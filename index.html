@@ -1,0 +1,3902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Misión CTSEO - Expedición Sistema Solar</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Phaser 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts: Fredoka & Orbitron -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Orbitron:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030712;
+      font-family: 'Fredoka', 'Inter', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .font-sci-fi {
+      font-family: 'Orbitron', 'Fredoka', sans-serif;
+    }
+
+    /* 3D Comic Action Buttons */
+    .comic-btn {
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+    }
+    .comic-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45);
+    }
+    .comic-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    /* Futuristic Glass panels */
+    .glass-card {
+      background: rgba(10, 16, 38, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(56, 189, 248, 0.28);
+    }
+
+    .glass-card-holo {
+      background: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.18), rgba(6, 11, 26, 0.92));
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 25px rgba(2, 132, 199, 0.25);
+    }
+
+    /* Animated Pulsing Flame */
+    @keyframes flameGlow {
+      0%, 100% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 8px #f59e0b); }
+      50% { transform: scale(1.18) rotate(3deg); filter: drop-shadow(0 0 16px #ef4444); }
+    }
+    .streak-fire-active {
+      animation: flameGlow 0.75s infinite ease-in-out;
+    }
+
+    /* Start Screen Warp Lines */
+    @keyframes warpStars {
+      0% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
+      50% { transform: scale(1.1) rotate(1deg); opacity: 0.8; }
+      100% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
+    }
+    .warp-anim {
+      animation: warpStars 4s infinite ease-in-out;
+    }
+
+    /* Plasma Bolt Trajectory */
+    @keyframes plasmaShot {
+      0% { stroke-dashoffset: 600; opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0.2; }
+    }
+    .plasma-trail {
+      stroke-dasharray: 200, 400;
+      animation: plasmaShot 1.8s infinite linear;
+    }
+
+    /* UFO Hover */
+    @keyframes ufoHover {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    .ufo-float {
+      animation: ufoHover 3.2s infinite ease-in-out;
+    }
+
+    /* Cockpit Subtle Oscillation */
+    @keyframes cockpitSway {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-3px) scale(1.002); }
+    }
+    .cockpit-sway {
+      animation: cockpitSway 2.5s infinite ease-in-out;
+    }
+
+    #game-container canvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 0 35px rgba(2, 132, 199, 0.25);
+    }
+  </style>
+</head>
+<body class="flex flex-col w-full h-full overflow-hidden bg-[#030712] relative">
+
+  <!-- =========================================================================
+       1. CINEMATIC START SCREEN (Splashscreen Artwork: Starship, 4 Students & UFO Pursuit)
+       ========================================================================= -->
+  <div id="start-screen" class="fixed inset-0 z-50 flex flex-col justify-between items-center bg-[#020512] overflow-hidden transition-opacity duration-700">
+    
+    <!-- Splashscreen Background Image -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center">
+      <img src="splashscreen.jpg" alt="Misión CTSEO Splashscreen" class="w-full h-full object-cover object-center select-none" />
+      <!-- Subtle top/bottom gradient vignette for UI legibility without covering the characters or title -->
+      <div class="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/90"></div>
+    </div>
+
+    <!-- START SCREEN HEADER & LANGUAGE TOGGLE -->
+    <div class="relative z-20 w-full flex justify-between items-center p-4 sm:p-6 max-w-7xl">
+      <!-- Institution Seal -->
+      <div class="glass-card px-3.5 py-1.5 rounded-2xl flex items-center space-x-2.5 border-cyan-400/30">
+        <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-sci-fi font-black text-sm">
+          C
+        </div>
+        <span class="text-xs sm:text-sm font-extrabold text-white tracking-widest font-sci-fi">CTSEO</span>
+      </div>
+
+      <!-- Language selector on start screen -->
+      <div class="glass-card p-1 rounded-2xl flex items-center space-x-1 border-amber-400/30">
+        <button onclick="setGlobalLanguage('es')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-amber-400 text-slate-950" data-lang="es">ES</button>
+        <button onclick="setGlobalLanguage('en')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white" data-lang="en">EN</button>
+        <button onclick="setGlobalLanguage('pt')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white" data-lang="pt">PT</button>
+      </div>
+    </div>
+
+    <!-- START SCREEN BOTTOM HERO: BRIEFING & ACTION (Positioned at bottom so the artwork & title shine unobstructed) -->
+    <div class="relative z-20 flex flex-col items-center text-center px-4 max-w-2xl mt-auto pb-2">
+      <!-- Metallic Badge -->
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/85 border border-cyan-400/50 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-2 shadow-lg shadow-cyan-900/50 backdrop-blur-md">
+        <i class="fa-solid fa-rocket animate-bounce"></i>
+        <span id="start-badge-text">Simulador Orbital Interactivo</span>
+      </div>
+
+      <!-- Subtitle & Lore Briefing -->
+      <p id="start-subtitle-text" class="text-sm sm:text-lg font-bold text-sky-200 tracking-wide mb-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+        ¡Defendiendo el Sistema Solar de la Flota Alienígena!
+      </p>
+      <p id="start-desc-text" class="text-xs sm:text-sm text-slate-200 max-w-xl mb-4 leading-relaxed bg-slate-950/80 px-4 py-2.5 rounded-2xl border border-sky-400/30 backdrop-blur-md shadow-xl">
+        Coloca los planetas en su orden orbital verdadero para activar el perímetro de defensa. Cada planeta te revelará datos científicos vitales para vencer al Comandante Zorgon en una batalla de ingenio.
+      </p>
+
+      <!-- BIG PLAY NOW BUTTON -->
+      <button id="btn-start-game" class="comic-btn group relative px-8 sm:px-12 py-3.5 sm:py-4 rounded-3xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black font-sci-fi text-lg sm:text-2xl tracking-wider uppercase border-2 border-amber-200 shadow-2xl shadow-amber-500/50 flex items-center justify-center space-x-3 cursor-pointer">
+        <i class="fa-solid fa-play text-slate-950 text-xl group-hover:scale-125 transition-transform"></i>
+        <span id="btn-start-text">¡JUGAR AHORA!</span>
+        <div class="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 rounded-full animate-ping"></div>
+      </button>
+    </div>
+
+    <!-- START SCREEN FOOTER CONTROLS -->
+    <div class="relative z-20 w-full p-4 flex justify-end items-center text-xs text-slate-300 max-w-7xl">
+      <button id="btn-start-sound-toggle" class="glass-card px-3 py-1.5 rounded-xl text-slate-200 hover:text-white flex items-center space-x-2">
+        <i id="start-sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
+        <span id="start-sound-text">Audio: Activo</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       2. TOP HUD BAR (Points & Streak always visible and unobstructed)
+       ========================================================================= -->
+  <header id="main-hud" class="w-full shrink-0 z-20 flex justify-between items-center px-3 py-2 bg-slate-950/90 border-b border-indigo-950/70 shadow-lg">
+    <!-- Score & Streak Group -->
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <!-- Title Badge -->
+      <div class="hidden md:flex glass-card px-3 py-1.5 rounded-2xl items-center space-x-2 border-cyan-500/30">
+        <span class="text-xs font-black tracking-wider uppercase text-cyan-400 font-sci-fi">🪐 MISIÓN CTSEO</span>
+      </div>
+
+      <!-- Score Box -->
+      <div class="glass-card px-3 py-1.5 rounded-2xl flex items-center space-x-2 shadow-xl">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-400/40">
+          <i class="fa-solid fa-trophy text-amber-400 text-xs sm:text-sm"></i>
+        </div>
+        <div>
+          <span id="score-title-label" class="text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Puntos</span>
+          <span id="score-text" class="text-base sm:text-lg font-black text-amber-300 drop-shadow leading-tight">0</span>
+        </div>
+      </div>
+
+      <!-- Streak Box -->
+      <div id="streak-container" class="glass-card px-3 py-1.5 rounded-2xl flex items-center space-x-2 shadow-xl transition-all">
+        <div id="streak-icon" class="text-base sm:text-lg text-slate-500 transition-all">
+          <i class="fa-solid fa-fire"></i>
+        </div>
+        <div>
+          <span id="streak-title-label" class="text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Racha</span>
+          <div class="flex items-center space-x-1.5 leading-tight">
+            <span id="streak-text" class="text-base sm:text-lg font-black text-slate-300">0</span>
+            <span id="multiplier-badge" class="hidden text-[10px] bg-gradient-to-r from-amber-500 to-rose-500 text-white font-extrabold px-1.5 py-0.5 rounded-full shadow">
+              +0
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions & Language Switcher Group -->
+    <div class="flex items-center space-x-1.5 sm:space-x-2">
+      <!-- Language Selector -->
+      <div class="glass-card p-1 rounded-2xl flex items-center space-x-1 border-amber-500/30">
+        <button id="lang-btn-es" onclick="setGlobalLanguage('es')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs bg-amber-400 text-slate-950 transition-all">ES</button>
+        <button id="lang-btn-en" onclick="setGlobalLanguage('en')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all">EN</button>
+        <button id="lang-btn-pt" onclick="setGlobalLanguage('pt')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all">PT</button>
+      </div>
+
+      <!-- Name Labels Toggle -->
+      <button id="btn-toggle-labels" class="comic-btn glass-card px-2.5 py-1.5 rounded-2xl text-cyan-300 hover:text-white flex items-center space-x-1.5 text-xs font-bold border-cyan-500/30">
+        <i class="fa-solid fa-tags"></i>
+        <span id="labels-header-text" class="hidden sm:inline">Etiquetas:</span>
+        <span id="label-state" class="text-emerald-400 font-black uppercase">SÍ</span>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button id="btn-sound" class="comic-btn glass-card w-8 h-8 sm:w-9 sm:h-9 rounded-2xl text-indigo-300 hover:text-white flex items-center justify-center text-xs sm:text-sm border-indigo-500/30">
+        <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+      </button>
+
+      <!-- Restart Button -->
+      <button id="btn-restart" class="comic-btn bg-rose-600 hover:bg-rose-500 w-8 h-8 sm:w-9 sm:h-9 rounded-2xl text-white flex items-center justify-center text-xs sm:text-sm border border-rose-400/50 shadow-rose-950/50">
+        <i class="fa-solid fa-arrow-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       3. INSTRUCTIONS / STATUS BANNER (Right below HUD, zero wasted space)
+       ========================================================================= -->
+  <div id="instructions-bar" class="w-full shrink-0 z-10 px-3 py-1.5 bg-gradient-to-r from-slate-950 via-indigo-950/70 to-slate-950 border-b border-indigo-900/30 flex items-center justify-center">
+    <div class="flex items-center space-x-2 text-cyan-200 text-xs sm:text-sm font-semibold tracking-wide text-center">
+      <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-xs sm:text-sm animate-pulse"></i>
+      <span id="instruction-banner-text">🪐 ¡Arrastra y suelta cada planeta en su órbita correcta desde el Sol! (1 = Más cercano)</span>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       4. PHASER 3 CANVAS CONTAINER
+       ========================================================================= -->
+  <main id="game-container" class="flex-1 w-full min-h-0 flex items-center justify-center relative overflow-hidden bg-transparent"></main>
+
+
+  <!-- =========================================================================
+       5. EDUCATIONAL PLANETARY TRANSMISSION MODAL (Shown as starship reaches planets)
+       ========================================================================= -->
+  <div id="fact-modal" class="hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-card-holo rounded-3xl p-5 sm:p-7 max-w-md w-full text-center shadow-2xl relative overflow-hidden transform transition-all duration-300">
+      <!-- Glow ambient -->
+      <div class="absolute -top-16 -right-16 w-36 h-36 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Transmission avatar -->
+      <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-tr from-cyan-500 to-sky-400 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30 border border-white/30">
+        <i id="fact-planet-icon" class="fa-solid fa-satellite-dish text-slate-950 text-2xl"></i>
+      </div>
+
+      <div class="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/40 text-[11px] font-bold text-cyan-300 uppercase tracking-widest mb-1 font-sci-fi">
+        <i class="fa-solid fa-tower-broadcast text-rose-400 animate-pulse"></i>
+        <span id="fact-modal-badge">TRANSMISIÓN DE NAVEGACIÓN</span>
+      </div>
+
+      <h3 id="fact-planet-name" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-sky-200 to-white mb-2 font-sci-fi">
+        MERCURIO
+      </h3>
+
+      <div class="bg-slate-900/80 p-4 rounded-2xl border border-sky-800/40 text-slate-200 text-sm leading-relaxed mb-5 text-left flex items-start space-x-3">
+        <i class="fa-solid fa-circle-info text-cyan-400 text-lg mt-0.5 shrink-0"></i>
+        <p id="fact-modal-body" class="font-medium">Dato del planeta aquí...</p>
+      </div>
+
+      <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2">
+        <span>¡ENTENDIDO, CONTINUAR RUTA!</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       6. ALIEN BOSS SHOWDOWN CARD (Positioned neatly BELOW top HUD - Points never blocked)
+       ========================================================================= -->
+  <div id="boss-battle-overlay" class="hidden fixed inset-x-0 bottom-0 pointer-events-none z-30 flex flex-col justify-start items-center p-3 sm:p-4" style="top: 56px;">
+    
+    <!-- Boss HP Card -->
+    <div class="pointer-events-auto glass-card-holo rounded-2xl p-3 sm:p-4 max-w-xl w-full mb-3 flex items-center justify-between shadow-2xl border-rose-500/40">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-700 to-rose-600 flex items-center justify-center border border-rose-400 text-xl shadow">
+          🛸
+        </div>
+        <div>
+          <span id="boss-badge-text" class="text-[10px] text-rose-400 font-black tracking-widest uppercase block font-sci-fi">JEFE ALIENÍGENA</span>
+          <h4 id="boss-title-text" class="text-sm sm:text-base font-black text-white leading-tight font-sci-fi">COMANDANTE ZORGON</h4>
+        </div>
+      </div>
+
+      <!-- Boss HP Bar -->
+      <div class="w-40 sm:w-56">
+        <div class="flex justify-between text-[11px] font-bold text-slate-300 mb-1">
+          <span id="boss-hp-label">ESCUDO NODRIZA</span>
+          <span id="boss-hp-text" class="text-rose-400 font-black">4 / 4 HP</span>
+        </div>
+        <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700">
+          <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trivia Multiple Choice Question Card -->
+    <div id="trivia-card" class="pointer-events-auto glass-card-holo rounded-3xl p-5 sm:p-6 max-w-xl w-full shadow-2xl border-cyan-400/50">
+      <div class="flex justify-between items-center mb-2">
+        <span id="trivia-round-indicator" class="text-xs font-black text-cyan-300 uppercase tracking-widest font-sci-fi">IMPACTO 1 DE 4</span>
+        <span id="trivia-reward-badge" class="text-xs font-bold text-amber-300 bg-amber-950/70 px-2 py-0.5 rounded-lg border border-amber-400/40">+200 PTS POR ACIERTO</span>
+      </div>
+
+      <h3 id="trivia-question-text" class="text-base sm:text-lg font-bold text-white mb-4 text-left leading-snug">
+        ¿Cuál es la característica principal aprendida en tu travesía?
+      </h3>
+
+      <!-- Shuffled Answer Buttons Container -->
+      <div id="trivia-options-container" class="flex flex-col space-y-2.5">
+        <!-- Injected via JavaScript dynamically -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       7. DEFEAT / GAME OVER MODAL (If shields/points drop to 0 in boss fight)
+       ========================================================================= -->
+  <div id="game-over-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card bg-slate-900/95 border-2 border-rose-500/70 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl">
+      <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-rose-600 to-red-500 rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-rose-600/40">
+        💥
+      </div>
+      <h2 id="defeat-title" class="text-3xl font-black text-rose-400 font-sci-fi mb-2">¡ESCUDOS AGOTADOS!</h2>
+      <p id="defeat-desc" class="text-slate-300 text-sm mb-6">
+        El Comandante Zorgon destruyó tus reservas de energía. ¡Repasa los datos espaciales y vuelve a intentarlo!
+      </p>
+      <button onclick="restartGameSession()" class="comic-btn w-full py-4 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-black text-lg uppercase tracking-wider flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span id="defeat-btn-retry">REINTENTAR MISIÓN</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       8. VICTORY CELEBRATION MODAL
+       ========================================================================= -->
+  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="victory-card" class="glass-card bg-slate-900/95 border-2 border-amber-400/60 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden transform scale-95 transition-all duration-300">
+      <!-- Ambient glow -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/25 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Icon Medal -->
+      <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-3xl flex items-center justify-center shadow-lg shadow-amber-500/30 transform -rotate-3">
+        <i class="fa-solid fa-award text-slate-950 text-5xl"></i>
+      </div>
+
+      <h2 id="modal-title" class="text-3xl sm:text-4xl font-black font-sci-fi text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-200 mb-1">
+        ¡VICTORIA CTSEO!
+      </h2>
+      <p id="modal-subtitle" class="text-slate-300 text-sm mb-6">¡El Comandante Zorgon huyó y el Sistema Solar fue salvado!</p>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-score" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Puntuación Final</span>
+          <span id="modal-score" class="text-2xl font-black text-amber-300">0</span>
+        </div>
+        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-streak" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Mejor Racha</span>
+          <span id="modal-streak" class="text-2xl font-black text-rose-400">0</span>
+        </div>
+        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-errors" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Errores</span>
+          <span id="modal-errors" class="text-2xl font-black text-slate-300">0</span>
+        </div>
+        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-acc" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Precisión</span>
+          <span id="modal-accuracy" class="text-2xl font-black text-emerald-400">100%</span>
+        </div>
+      </div>
+
+      <!-- Play Again Button -->
+      <button id="btn-play-again" onclick="restartGameSession()" class="comic-btn w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-lg tracking-wider uppercase border border-emerald-300 shadow-emerald-950/60 flex items-center justify-center">
+        <i class="fa-solid fa-play mr-2"></i> <span id="btn-play-again-text">Jugar de Nuevo</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       9. JAVASCRIPT LOGIC & AUDIO SYNTHESIZER
+       ========================================================================= -->
+  <script>
+    /* ==========================================================================
+       LOCALIZATION DICTIONARY (es = Spanish [Default], en = English, pt = Portuguese)
+       ========================================================================== */
+    const I18N = {
+      es: {
+        startBadge: "Simulador Orbital Interactivo",
+        startTitle: "MISIÓN CTSEO",
+        startSubtitle: "¡Defendiendo el Sistema Solar de la Flota Alienígena!",
+        startDesc: "Coloca los planetas en su orden orbital verdadero para activar el perímetro de defensa. Cada planeta te revelará datos científicos vitales para vencer al Comandante Zorgon en una batalla de ingenio.",
+        playNow: "¡JUGAR AHORA!",
+        soundActive: "Audio: Activo",
+        soundMuted: "Audio: Silenciado",
+        score: "Puntos",
+        streak: "Racha",
+        labels: "Etiquetas:",
+        labelsOn: "SÍ",
+        labelsOff: "NO",
+        bonus: "bono",
+        sunName: "☀️ SOL",
+        instructionsBanner: "🪐 ¡Arrastra y suelta cada planeta en su órbita correcta desde el Sol! (1 = Más cercano)",
+        streakBonusText: "¡RACHA!",
+        wrongText: "-50 ✕ Órbita incorrecta",
+        victoryTitle: "¡VICTORIA CTSEO!",
+        victoryDesc: "¡El Comandante Zorgon huyó y el Sistema Solar fue salvado!",
+        finalScore: "Puntuación Final",
+        bestStreak: "Mejor Racha",
+        mistakes: "Errores",
+        accuracy: "Precisión",
+        playAgain: "Jugar de Nuevo",
+        transmissionBadge: "TRANSMISIÓN DE NAVEGACIÓN",
+        transmissionBtn: "¡ENTENDIDO, CONTINUAR RUTA!",
+        bossTitle: "COMANDANTE ZORGON",
+        bossBadge: "JEFE ALIENÍGENA",
+        bossShield: "ESCUDO NODRIZA",
+        triviaReward: "+200 PTS POR ACIERTO",
+        roundIndicator: "IMPACTO {current} DE {total}",
+        defeatTitle: "¡ESCUDOS AGOTADOS!",
+        defeatDesc: "El Comandante Zorgon destruyó tus reservas de energía. ¡Repasa los datos espaciales y vuelve a intentarlo!",
+        retryBtn: "REINTENTAR MISIÓN"
+      },
+      en: {
+        startBadge: "Interactive Orbital Simulator",
+        startTitle: "MISSION CTSEO",
+        startSubtitle: "Defending the Solar System from the Alien War Fleet!",
+        startDesc: "Place each planet into its true orbital order to activate the defense perimeter. Each planet reveals crucial scientific intelligence needed to defeat Commander Zorgon in a battle of wits.",
+        playNow: "PLAY NOW!",
+        soundActive: "Audio: Enabled",
+        soundMuted: "Audio: Muted",
+        score: "Score",
+        streak: "Streak",
+        labels: "Labels:",
+        labelsOn: "ON",
+        labelsOff: "OFF",
+        bonus: "bonus",
+        sunName: "☀️ SUN",
+        instructionsBanner: "🪐 Drag and drop each planet into its correct orbit from the Sun! (1 = Closest)",
+        streakBonusText: "STREAK!",
+        wrongText: "-50 ✕ Wrong orbit",
+        victoryTitle: "CTSEO VICTORY!",
+        victoryDesc: "Commander Zorgon retreated into deep space! The Solar System is safe!",
+        finalScore: "Final Score",
+        bestStreak: "Best Streak",
+        mistakes: "Mistakes",
+        accuracy: "Accuracy",
+        playAgain: "Play Again",
+        transmissionBadge: "NAVIGATION TRANSMISSION",
+        transmissionBtn: "ROGER THAT, ADVANCE!",
+        bossTitle: "COMMANDER ZORGON",
+        bossBadge: "ALIEN WAR BOSS",
+        bossShield: "MOTHERSHIP SHIELD",
+        triviaReward: "+200 PTS PER HIT",
+        roundIndicator: "HIT {current} OF {total}",
+        defeatTitle: "SHIELDS DEPLETED!",
+        defeatDesc: "Commander Zorgon overwhelmed your ship's energy shield! Review the planetary data and try again!",
+        retryBtn: "RETRY MISSION"
+      },
+      pt: {
+        startBadge: "Simulador Orbital Interativo",
+        startTitle: "MISSÃO CTSEO",
+        startSubtitle: "Defendendo o Sistema Solar da Frota Alienígena!",
+        startDesc: "Posicione cada planeta em sua ordem orbital correta para ativar o perímetro de defesa. Cada planeta revelará dados científicos cruciais para derrotar o Comandante Zorgon em uma batalha de engenho.",
+        playNow: "JOGAR AGORA!",
+        soundActive: "Áudio: Ativo",
+        soundMuted: "Áudio: Mudo",
+        score: "Pontos",
+        streak: "Sequência",
+        labels: "Rótulos:",
+        labelsOn: "SIM",
+        labelsOff: "NÃO",
+        bonus: "bônus",
+        sunName: "☀️ SOL",
+        instructionsBanner: "🪐 Arraste e solte cada planeta em sua órbita correta a partir do Sol! (1 = Mais perto)",
+        streakBonusText: "SEQUÊNCIA!",
+        wrongText: "-50 ✕ Órbita errada",
+        victoryTitle: "VITÓRIA CTSEO!",
+        victoryDesc: "O Comandante Zorgon fugiu e o Sistema Solar está a salvo!",
+        finalScore: "Pontuação Final",
+        bestStreak: "Melhor Sequência",
+        mistakes: "Erros",
+        accuracy: "Precisão",
+        playAgain: "Jogar Novamente",
+        transmissionBadge: "TRANSMISSÃO DE NAVEGAÇÃO",
+        transmissionBtn: "ENTENDIDO, AVANÇAR!",
+        bossTitle: "COMANDANTE ZORGON",
+        bossBadge: "CHEFE ALIENÍGENA",
+        bossShield: "ESCUDO NAVE-MÃE",
+        triviaReward: "+200 PTS POR ACERTO",
+        roundIndicator: "IMPACTO {current} DE {total}",
+        defeatTitle: "ESCUDOS ESGOTADOS!",
+        defeatDesc: "O Comandante Zorgon destruiu seus escudos de energia. Revise os dados e tente novamente!",
+        retryBtn: "TENTAR NOVAMENTE"
+      }
+    };
+
+    let currentLanguage = 'es';
+
+    /* ==========================================================================
+       RICH FACT & TRIVIA DATABASE (3-4 facts per planet with linked questions)
+       ========================================================================== */
+    const PLANET_FACTS_DATABASE = {
+      mercury: [
+        {
+          fact: {
+            es: "Mercurio es el planeta más cercano al Sol y experimenta cambios extremos: ¡430°C de día y -180°C de noche!",
+            en: "Mercury is the closest planet to the Sun and has extreme temperatures: 430°C by day and -180°C at night!",
+            pt: "Mercúrio é o mais próximo do Sol e sofre extremos: 430°C de dia e -180°C à noite!"
+          },
+          question: {
+            es: "¿Qué temperatura nocturna extrema registra Mercurio?",
+            en: "What extreme nighttime temperature does Mercury experience?",
+            pt: "Qual temperatura noturna extrema Mercúrio registra?"
+          },
+          correct: { es: "-180°C", en: "-180°C", pt: "-180°C" },
+          distractors: [
+            { es: "0°C", en: "0°C", pt: "0°C" },
+            { es: "-50°C", en: "-50°C", pt: "-50°C" }
+          ]
+        },
+        {
+          fact: {
+            es: "Mercurio es el planeta más pequeño de los ocho, midiendo apenas un poco más que nuestra Luna.",
+            en: "Mercury is the smallest of all 8 planets, only slightly larger than Earth's Moon.",
+            pt: "Mercúrio é o menor dos oito planetas, apenas um pouco maior que nossa Lua."
+          },
+          question: {
+            es: "¿Cómo se compara el tamaño de Mercurio en el Sistema Solar?",
+            en: "How does Mercury's size rank in the Solar System?",
+            pt: "Como se compara o tamanho de Mercúrio no Sistema Solar?"
+          },
+          correct: { es: "Es el más pequeño", en: "It is the smallest", pt: "É o menor de todos" },
+          distractors: [
+            { es: "Es el más grande", en: "It is the largest", pt: "É o maior de todos" },
+            { es: "Igual a Júpiter", en: "Same as Jupiter", pt: "Igual a Júpiter" }
+          ]
+        },
+        {
+          fact: {
+            es: "Un año en Mercurio dura solo 88 días terrestres gracias a su tremenda velocidad orbital.",
+            en: "A year on Mercury lasts only 88 Earth days due to its immense orbital velocity.",
+            pt: "Um ano em Mercúrio dura apenas 88 dias terrestres devido à sua incrível velocidade orbital."
+          },
+          question: {
+            es: "¿Cuántos días terrestres dura un año completo en Mercurio?",
+            en: "How many Earth days does a full year on Mercury take?",
+            pt: "Quantos dias terrestres dura um ano completo em Mercúrio?"
+          },
+          correct: { es: "88 días", en: "88 days", pt: "88 dias" },
+          distractors: [
+            { es: "365 días", en: "365 days", pt: "365 dias" },
+            { es: "24 días", en: "24 days", pt: "24 dias" }
+          ]
+        }
+      ],
+      venus: [
+        {
+          fact: {
+            es: "Venus es el planeta más caliente de todos (465°C) debido a un potente efecto invernadero descontrolado.",
+            en: "Venus is the hottest planet of all (465°C) due to a runaway greenhouse effect trapped by dense clouds.",
+            pt: "Vênus é o planeta mais quente de todos (465°C) devido ao forte efeito estufa descontrolado."
+          },
+          question: {
+            es: "¿Por qué Venus es el planeta más caliente a pesar de no ser el primero?",
+            en: "Why is Venus the hottest planet despite not being the first from the Sun?",
+            pt: "Por que Vênus é o planeta mais quente apesar de não ser o primeiro?"
+          },
+          correct: { es: "Efecto invernadero descontrolado", en: "Runaway greenhouse effect", pt: "Efeito estufa descontrolado" },
+          distractors: [
+            { es: "Está hecho de magma líquido", en: "Made of liquid magma", pt: "Feito de magma líquido" },
+            { es: "No tiene atmósfera", en: "It has no atmosphere", pt: "Não tem atmosfera" }
+          ]
+        },
+        {
+          fact: {
+            es: "Venus gira al revés (rotación retrógrada): en Venus el Sol sale por el oeste y se pone por el este.",
+            en: "Venus rotates backwards (retrograde): on Venus the Sun rises in the west and sets in the east.",
+            pt: "Vênus gira ao contrário (rotação retrógrada): lá o Sol nasce no oeste e se põe no leste."
+          },
+          question: {
+            es: "¿Por qué punto cardinal sale el Sol en el planeta Venus?",
+            en: "From which cardinal direction does the Sun rise on Venus?",
+            pt: "Por qual ponto cardeal o Sol nasce no planeta Vênus?"
+          },
+          correct: { es: "Por el Oeste", en: "In the West", pt: "Pelo Oeste" },
+          distractors: [
+            { es: "Por el Este", en: "In the East", pt: "Pelo Leste" },
+            { es: "Por el Norte", en: "In the North", pt: "Pelo Norte" }
+          ]
+        },
+        {
+          fact: {
+            es: "Un solo día en Venus dura más que su año completo: rota tan lento que tarda 243 días terrestres.",
+            en: "A single day on Venus is longer than its entire year: it rotates so slowly it takes 243 Earth days.",
+            pt: "Um único dia em Vênus dura mais que seu ano inteiro: ele leva 243 dias terrestres para girar."
+          },
+          question: {
+            es: "¿Qué curiosidad temporal ocurre en Venus entre su día y su año?",
+            en: "What temporal anomaly occurs on Venus regarding its day and year?",
+            pt: "Qual anomalia temporal ocorre em Vênus entre seu dia e seu ano?"
+          },
+          correct: { es: "Su día dura más que su año", en: "Its day is longer than its year", pt: "Seu dia dura mais que seu ano" },
+          distractors: [
+            { es: "Su año dura 10 días", en: "Its year lasts 10 days", pt: "Seu ano dura 10 dias" },
+            { es: "No tiene noche", en: "It has no night", pt: "Não tem noite" }
+          ]
+        }
+      ],
+      earth: [
+        {
+          fact: {
+            es: "La Tierra es el único planeta conocido que posee agua líquida en superficie y alberga vida biológica.",
+            en: "Earth is the only known celestial planet with stable liquid water oceans and confirmed life.",
+            pt: "A Terra é o único planeta conhecido com oceanos de água líquida e vida confirmada."
+          },
+          question: {
+            es: "¿Qué elemento fundamental de la superficie hace única a la Tierra en el sistema?",
+            en: "What surface feature makes Earth unique among Solar System planets?",
+            pt: "Qual elemento fundamental torna a Terra única no sistema solar?"
+          },
+          correct: { es: "Agua líquida y vida", en: "Liquid water and life", pt: "Água líquida e vida" },
+          distractors: [
+            { es: "Anillos gigantes", en: "Giant rings", pt: "Anéis gigantes" },
+            { es: "Lluvia de diamantes", en: "Diamond rain", pt: "Chuva de diamantes" }
+          ]
+        },
+        {
+          fact: {
+            es: "El 71% de la superficie de la Tierra está cubierta por océanos de agua salada.",
+            en: "Approximately 71% of the Earth's surface is covered by liquid saltwater oceans.",
+            pt: "Aproximadamente 71% da superfície da Terra é coberta por oceanos de água salgada."
+          },
+          question: {
+            es: "¿Qué porcentaje aproximado de la Tierra está cubierto por agua?",
+            en: "Approximately what percentage of the Earth is covered by water?",
+            pt: "Qual porcentagem aproximada da Terra é coberta por água?"
+          },
+          correct: { es: "71%", en: "71%", pt: "71%" },
+          distractors: [
+            { es: "35%", en: "35%", pt: "35%" },
+            { es: "95%", en: "95%", pt: "95%" }
+          ]
+        },
+        {
+          fact: {
+            es: "El campo magnético terrestre nos defiende de la radiación cósmica y las tormentas solares.",
+            en: "Earth's strong magnetic field deflects dangerous cosmic radiation and solar storms.",
+            pt: "O campo magnético terrestre nos protege da radiação cósmica e tempestades solares."
+          },
+          question: {
+            es: "¿Qué escudo natural protege a la Tierra de las tormentas solares?",
+            en: "What natural shield protects Earth from high-energy solar storms?",
+            pt: "Qual escudo natural protege a Terra das tempestades solares?"
+          },
+          correct: { es: "El campo magnético", en: "The magnetic field", pt: "O campo magnético" },
+          distractors: [
+            { es: "La Luna", en: "The Moon", pt: "A Lua" },
+            { es: "Los volcanes", en: "Volcanoes", pt: "Os vulcões" }
+          ]
+        }
+      ],
+      mars: [
+        {
+          fact: {
+            es: "Marte alberga el Monte Olimpo, el volcán más colosal del Sistema Solar: ¡tres veces más alto que el Everest!",
+            en: "Mars hosts Olympus Mons, the largest volcano in the Solar System: three times taller than Mount Everest!",
+            pt: "Marte abriga o Monte Olimpo, o maior vulcão do Sistema Solar: três vezes mais alto que o Everest!"
+          },
+          question: {
+            es: "¿Cómo se llama el volcán colosal ubicado en Marte?",
+            en: "What is the name of the colossal volcano located on Mars?",
+            pt: "Qual é o nome do vulcão colossal localizado em Marte?"
+          },
+          correct: { es: "Monte Olimpo", en: "Olympus Mons", pt: "Monte Olimpo" },
+          distractors: [
+            { es: "Monte Vesubio", en: "Mount Vesuvius", pt: "Monte Vesúvio" },
+            { es: "Cráter Kepler", en: "Kepler Crater", pt: "Cratera Kepler" }
+          ]
+        },
+        {
+          fact: {
+            es: "Marte es de color rojo porque su regolito y rocas contienen abundantes óxidos de hierro (herrumbre).",
+            en: "Mars appears distinctively red because its soil and rocks are rich in iron oxide (rust).",
+            pt: "Marte é vermelho porque seu solo é rico em óxido de ferro (ferrugem)."
+          },
+          question: {
+            es: "¿Qué mineral da el característico color rojizo al planeta Marte?",
+            en: "Which chemical compound gives Mars its distinctive red appearance?",
+            pt: "Qual composto confere a cor avermelhada ao planeta Marte?"
+          },
+          correct: { es: "Óxido de hierro (óxido)", en: "Iron oxide (rust)", pt: "Óxido de ferro (ferrugem)" },
+          distractors: [
+            { es: "Azufre volcánico", en: "Volcanic sulfur", pt: "Enxofre vulcânico" },
+            { es: "Cobre oxidado", en: "Oxidized copper", pt: "Cobre oxidado" }
+          ]
+        },
+        {
+          fact: {
+            es: "Marte posee dos lunas diminutas con forma de asteroide llamadas Fobos y Deimos.",
+            en: "Mars is orbited by two tiny potato-shaped moons called Phobos and Deimos.",
+            pt: "Marte possui duas luas minúsculas com formato irregular chamadas Fobos e Deimos."
+          },
+          question: {
+            es: "¿Cuáles son las dos lunas que orbitan el planeta rojo?",
+            en: "What are the names of the two moons orbiting Mars?",
+            pt: "Quais são as duas luas que orbitam Marte?"
+          },
+          correct: { es: "Fobos y Deimos", en: "Phobos and Deimos", pt: "Fobos e Deimos" },
+          distractors: [
+            { es: "Europa y Titán", en: "Europa and Titan", pt: "Europa e Titã" },
+            { es: "Ío y Calisto", en: "Io and Callisto", pt: "Io e Calisto" }
+          ]
+        }
+      ],
+      jupiter: [
+        {
+          fact: {
+            es: "Júpiter es tan inmenso que en su interior podrían caber más de 1.300 planetas como la Tierra.",
+            en: "Jupiter is so colossal that over 1,300 Earths could fit inside its volume.",
+            pt: "Júpiter é tão imenso que mais de 1.300 planetas Terra caberiam dentro dele."
+          },
+          question: {
+            es: "¿Aproximadamente cuántas Tierras cabrían dentro del gigante Júpiter?",
+            en: "Roughly how many Earths could fit inside the gas giant Jupiter?",
+            pt: "Quantas Terras caberiam aproximadamente dentro de Júpiter?"
+          },
+          correct: { es: "Más de 1.300", en: "Over 1,300", pt: "Mais de 1.300" },
+          distractors: [
+            { es: "Unas 50", en: "About 50", pt: "Cerca de 50" },
+            { es: "Solo 10", en: "Only 10", pt: "Apenas 10" }
+          ]
+        },
+        {
+          fact: {
+            es: "La Gran Mancha Roja de Júpiter es un anticiclón gigantesco que lleva activo más de 300 años.",
+            en: "Jupiter's Great Red Spot is a monster storm that has raged continuously for over 300 years.",
+            pt: "A Grande Mancha Vermelha de Júpiter é uma tempestade colossal ativa há mais de 300 anos."
+          },
+          question: {
+            es: "¿Qué es verdaderamente la Gran Mancha Roja de Júpiter?",
+            en: "What is Jupiter's Great Red Spot in reality?",
+            pt: "O que é realmente a Grande Mancha Vermelha de Júpiter?"
+          },
+          correct: { es: "Una tormenta gigante de siglos", en: "A centuries-old monster storm", pt: "Uma tempestade gigante de séculos" },
+          distractors: [
+            { es: "Un océano de fuego", en: "An ocean of fire", pt: "Um oceano de fogo" },
+            { es: "Un cráter de meteorito", en: "A meteorite crater", pt: "Uma cratera de meteorito" }
+          ]
+        },
+        {
+          fact: {
+            es: "Júpiter tiene el día más veloz: ¡completa una rotación sobre su eje en menos de 10 horas!",
+            en: "Jupiter has the fastest rotation in the system: it spins completely in under 10 hours!",
+            pt: "Júpiter tem o dia mais rápido: completa uma rotação sobre seu eixo em menos de 10 horas!"
+          },
+          question: {
+            es: "¿Cuánto tarda Júpiter en dar un giro sobre su propio eje?",
+            en: "How long does Jupiter take to complete one full rotation on its axis?",
+            pt: "Quanto tempo Júpiter leva para dar uma volta sobre si mesmo?"
+          },
+          correct: { es: "Menos de 10 horas", en: "Under 10 hours", pt: "Menos de 10 horas" },
+          distractors: [
+            { es: "24 horas", en: "24 hours", pt: "24 horas" },
+            { es: "48 horas", en: "48 hours", pt: "48 horas" }
+          ]
+        }
+      ],
+      saturn: [
+        {
+          fact: {
+            es: "Los anillos espectaculares de Saturno están compuestos en un 99% por fragmentos de hielo puro y roca.",
+            en: "Saturn's dazzling rings are composed 99% of pure water ice chunks, dust, and rock fragments.",
+            pt: "Os anéis espetaculares de Saturno são formados 99% por pedaços de gelo de água pura e rocha."
+          },
+          question: {
+            es: "¿Cuál es el componente primordial de los anillos de Saturno?",
+            en: "What is the primary material forming Saturn's iconic rings?",
+            pt: "Qual é o elemento principal que compõe os anéis de Saturno?"
+          },
+          correct: { es: "Hielo de agua y roca", en: "Water ice and rock", pt: "Gelo de água e rocha" },
+          distractors: [
+            { es: "Lava volcánica", en: "Volcanic lava", pt: "Lava vulcânica" },
+            { es: "Plástico estelar", en: "Stellar polymers", pt: "Polímeros estelares" }
+          ]
+        },
+        {
+          fact: {
+            es: "Saturno es el planeta menos denso: es menos denso que el agua, ¡flotaría en una bañera cósmica!",
+            en: "Saturn is the least dense planet: less dense than liquid water, it would float in an enormous pool!",
+            pt: "Saturno é o menos denso: tem densidade menor que a água, flutuaria numa banheira cósmica!"
+          },
+          question: {
+            es: "¿Qué sucedería con Saturno si se colocara en una piscina gigante de agua?",
+            en: "What would happen if Saturn were placed into a gigantic pool of water?",
+            pt: "O que aconteceria com Saturno em uma piscina gigante com água?"
+          },
+          correct: { es: "Flotaría", en: "It would float", pt: "Ele flutuaria" },
+          distractors: [
+            { es: "Se hundiría como plomo", en: "It would sink like lead", pt: "Afundaria como chumbo" },
+            { es: "Se disolvería al instante", en: "Dissolve immediately", pt: "Dissolveria na hora" }
+          ]
+        },
+        {
+          fact: {
+            es: "Saturno tiene a Titán, la única luna del Sistema Solar con atmósfera densa y lagos de metano líquido.",
+            en: "Saturn's moon Titan is the only moon in the system with a thick atmosphere and liquid methane lakes.",
+            pt: "Saturno tem Titã, a única lua com atmosfera espessa e lagos de metano líquido."
+          },
+          question: {
+            es: "¿Qué luna de Saturno tiene lagos de metano líquido y atmósfera densa?",
+            en: "Which of Saturn's moons has thick clouds and liquid methane lakes?",
+            pt: "Qual lua de Saturno tem lagos de metano líquido e atmosfera espessa?"
+          },
+          correct: { es: "Titán", en: "Titan", pt: "Titã" },
+          distractors: [
+            { es: "Encélado", en: "Enceladus", pt: "Encélado" },
+            { es: "Mimas", en: "Mimas", pt: "Mimas" }
+          ]
+        }
+      ],
+      uranus: [
+        {
+          fact: {
+            es: "Urano rota prácticamente acostado de lado con una inclinación axial insólita de 98 grados.",
+            en: "Uranus rotates tilted completely on its side with a dramatic axial tilt of 98 degrees.",
+            pt: "Urano gira completamente de lado com uma inclinação axial incomum de 98 graus."
+          },
+          question: {
+            es: "¿Qué inclinación singular caracteriza la rotación del gigante Urano?",
+            en: "What unique tilt characterizes Uranus' rotational axis?",
+            pt: "Qual inclinação incomum caracteriza a rotação de Urano?"
+          },
+          correct: { es: "Gira acostado a 98°", en: "Rotates on its side at 98°", pt: "Gira deitado a 98°" },
+          distractors: [
+            { es: "No tiene rotación", en: "Has zero rotation", pt: "Não tem rotação" },
+            { es: "Inclinado a 5°", en: "Tilted at 5°", pt: "Inclinado a 5°" }
+          ]
+        },
+        {
+          fact: {
+            es: "Urano es el planeta más frío del Sistema Solar, alcanzando temperaturas mínimas de -224°C.",
+            en: "Uranus holds the record for the coldest atmosphere in the planetary system, reaching -224°C.",
+            pt: "Urano possui a atmosfera mais fria do Sistema Solar, atingindo até -224°C."
+          },
+          question: {
+            es: "¿Qué récord de temperatura ostenta la atmósfera de Urano?",
+            en: "What temperature record does Uranus' atmosphere hold?",
+            pt: "Qual recorde de temperatura a atmosfera de Urano possui?"
+          },
+          correct: { es: "La más fría (-224°C)", en: "The coldest (-224°C)", pt: "A mais fria (-224°C)" },
+          distractors: [
+            { es: "La más caliente", en: "The hottest", pt: "A mais quente" },
+            { es: "Temperatura media de 20°C", en: "Average of 20°C", pt: "Média de 20°C" }
+          ]
+        },
+        {
+          fact: {
+            es: "Urano debe su hermoso color aguamarina al metano en su atmósfera superior, que absorbe la luz roja.",
+            en: "Uranus gets its cyan-aquamarine hue from methane gas in its upper atmosphere absorbing red light.",
+            pt: "Urano tem sua bela cor azul-turquesa devido ao gás metano absorvendo a luz vermelha."
+          },
+          question: {
+            es: "¿Qué gas es responsable del color celeste aguamarina de Urano?",
+            en: "Which gas is responsible for Uranus' distinct cyan-aquamarine appearance?",
+            pt: "Qual gás é responsável pela cor azul-turquesa de Urano?"
+          },
+          correct: { es: "Gas metano", en: "Methane gas", pt: "Gás metano" },
+          distractors: [
+            { es: "Oxígeno puro", en: "Pure oxygen", pt: "Oxigênio puro" },
+            { es: "Helio pesado", en: "Heavy helium", pt: "Hélio pesado" }
+          ]
+        }
+      ],
+      neptune: [
+        {
+          fact: {
+            es: "Neptuno registra los vientos más feroces del Sistema Solar: ¡ráfagas supersónicas de más de 2.000 km/h!",
+            en: "Neptune unleashes the fiercest supersonic winds in the system, clocking over 2,000 km/h!",
+            pt: "Netuno registra os ventos mais ferozes do sistema: rajadas supersônicas de mais de 2.000 km/h!"
+          },
+          question: {
+            es: "¿A qué velocidad pueden soplar los vientos supersónicos de Neptuno?",
+            en: "At what velocity can Neptune's supersonic storm winds blow?",
+            pt: "A que velocidade os ventos supersônicos de Netuno podem soprar?"
+          },
+          correct: { es: "Más de 2.000 km/h", en: "Over 2,000 km/h", pt: "Mais de 2.000 km/h" },
+          distractors: [
+            { es: "100 km/h", en: "100 km/h", pt: "100 km/h" },
+            { es: "500 km/h", en: "500 km/h", pt: "500 km/h" }
+          ]
+        },
+        {
+          fact: {
+            es: "Neptuno tarda 165 años terrestres en completar una sola vuelta orbital alrededor del Sol.",
+            en: "Neptune takes an incredible 165 Earth years to complete just one full orbit around the Sun.",
+            pt: "Netuno leva 165 anos terrestres para completar uma única volta ao redor do Sol."
+          },
+          question: {
+            es: "¿Cuánto tiempo le toma a Neptuno dar una órbita completa al Sol?",
+            en: "How long does Neptune take to make one complete revolution around the Sun?",
+            pt: "Quanto tempo Netuno leva para dar uma volta orbital completa no Sol?"
+          },
+          correct: { es: "165 años terrestres", en: "165 Earth years", pt: "165 anos terrestres" },
+          distractors: [
+            { es: "12 años terrestres", en: "12 Earth years", pt: "12 anos terrestres" },
+            { es: "500 años terrestres", en: "500 Earth years", pt: "500 anos terrestres" }
+          ]
+        },
+        {
+          fact: {
+            es: "Neptuno fue descubierto en 1846 mediante cálculos matemáticos antes de ser visto por telescopio.",
+            en: "Neptune was discovered in 1846 through pure mathematics before ever being seen in a telescope.",
+            pt: "Netuno foi descoberto em 1846 através de cálculos matemáticos antes de ser visto por telescópio."
+          },
+          question: {
+            es: "¿Cómo fue descubierto inicialmente el planeta Neptuno?",
+            en: "How was Neptune initially discovered by astronomers?",
+            pt: "Como o planeta Netuno foi descoberto inicialmente pelos astrônomos?"
+          },
+          correct: { es: "Por cálculos matemáticos", en: "Through mathematical prediction", pt: "Por cálculos matemáticos" },
+          distractors: [
+            { es: "Por una sonda espacial", en: "By a deep space probe", pt: "Por uma sonda espacial" },
+            { es: "Por casualidad a simple vista", en: "Naked eye accident", pt: "Por acaso a olho nu" }
+          ]
+        }
+      ]
+    };
+
+    /* ==========================================================================
+       PLANET ASTRONOMICAL SPECIFICATIONS
+       ========================================================================== */
+    const PLANET_SPECS = [
+      {
+        order: 1,
+        id: 'mercury',
+        names: { es: 'Mercurio', en: 'Mercury', pt: 'Mercúrio' },
+        radius: 17,
+        orbitRadius: 145,
+        targetAngle: -0.22,
+        primaryColor: '#94a3b8',
+        shadowColor: '#334155'
+      },
+      {
+        order: 2,
+        id: 'venus',
+        names: { es: 'Venus', en: 'Venus', pt: 'Vênus' },
+        radius: 23,
+        orbitRadius: 235,
+        targetAngle: 0.22,
+        primaryColor: '#f59e0b',
+        shadowColor: '#78350f'
+      },
+      {
+        order: 3,
+        id: 'earth',
+        names: { es: 'Tierra', en: 'Earth', pt: 'Terra' },
+        radius: 26,
+        orbitRadius: 335,
+        targetAngle: -0.15,
+        primaryColor: '#0284c7',
+        shadowColor: '#082f49'
+      },
+      {
+        order: 4,
+        id: 'mars',
+        names: { es: 'Marte', en: 'Mars', pt: 'Marte' },
+        radius: 20,
+        orbitRadius: 440,
+        targetAngle: 0.24,
+        primaryColor: '#dc2626',
+        shadowColor: '#450a0a'
+      },
+      {
+        order: 5,
+        id: 'jupiter',
+        names: { es: 'Júpiter', en: 'Jupiter', pt: 'Júpiter' },
+        radius: 42,
+        orbitRadius: 560,
+        targetAngle: -0.19,
+        primaryColor: '#ea580c',
+        shadowColor: '#431407'
+      },
+      {
+        order: 6,
+        id: 'saturn',
+        names: { es: 'Saturno', en: 'Saturn', pt: 'Saturno' },
+        radius: 35,
+        orbitRadius: 695,
+        targetAngle: 0.16,
+        primaryColor: '#eab308',
+        shadowColor: '#713f12',
+        hasRings: true
+      },
+      {
+        order: 7,
+        id: 'uranus',
+        names: { es: 'Urano', en: 'Uranus', pt: 'Urano' },
+        radius: 29,
+        orbitRadius: 825,
+        targetAngle: -0.16,
+        primaryColor: '#06b6d4',
+        shadowColor: '#164e63',
+        hasTiltRings: true
+      },
+      {
+        order: 8,
+        id: 'neptune',
+        names: { es: 'Neptuno', en: 'Neptune', pt: 'Netuno' },
+        radius: 28,
+        orbitRadius: 955,
+        targetAngle: 0.18,
+        primaryColor: '#2563eb',
+        shadowColor: '#1e1b4b'
+      }
+    ];
+
+    /* ==========================================================================
+       SYNTHESIZED WEB AUDIO ENGINE (SFX + Dual Procedural Ambient BGM)
+       ========================================================================== */
+    class RetroAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+        this.bgmMode = 'start'; // 'start' | 'game'
+        this.bgmTimer = null;
+        this.bgmStep = 0;
+        this.bgmMasterGain = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+            this.bgmMasterGain = this.ctx.createGain();
+            this.bgmMasterGain.gain.setValueAtTime(this.enabled ? 1 : 0, this.ctx.currentTime);
+            this.bgmMasterGain.connect(this.ctx.destination);
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        if (this.enabled && !this.bgmTimer && this.bgmMode) {
+          this.startBGMLoop();
+        }
+      }
+
+      setBGMMode(mode) {
+        if (this.bgmMode === mode && this.bgmTimer) return;
+        this.bgmMode = mode;
+        this.bgmStep = 0;
+        if (this.bgmTimer) {
+          clearInterval(this.bgmTimer);
+          this.bgmTimer = null;
+        }
+        if (this.enabled && this.ctx) {
+          this.startBGMLoop();
+        }
+      }
+
+      setMuted(muted) {
+        this.enabled = !muted;
+        if (this.ctx && this.bgmMasterGain) {
+          this.bgmMasterGain.gain.setTargetAtTime(this.enabled ? 1 : 0, this.ctx.currentTime, 0.08);
+        }
+        if (this.enabled) {
+          this.init();
+          if (!this.bgmTimer) this.startBGMLoop();
+        } else if (this.bgmTimer) {
+          clearInterval(this.bgmTimer);
+          this.bgmTimer = null;
+        }
+      }
+
+      startBGMLoop() {
+        if (this.bgmTimer) clearInterval(this.bgmTimer);
+        if (!this.enabled || !this.ctx) return;
+
+        const tick = () => {
+          if (!this.enabled || !this.ctx || this.ctx.state !== 'running') return;
+          if (this.bgmMode === 'start') {
+            this.playStartBGMBeat(this.bgmStep++);
+          } else if (this.bgmMode === 'game') {
+            this.playGameBGMBeat(this.bgmStep++);
+          } else if (this.bgmMode === 'boss') {
+            this.playBossBGMBeat(this.bgmStep++);
+          }
+        };
+
+        tick();
+        const intervalMs = this.bgmMode === 'boss' ? 190 : (this.bgmMode === 'start' ? 450 : 650);
+        this.bgmTimer = setInterval(tick, intervalMs);
+      }
+
+      // Subtle heroic synthwave/sci-fi arpeggio & pad for the Start Screen
+      playStartBGMBeat(step) {
+        const now = this.ctx.currentTime;
+        const chords = [
+          [130.81, 196.00, 246.94, 293.66, 392.00], // Cmaj9
+          [110.00, 164.81, 220.00, 261.63, 329.63], // Am7
+          [87.31,  130.81, 174.61, 220.00, 261.63], // Fmaj7
+          [98.00,  146.83, 196.00, 246.94, 293.66]  // G6
+        ];
+        const chordIdx = Math.floor(step / 8) % chords.length;
+        const chord = chords[chordIdx];
+
+        // Warm Pad on beat 0 of every 8-step bar
+        if (step % 8 === 0) {
+          [chord[0], chord[1], chord[2]].forEach(freq => {
+            const osc = this.ctx.createOscillator();
+            const filter = this.ctx.createBiquadFilter();
+            const gain = this.ctx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(420, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.018, now + 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.bgmMasterGain);
+
+            osc.start(now);
+            osc.stop(now + 3.6);
+          });
+        }
+
+        // Subtle sci-fi pulse arpeggio
+        const arpPattern = [0, 1, 2, 3, 4, 3, 2, 1];
+        const noteFreq = chord[arpPattern[step % 8]];
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(noteFreq * 2, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.022, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+
+        osc.connect(gain);
+        gain.connect(this.bgmMasterGain);
+
+        osc.start(now);
+        osc.stop(now + 0.44);
+      }
+
+      // Subtle, floating cosmic ambient theme for the main Solar System game
+      playGameBGMBeat(step) {
+        const now = this.ctx.currentTime;
+        // Dreamy Dorian/Lydian space chords
+        const spaceChords = [
+          [146.83, 220.00, 261.63, 329.63, 440.00], // Dm9
+          [116.54, 174.61, 220.00, 293.66, 349.23], // Bbmaj7
+          [130.81, 196.00, 261.63, 329.63, 392.00], // C6/9
+          [110.00, 164.81, 207.65, 246.94, 329.63]  // Amaj7/E cosmic turnaround
+        ];
+        const bar = Math.floor(step / 8) % spaceChords.length;
+        const chord = spaceChords[bar];
+
+        // Deep space ambient drone on bar start
+        if (step % 8 === 0) {
+          [chord[0] * 0.5, chord[1], chord[3]].forEach(freq => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.024, now + 1.4);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.1);
+
+            osc.connect(gain);
+            gain.connect(this.bgmMasterGain);
+
+            osc.start(now);
+            osc.stop(now + 5.2);
+          });
+        }
+
+        // Sparse celestial starlight bell notes
+        const melodySteps = [0, 3, 5, 6];
+        if (melodySteps.includes(step % 8)) {
+          const noteIdx = (step + bar) % chord.length;
+          const freq = chord[noteIdx] * 2;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.016, now + 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+
+          osc.connect(gain);
+          gain.connect(this.bgmMasterGain);
+
+          osc.start(now);
+          osc.stop(now + 1.2);
+        }
+      }
+
+      // Energetic, tense sci-fi Boss Fight BGM for Commander Zorgon showdown
+      playBossBGMBeat(step) {
+        const now = this.ctx.currentTime;
+
+        // 1. Driving Octave-Pumping Sci-Fi Synth Bass (C minor / Phrygian progression)
+        const bassRoots = [65.41, 65.41, 77.78, 58.27]; // C2, C2, Eb2, Bb1/Ab1
+        const bar = Math.floor(step / 8) % bassRoots.length;
+        const root = bassRoots[bar];
+        const octaveMult = (step % 2 === 0) ? 1 : 2;
+        const bassFreq = (bar === 3 && step % 8 >= 4) ? 61.74 * octaveMult : root * octaveMult;
+
+        const bassOsc = this.ctx.createOscillator();
+        const bassFilter = this.ctx.createBiquadFilter();
+        const bassGain = this.ctx.createGain();
+
+        bassOsc.type = 'sawtooth';
+        bassOsc.frequency.setValueAtTime(bassFreq, now);
+
+        bassFilter.type = 'lowpass';
+        bassFilter.Q.setValueAtTime(3.5, now);
+        bassFilter.frequency.setValueAtTime(680, now);
+        bassFilter.frequency.exponentialRampToValueAtTime(160, now + 0.17);
+
+        bassGain.gain.setValueAtTime(0.001, now);
+        bassGain.gain.linearRampToValueAtTime(0.038, now + 0.015);
+        bassGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.18);
+
+        bassOsc.connect(bassFilter);
+        bassFilter.connect(bassGain);
+        bassGain.connect(this.bgmMasterGain);
+
+        bassOsc.start(now);
+        bassOsc.stop(now + 0.185);
+
+        // 2. Urgent Space-Combat Arpeggio Lead
+        const leadNotes = [
+          261.63, 311.13, 392.00, 523.25, 392.00, 311.13, 415.30, 392.00, // Cm + Ab tension
+          261.63, 311.13, 466.16, 523.25, 415.30, 392.00, 349.23, 311.13,
+          311.13, 392.00, 466.16, 622.25, 466.16, 392.00, 523.25, 466.16,
+          293.66, 349.23, 415.30, 587.33, 493.88, 415.30, 392.00, 246.94  // Diminished boss turnaround
+        ];
+        const leadFreq = leadNotes[step % leadNotes.length];
+
+        const leadOsc = this.ctx.createOscillator();
+        const leadGain = this.ctx.createGain();
+        leadOsc.type = (step % 4 === 0) ? 'square' : 'triangle';
+        leadOsc.frequency.setValueAtTime(leadFreq, now);
+
+        leadGain.gain.setValueAtTime(0.001, now);
+        leadGain.gain.linearRampToValueAtTime(step % 4 === 0 ? 0.022 : 0.016, now + 0.015);
+        leadGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.17);
+
+        leadOsc.connect(leadGain);
+        leadGain.connect(this.bgmMasterGain);
+
+        leadOsc.start(now);
+        leadOsc.stop(now + 0.18);
+
+        // 3. Dramatic Low Brass/Pad Hit on Bar Downbeat
+        if (step % 8 === 0) {
+          [root * 2, root * 3].forEach(f => {
+            const padOsc = this.ctx.createOscillator();
+            const padFilter = this.ctx.createBiquadFilter();
+            const padGain = this.ctx.createGain();
+
+            padOsc.type = 'sawtooth';
+            padOsc.frequency.setValueAtTime(f, now);
+
+            padFilter.type = 'lowpass';
+            padFilter.frequency.setValueAtTime(520, now);
+
+            padGain.gain.setValueAtTime(0.001, now);
+            padGain.gain.linearRampToValueAtTime(0.024, now + 0.08);
+            padGain.gain.exponentialRampToValueAtTime(0.0008, now + 1.3);
+
+            padOsc.connect(padFilter);
+            padFilter.connect(padGain);
+            padGain.connect(this.bgmMasterGain);
+
+            padOsc.start(now);
+            padOsc.stop(now + 1.35);
+          });
+        }
+      }
+
+      playWarp() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(1400, now + 0.6);
+
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.66);
+      }
+
+      // Prominent, punchy ion thruster jet whoosh + dual-oscillator turbine roar when the ship moves
+      playThruster(durationSec = 0.85) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // 1. Filtered noise plasma jet whoosh (more prominent body & air)
+        const bufferSize = Math.floor(this.ctx.sampleRate * durationSec);
+        const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = this.ctx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.setValueAtTime(1.3, now);
+        filter.frequency.setValueAtTime(220, now);
+        filter.frequency.exponentialRampToValueAtTime(780, now + durationSec * 0.45);
+        filter.frequency.exponentialRampToValueAtTime(180, now + durationSec);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.linearRampToValueAtTime(0.22, now + durationSec * 0.18);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.ctx.destination);
+
+        whiteNoise.start(now);
+        whiteNoise.stop(now + durationSec);
+
+        // 2. Low-mid afterburner roar (sawtooth through lowpass)
+        const roarOsc = this.ctx.createOscillator();
+        const roarFilter = this.ctx.createBiquadFilter();
+        const roarGain = this.ctx.createGain();
+        roarOsc.type = 'sawtooth';
+        roarOsc.frequency.setValueAtTime(72, now);
+        roarOsc.frequency.exponentialRampToValueAtTime(138, now + durationSec * 0.45);
+        roarOsc.frequency.exponentialRampToValueAtTime(65, now + durationSec);
+
+        roarFilter.type = 'lowpass';
+        roarFilter.frequency.setValueAtTime(460, now);
+
+        roarGain.gain.setValueAtTime(0.001, now);
+        roarGain.gain.linearRampToValueAtTime(0.15, now + durationSec * 0.2);
+        roarGain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+        roarOsc.connect(roarFilter);
+        roarFilter.connect(roarGain);
+        roarGain.connect(this.ctx.destination);
+
+        roarOsc.start(now);
+        roarOsc.stop(now + durationSec);
+
+        // 3. Ion turbine harmonic hum
+        const humOsc = this.ctx.createOscillator();
+        const humGain = this.ctx.createGain();
+        humOsc.type = 'triangle';
+        humOsc.frequency.setValueAtTime(115, now);
+        humOsc.frequency.exponentialRampToValueAtTime(195, now + durationSec * 0.45);
+        humOsc.frequency.exponentialRampToValueAtTime(95, now + durationSec);
+
+        humGain.gain.setValueAtTime(0.001, now);
+        humGain.gain.linearRampToValueAtTime(0.14, now + durationSec * 0.18);
+        humGain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+        humOsc.connect(humGain);
+        humGain.connect(this.ctx.destination);
+
+        humOsc.start(now);
+        humOsc.stop(now + durationSec);
+      }
+
+      playPickup() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(380, now);
+        osc.frequency.exponentialRampToValueAtTime(620, now + 0.09);
+
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.11);
+      }
+
+      playCorrect(streak = 1) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51];
+        const pitch = scale[Math.min(streak - 1, scale.length - 1)];
+
+        const osc1 = this.ctx.createOscillator();
+        const gain1 = this.ctx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(pitch, now);
+        osc1.frequency.exponentialRampToValueAtTime(pitch * 1.04, now + 0.35);
+
+        gain1.gain.setValueAtTime(0.26, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc1.connect(gain1);
+        gain1.connect(this.ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.36);
+
+        const osc2 = this.ctx.createOscillator();
+        const gain2 = this.ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(pitch * 1.5, now + 0.04);
+        gain2.gain.setValueAtTime(0.16, now + 0.04);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+        osc2.connect(gain2);
+        gain2.connect(this.ctx.destination);
+        osc2.start(now + 0.04);
+        osc2.stop(now + 0.33);
+      }
+
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.exponentialRampToValueAtTime(75, now + 0.28);
+
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.29);
+      }
+
+      playLaser() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // Twin high-energy photon laser pew
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(1320, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.22);
+
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.24);
+
+        // Sub-punch layer
+        const sub = this.ctx.createOscillator();
+        const subGain = this.ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(240, now);
+        sub.frequency.exponentialRampToValueAtTime(45, now + 0.2);
+        subGain.gain.setValueAtTime(0.3, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.21);
+        sub.connect(subGain);
+        subGain.connect(this.ctx.destination);
+        sub.start(now);
+        sub.stop(now + 0.22);
+      }
+
+      playAlienBlaster() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(68, now + 0.32);
+
+        gain.gain.setValueAtTime(0.26, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.33);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.34);
+      }
+
+      playExplosion(intensity = 1.0) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const dur = 0.45 * Math.max(0.6, intensity);
+
+        // 1. White noise blast wave through lowpass sweep
+        const bufLen = Math.floor(this.ctx.sampleRate * dur);
+        const buf = this.ctx.createBuffer(1, bufLen, this.ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.45));
+        }
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buf;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(950 * intensity, now);
+        filter.frequency.exponentialRampToValueAtTime(75, now + dur);
+
+        const nGain = this.ctx.createGain();
+        nGain.gain.setValueAtTime(Math.min(0.45, 0.32 * intensity), now);
+        nGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        noise.connect(filter);
+        filter.connect(nGain);
+        nGain.connect(this.ctx.destination);
+        noise.start(now);
+        noise.stop(now + dur);
+
+        // 2. Deep sub-bass concussion thump
+        const sub = this.ctx.createOscillator();
+        const sGain = this.ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(135, now);
+        sub.frequency.exponentialRampToValueAtTime(26, now + dur);
+
+        sGain.gain.setValueAtTime(Math.min(0.5, 0.36 * intensity), now);
+        sGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        sub.connect(sGain);
+        sGain.connect(this.ctx.destination);
+        sub.start(now);
+        sub.stop(now + dur);
+      }
+
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const chord = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+        chord.forEach((freq, idx) => {
+          const t = this.ctx.currentTime + idx * 0.09;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, t);
+
+          gain.gain.setValueAtTime(0.22, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.58);
+        });
+      }
+    }
+
+    const sound = new RetroAudioEngine();
+    const unlockAudio = () => {
+      sound.init();
+    };
+    window.addEventListener('pointerdown', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+
+    /* ==========================================================================
+       PHASER 3 GAME ENGINE SCENE
+       ========================================================================== */
+    class SolarSystemGameScene extends Phaser.Scene {
+      constructor() {
+        super({ key: 'SolarSystemGameScene' });
+      }
+
+      init() {
+        this.score = 0;
+        this.streak = 0;
+        this.bestStreak = 0;
+        this.errors = 0;
+        this.placedCount = 0;
+        this.showLabels = true;
+        this.isGameWon = false;
+
+        // Session Facts & Spaceship Progression
+        this.sessionFacts = {};
+        this.shipNextTargetOrder = 1;
+        this.isShipMoving = false;
+        this.isBossActive = false;
+        this.bossHP = 4;
+        this.currentTriviaIndex = 0;
+        this.activeTriviaList = [];
+
+        this.orbitTargets = [];
+        this.planets = [];
+      }
+
+      create() {
+        // 1. Pick a random scientific fact for each of the 8 planets for this session
+        PLANET_SPECS.forEach(p => {
+          const pool = PLANET_FACTS_DATABASE[p.id];
+          const chosen = Phaser.Utils.Array.GetRandom(pool);
+          this.sessionFacts[p.id] = chosen;
+        });
+
+        // 2. Procedural Illustrated Cartoon Textures
+        this.generateHighEndTextures();
+
+        // 3. Cosmic Space Background with glowing nebulae & twinkling stars
+        this.buildCosmicBackground();
+
+        // 4. Background Ambience (Asteroids, Satellites, Comets & Starman Easter Egg)
+        this.buildSpaceDebrisAndSatellites();
+        this.startCometScheduler();
+        this.startEasterEggScheduler();
+
+        // 5. Sun and Concentric Glowing Orbit Rings (Centered at Sun X: 80, Y: 310)
+        this.sunCenter = { x: 80, y: 310 };
+        this.buildSolarSystem();
+
+        // 6. Droppable Frosted-Glass Target Docks
+        this.buildDropTargets();
+
+        // 7. Draggable Planets Shelf Tray at Bottom
+        this.buildBottomTray();
+
+        // 8. CTSEO Starship Sprite (Starts parked at the Sun)
+        this.buildStarship();
+
+        // 9. Input & Drag Events
+        this.setupDragEvents();
+
+        // 10. Sync HUD & Apply Default Language
+        this.applyLanguage(currentLanguage);
+        this.syncHUD();
+      }
+
+      /* ------------------------------------------------------------------------
+         HIGH-END ILLUSTRATED TEXTURES GENERATOR (Spherical shading & details)
+         ------------------------------------------------------------------------ */
+      generateHighEndTextures() {
+        // --- 1. Dynamic Radiant Sun (240x240) ---
+        if (!this.textures.exists('tex_sun')) {
+          const sunTex = this.textures.createCanvas('tex_sun', 240, 240);
+          const ctx = sunTex.context;
+
+          // Corona Glow
+          const corona = ctx.createRadialGradient(120, 120, 45, 120, 120, 115);
+          corona.addColorStop(0, '#fef08a');
+          corona.addColorStop(0.4, '#f59e0b');
+          corona.addColorStop(0.7, 'rgba(239, 68, 68, 0.4)');
+          corona.addColorStop(1, 'rgba(245, 158, 11, 0)');
+          ctx.fillStyle = corona;
+          ctx.beginPath();
+          ctx.arc(120, 120, 115, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Radiant Sun Core
+          const core = ctx.createRadialGradient(105, 105, 10, 120, 120, 75);
+          core.addColorStop(0, '#ffffff');
+          core.addColorStop(0.2, '#fef08a');
+          core.addColorStop(0.65, '#f59e0b');
+          core.addColorStop(1, '#ea580c');
+          ctx.fillStyle = core;
+          ctx.beginPath();
+          ctx.arc(120, 120, 75, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Border edge
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = '#fef08a';
+          ctx.stroke();
+
+          // Solar Granules / Cartoon spots
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.beginPath();
+          ctx.arc(100, 95, 18, 0, Math.PI * 2);
+          ctx.fill();
+
+          sunTex.refresh();
+        }
+
+        // --- 2. 3D-Shaded Vector Planets (With Crescent Shading & Atmosphere) ---
+        PLANET_SPECS.forEach(p => {
+          const key = `tex_${p.id}`;
+          if (this.textures.exists(key)) return;
+
+          const pad = p.hasRings ? 55 : 28;
+          const size = Math.ceil(p.radius * 2 + pad * 2);
+          const cx = size / 2;
+          const cy = size / 2;
+
+          const pTex = this.textures.createCanvas(key, size, size);
+          const ctx = pTex.context;
+
+          // Saturn Back Rings
+          if (p.hasRings) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, p.radius * 2.3, p.radius * 0.7, -0.22, 0, Math.PI * 2);
+            ctx.lineWidth = 9;
+            ctx.strokeStyle = 'rgba(180, 83, 9, 0.85)';
+            ctx.stroke();
+            // Cassini division
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#0a0f26';
+            ctx.stroke();
+            // Inner ring
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#fef08a';
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Uranus vertical ring back
+          if (p.hasTiltRings) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, p.radius * 0.45, p.radius * 1.8, 0.2, 0, Math.PI * 2);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'rgba(165, 243, 252, 0.55)';
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Planet Main Sphere Base
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, p.radius, 0, Math.PI * 2);
+          ctx.clip();
+
+          // 3D Spherical Volume Gradient (Light source from top-left toward Sun)
+          const sphereGrad = ctx.createRadialGradient(
+            cx - p.radius * 0.35, cy - p.radius * 0.35, p.radius * 0.1,
+            cx, cy, p.radius
+          );
+          sphereGrad.addColorStop(0, '#ffffff');
+          sphereGrad.addColorStop(0.25, p.primaryColor);
+          sphereGrad.addColorStop(1, p.shadowColor);
+          ctx.fillStyle = sphereGrad;
+          ctx.fill();
+
+          // Surface Specific Illustrated Details
+          if (p.id === 'mercury') {
+            ctx.fillStyle = 'rgba(51, 65, 85, 0.5)';
+            ctx.beginPath();
+            ctx.arc(cx - 5, cy - 4, 3.5, 0, Math.PI * 2);
+            ctx.arc(cx + 4, cy + 3, 4.5, 0, Math.PI * 2);
+            ctx.arc(cx - 2, cy + 5, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            // Crater white rim highlights
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          } else if (p.id === 'venus') {
+            ctx.fillStyle = 'rgba(254, 243, 199, 0.4)';
+            ctx.fillRect(cx - p.radius, cy - 6, p.radius * 2, 4);
+            ctx.fillRect(cx - p.radius, cy + 4, p.radius * 2, 5);
+          } else if (p.id === 'earth') {
+            // Continents
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.arc(cx - 5, cy - 3, 7, 0, Math.PI * 2);
+            ctx.arc(cx + 6, cy + 5, 8, 0, Math.PI * 2);
+            ctx.fill();
+            // Cloud swirls
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.beginPath();
+            ctx.ellipse(cx - 2, cy - 8, p.radius * 0.6, 2.5, -0.1, 0, Math.PI * 2);
+            ctx.ellipse(cx + 1, cy + 6, p.radius * 0.5, 2.5, 0.1, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (p.id === 'mars') {
+            // Ice Cap
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(cx, cy - p.radius + 3, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            // Valles Marineris canyon
+            ctx.strokeStyle = '#450a0a';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(cx - 8, cy + 2);
+            ctx.lineTo(cx + 7, cy + 4);
+            ctx.stroke();
+          } else if (p.id === 'jupiter') {
+            // Terracotta and gold bands
+            ctx.fillStyle = 'rgba(180, 83, 9, 0.7)';
+            ctx.fillRect(cx - p.radius, cy - 14, p.radius * 2, 6);
+            ctx.fillRect(cx - p.radius, cy + 3, p.radius * 2, 7);
+            ctx.fillRect(cx - p.radius, cy + 16, p.radius * 2, 5);
+            // Great Red Spot
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.ellipse(cx + 10, cy + 7, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          } else if (p.id === 'saturn') {
+            ctx.fillStyle = 'rgba(254, 240, 138, 0.4)';
+            ctx.fillRect(cx - p.radius, cy - 5, p.radius * 2, 4);
+            ctx.fillRect(cx - p.radius, cy + 6, p.radius * 2, 5);
+          } else if (p.id === 'uranus') {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(cx - p.radius, cy - 3, p.radius * 2, 3);
+          } else if (p.id === 'neptune') {
+            ctx.fillStyle = 'rgba(96, 165, 250, 0.6)';
+            ctx.fillRect(cx - p.radius, cy - 4, p.radius * 2, 3);
+            // Dark spot
+            ctx.fillStyle = '#1e1b4b';
+            ctx.beginPath();
+            ctx.arc(cx + 5, cy + 5, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Crescent Dark Shadow for authentic 3D celestial look
+          ctx.fillStyle = 'rgba(3, 7, 18, 0.42)';
+          ctx.beginPath();
+          ctx.arc(cx + p.radius * 0.4, cy, p.radius, -Math.PI / 2, Math.PI / 2, false);
+          ctx.arc(cx, cy, p.radius, Math.PI / 2, -Math.PI / 2, false);
+          ctx.fill();
+
+          ctx.restore(); // Restore clip
+
+          // Saturn Front Overlapping Ring
+          if (p.hasRings) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(cx, cy + 1, p.radius * 2.3, p.radius * 0.7, -0.22, 0, Math.PI);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#fef08a';
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Atmospheric Outer Rim
+          ctx.beginPath();
+          ctx.arc(cx, cy, p.radius, 0, Math.PI * 2);
+          ctx.lineWidth = 2.5;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.stroke();
+
+          pTex.refresh();
+        });
+
+        // --- 3. Epic CTSEO Delta Starfighter Sprite (High-Detail In-game Ship) ---
+        if (!this.textures.exists('tex_hero_ship')) {
+          const shipTex = this.textures.createCanvas('tex_hero_ship', 96, 72);
+          const c = shipTex.context;
+
+          // Twin Wingtip Photon Cannon Barrels
+          c.fillStyle = '#64748b';
+          c.fillRect(46, 7, 22, 4);
+          c.fillRect(46, 61, 22, 4);
+          // Glowing cyan emitter tips
+          c.fillStyle = '#38bdf8';
+          c.beginPath();
+          c.arc(68, 9, 2.5, 0, Math.PI * 2);
+          c.arc(68, 63, 2.5, 0, Math.PI * 2);
+          c.fill();
+
+          // Outer Swept Delta Wings (Dark metallic under-frame)
+          c.fillStyle = '#334155';
+          c.beginPath();
+          c.moveTo(12, 16);
+          c.lineTo(34, 4);
+          c.lineTo(66, 22);
+          c.lineTo(92, 36);
+          c.lineTo(66, 50);
+          c.lineTo(34, 68);
+          c.lineTo(12, 56);
+          c.lineTo(22, 36);
+          c.closePath();
+          c.fill();
+
+          // Main Armored Delta Fuselage & Wings (3D Metallic Gradient)
+          const hullGrad = c.createLinearGradient(14, 10, 88, 62);
+          hullGrad.addColorStop(0, '#ffffff');
+          hullGrad.addColorStop(0.45, '#e2e8f0');
+          hullGrad.addColorStop(0.85, '#94a3b8');
+          hullGrad.addColorStop(1, '#475569');
+          c.fillStyle = hullGrad;
+          c.beginPath();
+          c.moveTo(16, 18);
+          c.lineTo(36, 7);
+          c.lineTo(92, 36);
+          c.lineTo(36, 65);
+          c.lineTo(16, 54);
+          c.lineTo(25, 36);
+          c.closePath();
+          c.fill();
+          c.lineWidth = 1.5;
+          c.strokeStyle = '#64748b';
+          c.stroke();
+
+          // Orange & CTSEO Turquoise Aerodynamic Wing Trim Stripes (Matching Splashscreen)
+          c.fillStyle = '#f97316';
+          c.beginPath();
+          c.moveTo(24, 18);
+          c.lineTo(37, 11);
+          c.lineTo(74, 30);
+          c.lineTo(64, 31);
+          c.closePath();
+          c.fill();
+          c.beginPath();
+          c.moveTo(24, 54);
+          c.lineTo(37, 61);
+          c.lineTo(74, 42);
+          c.lineTo(64, 41);
+          c.closePath();
+          c.fill();
+
+          // CTSEO Turquoise Inner Armor Inlays
+          c.fillStyle = '#0284c7';
+          c.beginPath();
+          c.moveTo(28, 24);
+          c.lineTo(76, 36);
+          c.lineTo(28, 48);
+          c.lineTo(34, 36);
+          c.closePath();
+          c.fill();
+
+          // Dual Rear Ion Thruster Nozzles
+          c.fillStyle = '#1e293b';
+          c.fillRect(11, 24, 9, 8);
+          c.fillRect(11, 40, 9, 8);
+          c.fillStyle = '#38bdf8';
+          c.fillRect(9, 25, 4, 6);
+          c.fillRect(9, 41, 4, 6);
+
+          // Panoramic Glass Cockpit Canopy
+          const glassGrad = c.createLinearGradient(34, 28, 66, 44);
+          glassGrad.addColorStop(0, '#0284c7');
+          glassGrad.addColorStop(0.4, '#38bdf8');
+          glassGrad.addColorStop(0.8, '#0369a1');
+          glassGrad.addColorStop(1, '#0f172a');
+          c.fillStyle = glassGrad;
+          c.beginPath();
+          c.moveTo(34, 31);
+          c.quadraticCurveTo(52, 24, 70, 36);
+          c.quadraticCurveTo(52, 48, 34, 41);
+          c.closePath();
+          c.fill();
+          c.lineWidth = 1.5;
+          c.strokeStyle = '#bae6fd';
+          c.stroke();
+
+          // Canopy Specular Highlight Glint
+          c.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+          c.lineWidth = 1.8;
+          c.beginPath();
+          c.moveTo(40, 31);
+          c.quadraticCurveTo(52, 28, 62, 34);
+          c.stroke();
+
+          shipTex.refresh();
+        }
+
+        // --- 3b. Dynamic Twin-Core Ion Thruster Flame Texture ---
+        if (!this.textures.exists('tex_thruster_flame')) {
+          const flameTex = this.textures.createCanvas('tex_thruster_flame', 54, 34);
+          const c = flameTex.context;
+
+          // Outer electric blue plasma aura (pointing left from x=52 to x=2)
+          const outerGrad = c.createLinearGradient(52, 17, 2, 17);
+          outerGrad.addColorStop(0, 'rgba(56, 189, 248, 0.98)');
+          outerGrad.addColorStop(0.45, 'rgba(14, 165, 233, 0.8)');
+          outerGrad.addColorStop(0.8, 'rgba(37, 99, 235, 0.4)');
+          outerGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+          c.fillStyle = outerGrad;
+          c.beginPath();
+          c.moveTo(52, 3);
+          c.lineTo(1, 17);
+          c.lineTo(52, 31);
+          c.closePath();
+          c.fill();
+
+          // Inner white/gold shock-diamond core
+          const coreGrad = c.createLinearGradient(52, 17, 14, 17);
+          coreGrad.addColorStop(0, '#ffffff');
+          coreGrad.addColorStop(0.45, '#fef08a');
+          coreGrad.addColorStop(0.85, '#38bdf8');
+          coreGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+          c.fillStyle = coreGrad;
+          c.beginPath();
+          c.moveTo(52, 9);
+          c.lineTo(10, 17);
+          c.lineTo(52, 25);
+          c.closePath();
+          c.fill();
+
+          flameTex.refresh();
+        }
+
+        // --- 4. Commander Zorgon Alien Dreadnought Warship (Epic Boss Sprite) ---
+        if (!this.textures.exists('tex_alien_ufo')) {
+          const ufoTex = this.textures.createCanvas('tex_alien_ufo', 124, 90);
+          const c = ufoTex.context;
+
+          // Rear Violet Plasma Thruster Plumes (matching splashscreen dreadnought)
+          const rearGlow = c.createRadialGradient(95, 45, 5, 95, 45, 38);
+          rearGlow.addColorStop(0, 'rgba(232, 121, 249, 0.95)');
+          rearGlow.addColorStop(0.5, 'rgba(168, 85, 247, 0.5)');
+          rearGlow.addColorStop(1, 'rgba(168, 85, 247, 0)');
+          c.fillStyle = rearGlow;
+          c.beginPath();
+          c.ellipse(92, 22, 22, 7, -0.25, 0, Math.PI * 2);
+          c.ellipse(92, 68, 22, 7, 0.25, 0, Math.PI * 2);
+          c.fill();
+
+          // Swept Biomechanical Dreadnought Wings (Dark Obsidian/Violet Armor)
+          const wingGrad = c.createLinearGradient(12, 10, 108, 80);
+          wingGrad.addColorStop(0, '#3b0764');
+          wingGrad.addColorStop(0.4, '#6b21a8');
+          wingGrad.addColorStop(0.75, '#1e1b4b');
+          wingGrad.addColorStop(1, '#090d16');
+          c.fillStyle = wingGrad;
+          c.beginPath();
+          c.moveTo(8, 45);     // Prow tip pointing left toward player
+          c.lineTo(38, 18);
+          c.lineTo(98, 6);     // Upper swept wingtip
+          c.lineTo(82, 30);
+          c.lineTo(106, 45);   // Rear spine
+          c.lineTo(82, 60);
+          c.lineTo(98, 84);    // Lower swept wingtip
+          c.lineTo(38, 72);
+          c.closePath();
+          c.fill();
+          c.lineWidth = 2;
+          c.strokeStyle = '#c084fc';
+          c.stroke();
+
+          // Armored Wing Ribs & Neon Magenta Energy Channels
+          c.strokeStyle = '#ec4899';
+          c.lineWidth = 2;
+          c.beginPath();
+          c.moveTo(26, 36); c.lineTo(84, 14);
+          c.moveTo(26, 54); c.lineTo(84, 76);
+          c.stroke();
+
+          // Twin Heavy Forward Plasma Blaster Nodes
+          c.fillStyle = '#f43f5e';
+          c.beginPath();
+          c.arc(28, 24, 5, 0, Math.PI * 2);
+          c.arc(28, 66, 5, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = '#fecdd3';
+          c.beginPath();
+          c.arc(27, 24, 2.2, 0, Math.PI * 2);
+          c.arc(27, 66, 2.2, 0, Math.PI * 2);
+          c.fill();
+
+          // Central Armored Hull Disc & Prow Visor
+          const coreHull = c.createRadialGradient(54, 45, 4, 58, 45, 30);
+          coreHull.addColorStop(0, '#581c87');
+          coreHull.addColorStop(0.7, '#2e1065');
+          coreHull.addColorStop(1, '#0f172a');
+          c.fillStyle = coreHull;
+          c.beginPath();
+          c.ellipse(56, 45, 32, 20, 0, 0, Math.PI * 2);
+          c.fill();
+          c.lineWidth = 1.8;
+          c.strokeStyle = '#a855f7';
+          c.stroke();
+
+          // Menacing Crimson Dreadnought Eyes on Prow (just like the splashscreen!)
+          c.fillStyle = '#ef4444';
+          c.beginPath();
+          c.moveTo(22, 38); c.lineTo(34, 33); c.lineTo(31, 41); c.closePath();
+          c.moveTo(22, 52); c.lineTo(34, 57); c.lineTo(31, 49); c.closePath();
+          c.fill();
+          c.fillStyle = '#fef08a';
+          c.beginPath();
+          c.arc(28, 37, 1.5, 0, Math.PI * 2);
+          c.arc(28, 53, 1.5, 0, Math.PI * 2);
+          c.fill();
+
+          // Translucent Emerald Command Cockpit & Commander Zorgon Silhouette
+          const domeGrad = c.createRadialGradient(58, 42, 2, 60, 45, 16);
+          domeGrad.addColorStop(0, 'rgba(74, 222, 128, 0.9)');
+          domeGrad.addColorStop(0.65, 'rgba(22, 163, 74, 0.75)');
+          domeGrad.addColorStop(1, 'rgba(5, 46, 22, 0.95)');
+          c.fillStyle = domeGrad;
+          c.beginPath();
+          c.ellipse(60, 45, 15, 12, 0, 0, Math.PI * 2);
+          c.fill();
+          c.lineWidth = 1.5;
+          c.strokeStyle = '#86efac';
+          c.stroke();
+
+          // Commander Zorgon head & glowing alien eyes inside dome
+          c.fillStyle = '#052e16';
+          c.beginPath();
+          c.ellipse(59, 45, 7, 6, 0, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = '#4ade80';
+          c.beginPath();
+          c.ellipse(56, 43, 2.2, 1.4, -0.3, 0, Math.PI * 2);
+          c.ellipse(56, 47, 2.2, 1.4, 0.3, 0, Math.PI * 2);
+          c.fill();
+
+          ufoTex.refresh();
+        }
+
+        // --- 5. Asteroids, Orbital Satellites & Easter Egg Textures ---
+        if (!this.textures.exists('tex_asteroid_1')) {
+          const a1 = this.textures.createCanvas('tex_asteroid_1', 30, 30);
+          const c = a1.context;
+          c.fillStyle = '#64748b';
+          c.beginPath();
+          c.moveTo(15, 3); c.lineTo(25, 7); c.lineTo(27, 20); c.lineTo(19, 27); c.lineTo(7, 25); c.lineTo(3, 13);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#334155';
+          c.beginPath();
+          c.arc(11, 11, 3.5, 0, Math.PI * 2);
+          c.arc(19, 18, 4, 0, Math.PI * 2);
+          c.fill();
+          a1.refresh();
+        }
+
+        if (!this.textures.exists('tex_satellite')) {
+          const sat = this.textures.createCanvas('tex_satellite', 56, 36);
+          const c = sat.context;
+
+          // Gold support boom rod
+          c.strokeStyle = '#eab308';
+          c.lineWidth = 2;
+          c.beginPath();
+          c.moveTo(4, 18);
+          c.lineTo(52, 18);
+          c.stroke();
+
+          // Left & Right Solar Panel Wings (Deep sapphire blue with cyan grid)
+          c.fillStyle = '#1d4ed8';
+          c.fillRect(3, 10, 17, 16);
+          c.fillRect(36, 10, 17, 16);
+          c.strokeStyle = '#38bdf8';
+          c.lineWidth = 1;
+          c.strokeRect(3, 10, 17, 16);
+          c.strokeRect(36, 10, 17, 16);
+
+          // Solar cell grid lines
+          c.beginPath();
+          c.moveTo(3, 18); c.lineTo(20, 18);
+          c.moveTo(11.5, 10); c.lineTo(11.5, 26);
+          c.moveTo(36, 18); c.lineTo(53, 18);
+          c.moveTo(44.5, 10); c.lineTo(44.5, 26);
+          c.stroke();
+
+          // Central metallic foil module bus
+          c.fillStyle = '#cbd5e1';
+          c.fillRect(22, 12, 12, 12);
+          c.fillStyle = '#f59e0b';
+          c.fillRect(24, 14, 8, 8);
+
+          // Parabolic Dish & Telemetry Beacon at top
+          c.strokeStyle = '#e2e8f0';
+          c.lineWidth = 1.8;
+          c.beginPath();
+          c.arc(28, 9, 5, 0.2, Math.PI - 0.2);
+          c.stroke();
+          c.beginPath();
+          c.moveTo(28, 9);
+          c.lineTo(28, 3);
+          c.stroke();
+          c.fillStyle = '#ef4444';
+          c.beginPath();
+          c.arc(28, 3, 2, 0, Math.PI * 2);
+          c.fill();
+
+          sat.refresh();
+        }
+
+        if (!this.textures.exists('tex_astronaut')) {
+          const astro = this.textures.createCanvas('tex_astronaut', 46, 48);
+          const c = astro.context;
+
+          // Wavy drifting umbilical tether cord
+          c.strokeStyle = 'rgba(203, 213, 225, 0.75)';
+          c.lineWidth = 1.8;
+          c.beginPath();
+          c.moveTo(20, 28);
+          c.quadraticCurveTo(8, 34, 6, 44);
+          c.stroke();
+
+          // PLSS Life-Support Backpack
+          c.fillStyle = '#94a3b8';
+          c.fillRect(14, 17, 18, 15);
+
+          // Outstretched Floating Legs
+          c.strokeStyle = '#f8fafc';
+          c.lineWidth = 4.5;
+          c.lineCap = 'round';
+          c.beginPath();
+          c.moveTo(19, 31); c.lineTo(15, 41);
+          c.moveTo(27, 31); c.lineTo(32, 40);
+          c.stroke();
+          // Turquoise boots
+          c.fillStyle = '#0284c7';
+          c.beginPath();
+          c.arc(14, 42, 2.8, 0, Math.PI * 2);
+          c.arc(33, 41, 2.8, 0, Math.PI * 2);
+          c.fill();
+
+          // Outstretched Waving Arms
+          c.beginPath();
+          c.moveTo(16, 21); c.lineTo(7, 15);
+          c.moveTo(30, 21); c.lineTo(39, 16);
+          c.stroke();
+          // Turquoise gloves
+          c.beginPath();
+          c.arc(6, 14, 2.5, 0, Math.PI * 2);
+          c.arc(40, 15, 2.5, 0, Math.PI * 2);
+          c.fill();
+
+          // Spacesuit Torso (White with CTSEO Turquoise chest pack)
+          c.fillStyle = '#f8fafc';
+          c.beginPath();
+          c.roundRect(16, 18, 14, 15, 4);
+          c.fill();
+          c.fillStyle = '#0284c7';
+          c.fillRect(19, 21, 8, 6);
+          c.fillStyle = '#38bdf8';
+          c.fillRect(21, 23, 4, 2);
+
+          // Astronaut Helmet
+          c.fillStyle = '#ffffff';
+          c.beginPath();
+          c.arc(23, 12, 8.5, 0, Math.PI * 2);
+          c.fill();
+          c.lineWidth = 1.2;
+          c.strokeStyle = '#cbd5e1';
+          c.stroke();
+
+          // Reflective Gold/Cyan Visor Shield
+          const visorGrad = c.createLinearGradient(17, 8, 29, 16);
+          visorGrad.addColorStop(0, '#f59e0b');
+          visorGrad.addColorStop(0.6, '#0284c7');
+          visorGrad.addColorStop(1, '#0f172a');
+          c.fillStyle = visorGrad;
+          c.beginPath();
+          c.ellipse(23, 12, 6, 4.8, 0, 0, Math.PI * 2);
+          c.fill();
+
+          // Visor Glint
+          c.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          c.beginPath();
+          c.arc(20.5, 10, 1.6, 0, Math.PI * 2);
+          c.fill();
+
+          astro.refresh();
+        }
+
+        if (!this.textures.exists('tex_tesla')) {
+          const car = this.textures.createCanvas('tex_tesla', 52, 28);
+          const c = car.context;
+          c.fillStyle = '#dc2626';
+          c.beginPath();
+          c.moveTo(6, 18); c.lineTo(12, 12); c.lineTo(38, 12); c.lineTo(47, 16); c.lineTo(46, 21); c.lineTo(6, 21);
+          c.closePath();
+          c.fill();
+          c.fillStyle = 'rgba(56, 189, 248, 0.7)';
+          c.beginPath();
+          c.moveTo(20, 12); c.lineTo(27, 6); c.lineTo(33, 6); c.lineTo(35, 12);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#1e293b';
+          c.beginPath();
+          c.arc(14, 21, 5, 0, Math.PI * 2);
+          c.arc(38, 21, 5, 0, Math.PI * 2);
+          c.fill();
+          car.refresh();
+        }
+
+        if (!this.textures.exists('tex_comet_head')) {
+          const ch = this.textures.createCanvas('tex_comet_head', 28, 28);
+          const c = ch.context;
+          const rad = c.createRadialGradient(14, 14, 2, 14, 14, 13);
+          rad.addColorStop(0, '#ffffff');
+          rad.addColorStop(0.4, '#67e8f9');
+          rad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+          c.fillStyle = rad;
+          c.beginPath();
+          c.arc(14, 14, 13, 0, Math.PI * 2);
+          c.fill();
+          ch.refresh();
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         COSMIC STARFIELD BACKGROUND
+         ------------------------------------------------------------------------ */
+      buildCosmicBackground() {
+        const bg = this.add.graphics();
+        bg.fillGradientStyle(0x020512, 0x050b24, 0x070e2f, 0x0d0928, 1);
+        bg.fillRect(0, 0, 1280, 720);
+
+        // Ambient glowing nebulae
+        bg.fillStyle(0x0284c7, 0.12);
+        bg.fillCircle(480, 260, 280);
+        bg.fillStyle(0x7c3aed, 0.09);
+        bg.fillCircle(920, 320, 320);
+
+        // Twinkling stars
+        for (let i = 0; i < 95; i++) {
+          const x = Phaser.Math.Between(0, 1280);
+          const y = Phaser.Math.Between(0, 720);
+          const r = Phaser.Math.FloatBetween(1, 2.8);
+          const star = this.add.circle(x, y, r, 0xffffff, Phaser.Math.FloatBetween(0.3, 0.95));
+
+          this.tweens.add({
+            targets: star,
+            alpha: { from: star.alpha, to: 0.1 },
+            scale: { from: 1, to: 1.4 },
+            duration: Phaser.Math.Between(1000, 2600),
+            yoyo: true,
+            repeat: -1,
+            delay: Phaser.Math.Between(0, 1500)
+          });
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         BACKGROUND AMBIENT OBJECTS: ASTEROIDS & ORBITAL SATELLITES (Depth: 1)
+         ------------------------------------------------------------------------ */
+      buildSpaceDebrisAndSatellites() {
+        const ambientObjects = [
+          // Floating Asteroids
+          { x: 380, y: 110, tex: 'tex_asteroid_1', scale: 0.85, alpha: 0.65, dur: 14000, dx: 30, dy: -18, rotDur: 22000 },
+          { x: 740, y: 130, tex: 'tex_asteroid_1', scale: 0.75, alpha: 0.65, dur: 18000, dx: -25, dy: 22, rotDur: 25000 },
+          { x: 990, y: 220, tex: 'tex_asteroid_1', scale: 0.65, alpha: 0.65, dur: 16000, dx: 35, dy: 15, rotDur: 20000 },
+          // Decorative Orbital Satellites
+          { x: 260, y: 495, tex: 'tex_satellite',  scale: 0.82, alpha: 0.82, dur: 15000, dx: 38, dy: -22, rotDur: 32000 },
+          { x: 615, y: 85,  tex: 'tex_satellite',  scale: 0.76, alpha: 0.78, dur: 19000, dx: -42, dy: 18, rotDur: 36000 },
+          { x: 1125, y: 145, tex: 'tex_satellite', scale: 0.85, alpha: 0.85, dur: 17000, dx: -30, dy: 28, rotDur: 29000 }
+        ];
+
+        ambientObjects.forEach(cfg => {
+          const obj = this.add.image(cfg.x, cfg.y, cfg.tex)
+            .setScale(cfg.scale)
+            .setAlpha(cfg.alpha)
+            .setDepth(1);
+
+          this.tweens.add({
+            targets: obj,
+            x: cfg.x + cfg.dx,
+            y: cfg.y + cfg.dy,
+            duration: cfg.dur,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+          });
+
+          this.tweens.add({
+            targets: obj,
+            angle: 360,
+            duration: cfg.rotDur,
+            repeat: -1
+          });
+        });
+      }
+
+      startCometScheduler() {
+        const fireComet = () => {
+          if (!this.scene.isActive()) return;
+
+          const startX = Phaser.Math.Between(200, 1100);
+          const startY = -40;
+          const endX = startX - Phaser.Math.Between(350, 600);
+          const endY = 760;
+
+          const tail = this.add.graphics().setDepth(1);
+          const head = this.add.image(startX, startY, 'tex_comet_head').setScale(1.1).setDepth(1);
+          const trailPoints = [];
+
+          this.tweens.add({
+            targets: head,
+            x: endX,
+            y: endY,
+            duration: Phaser.Math.Between(1300, 1800),
+            ease: 'Linear',
+            onUpdate: () => {
+              trailPoints.push({ x: head.x, y: head.y, alpha: 0.8 });
+              if (trailPoints.length > 20) trailPoints.shift();
+
+              tail.clear();
+              for (let i = 0; i < trailPoints.length - 1; i++) {
+                const p1 = trailPoints[i];
+                const p2 = trailPoints[i + 1];
+                const frac = i / trailPoints.length;
+                tail.lineStyle(frac * 5 + 0.5, 0x38bdf8, frac * 0.7);
+                tail.lineBetween(p1.x, p1.y, p2.x, p2.y);
+              }
+            },
+            onComplete: () => {
+              tail.destroy();
+              head.destroy();
+              this.time.delayedCall(Phaser.Math.Between(11000, 19000), fireComet);
+            }
+          });
+        };
+
+        this.time.delayedCall(5000, fireComet);
+      }
+
+      startEasterEggScheduler() {
+        const spawnTeslaRoadster = () => {
+          if (!this.scene.isActive()) return;
+          const tesla = this.add.image(-70, Phaser.Math.Between(150, 440), 'tex_tesla')
+            .setScale(0.82)
+            .setAlpha(0.88)
+            .setAngle(14)
+            .setDepth(1);
+
+          this.tweens.add({
+            targets: tesla,
+            x: 1350,
+            y: tesla.y + 40,
+            angle: 26,
+            duration: 26000,
+            ease: 'Linear',
+            onComplete: () => {
+              tesla.destroy();
+              this.time.delayedCall(Phaser.Math.Between(45000, 75000), spawnTeslaRoadster);
+            }
+          });
+        };
+
+        const spawnDriftingAstronaut = () => {
+          if (!this.scene.isActive()) return;
+          const fromRight = Math.random() < 0.5;
+          const startX = fromRight ? 1340 : -60;
+          const endX = fromRight ? -60 : 1340;
+          const startY = Phaser.Math.Between(110, 480);
+          const endY = Phaser.Math.Between(110, 480);
+
+          const astro = this.add.image(startX, startY, 'tex_astronaut')
+            .setScale(0.88)
+            .setAlpha(0.92)
+            .setDepth(1);
+
+          // Gentle zero-gravity tumble across deep space
+          this.tweens.add({
+            targets: astro,
+            x: endX,
+            y: endY,
+            angle: fromRight ? -360 : 360,
+            duration: Phaser.Math.Between(22000, 29000),
+            ease: 'Linear',
+            onComplete: () => {
+              astro.destroy();
+              this.time.delayedCall(Phaser.Math.Between(28000, 48000), spawnDriftingAstronaut);
+            }
+          });
+        };
+
+        this.time.delayedCall(8000, spawnDriftingAstronaut);
+        this.time.delayedCall(18000, spawnTeslaRoadster);
+      }
+
+      /* ------------------------------------------------------------------------
+         SOLAR SYSTEM BASE (SUN & NEON ORBITS)
+         ------------------------------------------------------------------------ */
+      buildSolarSystem() {
+        this.orbitGraphics = this.add.graphics();
+
+        PLANET_SPECS.forEach(p => {
+          this.orbitGraphics.lineStyle(2, 0x38bdf8, 0.32);
+
+          const steps = 90;
+          for (let i = 0; i < steps; i += 2) {
+            const startA = (i / steps) * Math.PI * 2;
+            const endA = ((i + 1) / steps) * Math.PI * 2;
+            this.orbitGraphics.beginPath();
+            this.orbitGraphics.arc(this.sunCenter.x, this.sunCenter.y, p.orbitRadius, startA, endA, false);
+            this.orbitGraphics.strokePath();
+          }
+        });
+
+        // Sun Sprite
+        this.sun = this.add.image(this.sunCenter.x, this.sunCenter.y, 'tex_sun').setOrigin(0.5);
+
+        this.tweens.add({
+          targets: this.sun,
+          scale: 1.05,
+          angle: 360,
+          duration: 32000,
+          repeat: -1
+        });
+
+        this.sunLabel = this.add.text(this.sunCenter.x, this.sunCenter.y + 92, I18N[currentLanguage].sunName, {
+          fontFamily: 'Fredoka, sans-serif',
+          fontSize: '14px',
+          fontStyle: 'bold',
+          color: '#fef08a'
+        }).setOrigin(0.5);
+      }
+
+      /* ------------------------------------------------------------------------
+         ORBIT DROP TARGETS (FROSTED GLASS DOCKS)
+         ------------------------------------------------------------------------ */
+      buildDropTargets() {
+        PLANET_SPECS.forEach(p => {
+          const tx = this.sunCenter.x + Math.cos(p.targetAngle) * p.orbitRadius;
+          const ty = this.sunCenter.y + Math.sin(p.targetAngle) * p.orbitRadius;
+
+          const targetHalo = this.add.graphics();
+          const targetHitRadius = Math.max(32, p.radius + 15);
+
+          targetHalo.lineStyle(2.5, 0x38bdf8, 0.55);
+          targetHalo.strokeCircle(0, 0, targetHitRadius);
+          targetHalo.fillStyle(0x0a102b, 0.7);
+          targetHalo.fillCircle(0, 0, targetHitRadius);
+
+          const orderNum = this.add.text(0, 0, `#${p.order}`, {
+            fontFamily: 'Orbitron, Fredoka, sans-serif',
+            fontSize: `${Math.max(13, p.radius * 0.7)}px`,
+            fontStyle: 'bold',
+            color: '#38bdf8'
+          }).setOrigin(0.5);
+
+          const slotContainer = this.add.container(tx, ty, [targetHalo, orderNum]);
+
+          this.tweens.add({
+            targets: targetHalo,
+            scale: { from: 0.96, to: 1.04 },
+            alpha: { from: 0.5, to: 0.9 },
+            duration: 1400 + p.order * 100,
+            yoyo: true,
+            repeat: -1
+          });
+
+          this.orbitTargets.push({
+            order: p.order,
+            planetId: p.id,
+            x: tx,
+            y: ty,
+            radius: targetHitRadius,
+            container: slotContainer,
+            halo: targetHalo,
+            numberText: orderNum,
+            isOccupied: false,
+            planetSprite: null
+          });
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         BOTTOM TRAY & SHUFFLED PLANETS
+         ------------------------------------------------------------------------ */
+      buildBottomTray() {
+        const trayY = 645;
+
+        const trayG = this.add.graphics();
+        trayG.fillStyle(0x060b24, 0.92);
+        trayG.lineStyle(2, 0x1e293b, 0.9);
+        trayG.fillRoundedRect(40, trayY - 50, 1200, 100, 24);
+        trayG.strokeRoundedRect(40, trayY - 50, 1200, 100, 24);
+
+        const shuffled = Phaser.Utils.Array.Shuffle([...PLANET_SPECS]);
+        const slotWidth = 1140 / 8;
+        const startX = 70 + slotWidth * 0.5;
+
+        shuffled.forEach((p, idx) => {
+          const px = startX + idx * slotWidth;
+          const py = trayY + 3;
+
+          const planetImg = this.add.image(px, py, `tex_${p.id}`)
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
+          this.input.setDraggable(planetImg);
+
+          const planetName = p.names[currentLanguage] || p.names.es;
+          const label = this.add.text(px, py + p.radius + 14, planetName, {
+            fontFamily: 'Fredoka, sans-serif',
+            fontSize: '12px',
+            fontStyle: 'bold',
+            color: '#f8fafc',
+            stroke: '#030712',
+            strokeThickness: 3
+          }).setOrigin(0.5);
+          label.setVisible(this.showLabels);
+
+          planetImg.spec = p;
+          planetImg.homeX = px;
+          planetImg.homeY = py;
+          planetImg.label = label;
+          planetImg.isPlaced = false;
+
+          this.planets.push(planetImg);
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         CTSEO EXPEDITION STARSHIP & THRUSTER PLUME
+         ------------------------------------------------------------------------ */
+      buildStarship() {
+        // Starts docked right at the Sun
+        this.starship = this.add.image(this.sunCenter.x + 60, this.sunCenter.y, 'tex_hero_ship')
+          .setScale(0.75)
+          .setDepth(15);
+
+        // Attached thruster flame behind the ship stern (origin at right edge so it extends backward)
+        this.thrusterFlame = this.add.image(this.starship.x, this.starship.y, 'tex_thruster_flame')
+          .setOrigin(1, 0.5)
+          .setScale(0.35, 0.6)
+          .setAlpha(0.4)
+          .setDepth(14);
+
+        this.thrusterStep = 0;
+
+        this.tweens.add({
+          targets: this.starship,
+          y: '+=6',
+          duration: 1200,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+          onUpdate: () => this.syncThrusterPosition(false)
+        });
+      }
+
+      syncThrusterPosition(isBoosting = false) {
+        if (!this.starship || !this.thrusterFlame) return;
+        const rot = this.starship.rotation;
+        const sternOffset = 34 * this.starship.scaleX;
+        const sternX = this.starship.x - Math.cos(rot) * sternOffset;
+        const sternY = this.starship.y - Math.sin(rot) * sternOffset;
+
+        this.thrusterFlame.setPosition(sternX, sternY);
+        this.thrusterFlame.setRotation(rot);
+
+        if (isBoosting) {
+          // Rapid plasma flicker + ion exhaust particles while moving
+          const flickerX = Phaser.Math.FloatBetween(1.15, 1.75) * this.starship.scaleX;
+          const flickerY = Phaser.Math.FloatBetween(0.95, 1.35) * this.starship.scaleY;
+          this.thrusterFlame.setScale(flickerX, flickerY);
+          this.thrusterFlame.setAlpha(Phaser.Math.FloatBetween(0.88, 1.0));
+
+          this.thrusterStep++;
+          if (this.thrusterStep % 2 === 0) {
+            const pColor = Phaser.Utils.Array.GetRandom([0x38bdf8, 0x7dd3fc, 0xfef08a, 0xffffff]);
+            const exhaust = this.add.circle(
+              sternX + Phaser.Math.Between(-4, 4),
+              sternY + Phaser.Math.Between(-4, 4),
+              Phaser.Math.FloatBetween(2.2, 4.5) * this.starship.scaleX,
+              pColor,
+              0.9
+            ).setDepth(14);
+
+            this.tweens.add({
+              targets: exhaust,
+              x: sternX - Math.cos(rot) * Phaser.Math.Between(18, 36),
+              y: sternY - Math.sin(rot) * Phaser.Math.Between(18, 36),
+              alpha: 0,
+              scale: 0.15,
+              duration: Phaser.Math.Between(240, 420),
+              ease: 'Quad.easeOut',
+              onComplete: () => exhaust.destroy()
+            });
+          }
+        } else {
+          // Subtle idle engine glow
+          this.thrusterFlame.setScale(0.42 * this.starship.scaleX, 0.65 * this.starship.scaleY);
+          this.thrusterFlame.setAlpha(0.45 * this.starship.alpha);
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         DRAG AND DROP LOGIC
+         ------------------------------------------------------------------------ */
+      setupDragEvents() {
+        this.input.on('dragstart', (pointer, gameObject) => {
+          if (gameObject.isPlaced) return;
+
+          sound.playPickup();
+          this.children.bringToTop(gameObject);
+          if (gameObject.label) this.children.bringToTop(gameObject.label);
+
+          this.tweens.add({
+            targets: gameObject,
+            scale: 1.25,
+            duration: 140,
+            ease: 'Back.easeOut'
+          });
+
+          this.orbitTargets.forEach(t => {
+            if (!t.isOccupied) {
+              t.halo.clear();
+              t.halo.lineStyle(3, 0xfacc15, 0.9);
+              t.halo.strokeCircle(0, 0, t.radius);
+            }
+          });
+        });
+
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+          if (gameObject.isPlaced) return;
+
+          gameObject.x = dragX;
+          gameObject.y = dragY;
+
+          if (gameObject.label) {
+            gameObject.label.x = dragX;
+            gameObject.label.y = dragY + gameObject.spec.radius + 14;
+          }
+        });
+
+        this.input.on('dragend', (pointer, gameObject) => {
+          if (gameObject.isPlaced) return;
+
+          this.restoreTargetHalos();
+
+          let closest = null;
+          let minDistance = 75;
+
+          this.orbitTargets.forEach(t => {
+            const dist = Phaser.Math.Distance.Between(gameObject.x, gameObject.y, t.x, t.y);
+            if (dist < minDistance && !t.isOccupied) {
+              closest = t;
+              minDistance = dist;
+            }
+          });
+
+          if (closest) {
+            if (closest.order === gameObject.spec.order) {
+              this.onCorrectDrop(gameObject, closest);
+            } else {
+              this.onWrongDrop(gameObject, closest);
+            }
+          } else {
+            this.returnToTray(gameObject);
+          }
+        });
+      }
+
+      restoreTargetHalos() {
+        this.orbitTargets.forEach(t => {
+          if (!t.isOccupied) {
+            t.halo.clear();
+            t.halo.lineStyle(2.5, 0x38bdf8, 0.55);
+            t.halo.strokeCircle(0, 0, t.radius);
+            t.halo.fillStyle(0x0a102b, 0.7);
+            t.halo.fillCircle(0, 0, t.radius);
+          }
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         DROP SUCCESS
+         ------------------------------------------------------------------------ */
+      onCorrectDrop(planet, target) {
+        planet.isPlaced = true;
+        this.input.setDraggable(planet, false);
+        planet.disableInteractive();
+
+        target.isOccupied = true;
+        target.planetSprite = planet;
+        this.placedCount++;
+
+        this.streak++;
+        if (this.streak > this.bestStreak) this.bestStreak = this.streak;
+
+        const bonus = this.streak * 50;
+        const totalAward = 100 + bonus;
+        this.score += totalAward;
+
+        sound.playCorrect(this.streak);
+
+        this.tweens.add({
+          targets: planet,
+          x: target.x,
+          y: target.y,
+          scaleX: 1.15,
+          scaleY: 0.9,
+          duration: 180,
+          ease: 'Back.easeOut',
+          onComplete: () => {
+            this.tweens.add({ targets: planet, scaleX: 1.0, scaleY: 1.0, duration: 150 });
+          }
+        });
+
+        if (planet.label) {
+          planet.label.x = target.x;
+          planet.label.y = target.y + planet.spec.radius + 12;
+        }
+
+        target.numberText.setVisible(false);
+        target.halo.clear();
+        target.halo.lineStyle(3, 0x10b981, 0.95);
+        target.halo.strokeCircle(0, 0, target.radius);
+        target.halo.fillStyle(0x064e3b, 0.45);
+        target.halo.fillCircle(0, 0, target.radius);
+
+        this.spawnConfetti(target.x, target.y);
+
+        const loc = I18N[currentLanguage];
+        const textMsg = this.streak > 1 ? `+${totalAward}!\n🔥 ${this.streak}x ${loc.streakBonusText}` : `+${totalAward}!`;
+        this.spawnFloatingScore(target.x, target.y - 35, textMsg, this.streak > 1 ? '#fbbf24' : '#34d399');
+
+        this.syncHUD();
+
+        // Check if spaceship can advance sequentially
+        this.checkAdvanceSpaceship();
+      }
+
+      /* ------------------------------------------------------------------------
+         SEQUENTIAL SPACESHIP ADVANCEMENT & EDUCATIONAL TRANSMISSIONS
+         ------------------------------------------------------------------------ */
+      checkAdvanceSpaceship() {
+        if (this.isShipMoving) return;
+
+        const nextTarget = this.orbitTargets.find(t => t.order === this.shipNextTargetOrder);
+        if (nextTarget && nextTarget.isOccupied) {
+          this.isShipMoving = true;
+
+          const angle = Phaser.Math.Angle.Between(this.starship.x, this.starship.y, nextTarget.x, nextTarget.y);
+          this.starship.setRotation(angle);
+          sound.playThruster(0.9);
+
+          this.tweens.add({
+            targets: this.starship,
+            x: nextTarget.x + 38,
+            y: nextTarget.y - 12,
+            duration: 900,
+            ease: 'Cubic.easeInOut',
+            onUpdate: () => this.syncThrusterPosition(true),
+            onComplete: () => {
+              this.isShipMoving = false;
+              this.syncThrusterPosition(false);
+              this.showFactTransmission(nextTarget.planetId);
+              this.shipNextTargetOrder++;
+            }
+          });
+        }
+      }
+
+      showFactTransmission(planetId) {
+        sound.playPickup();
+        this.activeFactPlanetId = planetId;
+        const spec = PLANET_SPECS.find(p => p.id === planetId);
+        const factEntry = this.sessionFacts[planetId];
+        if (!factEntry) return;
+
+        const modal = document.getElementById('fact-modal');
+        const pName = document.getElementById('fact-planet-name');
+        const pBody = document.getElementById('fact-modal-body');
+
+        pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
+        pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+
+        modal.classList.remove('hidden');
+
+        const contBtn = document.getElementById('btn-fact-continue');
+        contBtn.onclick = () => {
+          modal.classList.add('hidden');
+          this.activeFactPlanetId = null;
+          // If all 8 planets cleared and ship finished voyage, Commander Zorgon attacks!
+          if (this.placedCount === 8 && this.shipNextTargetOrder > 8) {
+            this.time.delayedCall(400, () => this.startBossBattle());
+          } else {
+            this.checkAdvanceSpaceship();
+          }
+        };
+      }
+
+      /* ------------------------------------------------------------------------
+         BOSS BATTLE: COMMANDER ZORGON TRIVIA SHOWDOWN
+         ------------------------------------------------------------------------ */
+      startBossBattle() {
+        this.isBossActive = true;
+        this.bossMaxHP = 4;
+        this.bossHP = 4;
+        this.currentTriviaIndex = 0;
+
+        // Switch to intense Space Boss Fight BGM!
+        sound.setBGMMode('boss');
+
+        // Collect all 8 questions from the session facts shown this run so the player must land 4 hits to win
+        const shownPlanetKeys = Object.keys(this.sessionFacts);
+        const shuffledKeys = Phaser.Utils.Array.Shuffle([...shownPlanetKeys]);
+        this.activeTriviaList = shuffledKeys.map(k => this.sessionFacts[k]);
+
+        this.updateBossHPUI();
+
+        // Stop previous idle ship tweens and move user starship into battle stance
+        this.tweens.killTweensOf(this.starship);
+        const shipBattleX = 720;
+        const shipBattleY = 540;
+        const ufoBattleX = 960;
+        const ufoBattleY = 510;
+
+        // Spawn Boss Dreadnought Sprite on canvas
+        this.bossUfo = this.add.image(1350, 420, 'tex_alien_ufo')
+          .setScale(1.18)
+          .setDepth(20);
+
+        sound.playWarp();
+        this.cameras.main.shake(300, 0.008);
+
+        // Gently zoom in and pan camera toward the battle arena while keeping the top trivia card clear
+        this.cameras.main.pan(820, 430, 1100, 'Cubic.easeInOut');
+        this.cameras.main.zoomTo(1.22, 1100, 'Cubic.easeInOut');
+
+        // Move CTSEO starship into combat position facing the arriving Alien UFO
+        const battleAngle = Phaser.Math.Angle.Between(shipBattleX, shipBattleY, ufoBattleX, ufoBattleY);
+        sound.playThruster(1.0);
+        this.tweens.add({
+          targets: this.starship,
+          x: shipBattleX,
+          y: shipBattleY,
+          scale: 1.05,
+          rotation: battleAngle,
+          duration: 1000,
+          ease: 'Cubic.easeInOut',
+          onUpdate: () => this.syncThrusterPosition(true),
+          onComplete: () => {
+            this.syncThrusterPosition(false);
+            // Subtle combat hover while locked onto the UFO
+            this.tweens.add({
+              targets: this.starship,
+              y: '+=10',
+              duration: 1200,
+              yoyo: true,
+              repeat: -1,
+              ease: 'Sine.easeInOut',
+              onUpdate: () => {
+                if (this.bossUfo && this.starship) {
+                  this.starship.setRotation(
+                    Phaser.Math.Angle.Between(this.starship.x, this.starship.y, this.bossUfo.x, this.bossUfo.y)
+                  );
+                  this.syncThrusterPosition(false);
+                }
+              }
+            });
+          }
+        });
+
+        this.tweens.add({
+          targets: this.bossUfo,
+          x: ufoBattleX,
+          y: ufoBattleY,
+          duration: 1200,
+          ease: 'Back.easeOut',
+          onComplete: () => {
+            // Ensure starship is aimed right at the UFO
+            this.starship.setRotation(
+              Phaser.Math.Angle.Between(this.starship.x, this.starship.y, this.bossUfo.x, this.bossUfo.y)
+            );
+
+            // Hover animation
+            this.tweens.add({
+              targets: this.bossUfo,
+              y: '+=16',
+              duration: 1500,
+              yoyo: true,
+              repeat: -1,
+              ease: 'Sine.easeInOut'
+            });
+
+            // Reveal boss battle UI cleanly below header
+            document.getElementById('boss-battle-overlay').classList.remove('hidden');
+            this.renderBossQuestion();
+          }
+        });
+      }
+
+      renderBossQuestion() {
+        if (this.bossHP <= 0) {
+          this.triggerVictory();
+          return;
+        }
+        if (this.currentTriviaIndex >= this.activeTriviaList.length) {
+          this.triggerDefeat();
+          return;
+        }
+
+        const qData = this.activeTriviaList[this.currentTriviaIndex];
+        const loc = I18N[currentLanguage] || I18N.es;
+
+        const roundInd = document.getElementById('trivia-round-indicator');
+        const hitsLanded = (this.bossMaxHP - this.bossHP) + 1;
+        roundInd.innerText = loc.roundIndicator
+          .replace('{current}', Math.min(this.bossMaxHP, hitsLanded))
+          .replace('{total}', this.bossMaxHP);
+
+        const qText = document.getElementById('trivia-question-text');
+        qText.innerText = qData.question[currentLanguage] || qData.question.es;
+
+        // Shuffle options so correct answer is NOT always 'A'
+        const correctText = qData.correct[currentLanguage] || qData.correct.es;
+        const dist1 = qData.distractors[0][currentLanguage] || qData.distractors[0].es;
+        const dist2 = qData.distractors[1][currentLanguage] || qData.distractors[1].es;
+
+        const options = Phaser.Utils.Array.Shuffle([
+          { text: correctText, isCorrect: true },
+          { text: dist1, isCorrect: false },
+          { text: dist2, isCorrect: false }
+        ]);
+
+        const container = document.getElementById('trivia-options-container');
+        container.innerHTML = '';
+
+        const letters = ['A', 'B', 'C'];
+        options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'comic-btn w-full p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-left flex items-center space-x-3 border border-slate-700 hover:border-cyan-400 text-slate-200 transition-all';
+          btn.innerHTML = `
+            <span class="w-7 h-7 rounded-xl bg-cyan-950 border border-cyan-400/50 flex items-center justify-center font-sci-fi font-bold text-cyan-300 text-xs shrink-0">${letters[idx]}</span>
+            <span class="text-xs sm:text-sm font-semibold">${opt.text}</span>
+          `;
+
+          btn.onclick = () => {
+            // Disable buttons to avoid double tap
+            container.querySelectorAll('button').forEach(b => b.disabled = true);
+            this.handleBossAnswer(opt.isCorrect, btn);
+          };
+
+          container.appendChild(btn);
+        });
+      }
+
+      handleBossAnswer(isCorrect, buttonEl) {
+        if (isCorrect) {
+          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700');
+          buttonEl.classList.add('bg-emerald-950', 'border-emerald-400', 'text-emerald-300');
+
+          this.bossHP--;
+          this.score += 200;
+          this.streak++;
+          if (this.streak > this.bestStreak) this.bestStreak = this.streak;
+
+          sound.playLaser();
+          this.firePhotonLaser();
+
+          this.updateBossHPUI();
+          this.syncHUD();
+
+          this.time.delayedCall(900, () => {
+            this.currentTriviaIndex++;
+            this.renderBossQuestion();
+          });
+        } else {
+          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700');
+          buttonEl.classList.add('bg-rose-950', 'border-rose-400', 'text-rose-300');
+
+          this.errors++;
+          this.score = Math.max(0, this.score - 150);
+          this.streak = 0;
+          sound.playWrong();
+
+          // Re-queue missed question at the end so the player still has a chance if shields hold
+          const missedQuestion = this.activeTriviaList[this.currentTriviaIndex];
+          if (missedQuestion) {
+            this.activeTriviaList.push(missedQuestion);
+          }
+
+          this.fireAlienPlasma();
+          this.syncHUD();
+
+          if (this.score <= 0) {
+            this.time.delayedCall(700, () => this.triggerDefeat());
+          } else {
+            this.time.delayedCall(900, () => {
+              this.currentTriviaIndex++;
+              this.renderBossQuestion();
+            });
+          }
+        }
+      }
+
+      firePhotonLaser() {
+        const sx = this.starship.x;
+        const sy = this.starship.y;
+        const tx = this.bossUfo.x;
+        const ty = this.bossUfo.y;
+        const angle = Phaser.Math.Angle.Between(sx, sy, tx, ty);
+
+        // 1. Muzzle Flash at Starship Nose & Ship Recoil Kickback
+        const noseX = sx + Math.cos(angle) * 38;
+        const noseY = sy + Math.sin(angle) * 38;
+        const muzzle = this.add.circle(noseX, noseY, 18, 0xffffff, 0.95).setDepth(23);
+        const muzzleGlow = this.add.circle(noseX, noseY, 32, 0x38bdf8, 0.65).setDepth(22);
+        this.tweens.add({
+          targets: [muzzle, muzzleGlow],
+          scale: 0.1,
+          alpha: 0,
+          duration: 180,
+          onComplete: () => { muzzle.destroy(); muzzleGlow.destroy(); }
+        });
+
+        // Recoil kickback on player starship
+        this.tweens.add({
+          targets: this.starship,
+          x: sx - Math.cos(angle) * 11,
+          y: sy - Math.sin(angle) * 11,
+          duration: 70,
+          yoyo: true,
+          ease: 'Quad.easeOut',
+          onUpdate: () => this.syncThrusterPosition(true),
+          onComplete: () => this.syncThrusterPosition(false)
+        });
+
+        // 2. Multi-Layered High-Energy Twin Photon Beam
+        const beam = this.add.graphics().setDepth(22);
+        // Outer glow
+        beam.lineStyle(16, 0x0284c7, 0.45);
+        beam.lineBetween(noseX, noseY, tx, ty);
+        // Mid cyan plasma
+        beam.lineStyle(8, 0x38bdf8, 0.9);
+        beam.lineBetween(noseX, noseY, tx, ty);
+        // White-hot core
+        beam.lineStyle(3.5, 0xffffff, 1);
+        beam.lineBetween(noseX, noseY, tx, ty);
+
+        this.tweens.add({
+          targets: beam,
+          alpha: 0,
+          duration: 240,
+          onComplete: () => beam.destroy()
+        });
+
+        // 3. Traveling Photon Torpedo Pulse + Impact Explosion on UFO
+        const pulse = this.add.circle(noseX, noseY, 10, 0xfef08a, 1).setDepth(24);
+        this.tweens.add({
+          targets: pulse,
+          x: tx,
+          y: ty,
+          duration: 140,
+          ease: 'Cubic.easeIn',
+          onComplete: () => {
+            pulse.destroy();
+            sound.playExplosion(0.75);
+            this.cameras.main.shake(240, 0.01);
+            this.spawnExplosionBurst(tx + Phaser.Math.Between(-15, 10), ty + Phaser.Math.Between(-10, 10), 0.9);
+            this.spawnFloatingScore(tx, ty - 45, '-1 HP 💥', '#38bdf8');
+
+            if (this.bossUfo) {
+              this.bossUfo.setTintFill(0xffffff);
+              this.time.delayedCall(70, () => {
+                if (this.bossUfo) this.bossUfo.setTint(0xf43f5e);
+              });
+              this.time.delayedCall(180, () => {
+                if (this.bossUfo) this.bossUfo.clearTint();
+              });
+
+              this.tweens.add({
+                targets: this.bossUfo,
+                x: tx + 22,
+                angle: 8,
+                duration: 65,
+                yoyo: true,
+                repeat: 3,
+                onComplete: () => {
+                  if (this.bossUfo) this.bossUfo.setAngle(0);
+                }
+              });
+            }
+          }
+        });
+      }
+
+      fireAlienPlasma() {
+        sound.playAlienBlaster();
+
+        const ux = this.bossUfo.x - 28;
+        const uy = this.bossUfo.y;
+        const sx = this.starship.x;
+        const sy = this.starship.y;
+
+        // UFO cannon muzzle flash & recoil
+        const ufoMuzzle = this.add.circle(ux, uy, 20, 0xf43f5e, 0.9).setDepth(23);
+        this.tweens.add({
+          targets: ufoMuzzle,
+          scale: 0.1,
+          alpha: 0,
+          duration: 200,
+          onComplete: () => ufoMuzzle.destroy()
+        });
+
+        this.tweens.add({
+          targets: this.bossUfo,
+          x: this.bossUfo.x + 10,
+          duration: 80,
+          yoyo: true
+        });
+
+        // Glowing multi-layered Alien Plasma Torpedo with trailing embers
+        const boltAura = this.add.circle(ux, uy, 16, 0xec4899, 0.55).setDepth(22);
+        const boltCore = this.add.circle(ux, uy, 8, 0xffffff, 1).setDepth(23);
+
+        this.tweens.add({
+          targets: [boltAura, boltCore],
+          x: sx,
+          y: sy,
+          duration: 320,
+          ease: 'Cubic.easeIn',
+          onUpdate: () => {
+            if (Math.random() < 0.65) {
+              const ember = this.add.circle(
+                boltCore.x + Phaser.Math.Between(-5, 5),
+                boltCore.y + Phaser.Math.Between(-5, 5),
+                Phaser.Math.FloatBetween(2.5, 5),
+                Phaser.Utils.Array.GetRandom([0xf43f5e, 0xec4899, 0xa855f7]),
+                0.85
+              ).setDepth(21);
+              this.tweens.add({
+                targets: ember,
+                alpha: 0,
+                scale: 0.1,
+                duration: 200,
+                onComplete: () => ember.destroy()
+              });
+            }
+          },
+          onComplete: () => {
+            boltAura.destroy();
+            boltCore.destroy();
+
+            sound.playExplosion(0.85);
+            this.cameras.main.shake(320, 0.013);
+            this.cameras.main.flash(160, 244, 63, 94);
+
+            // Energy Shield Dome flare on CTSEO Starship
+            const shield = this.add.graphics({ x: sx, y: sy }).setDepth(24);
+            shield.lineStyle(4, 0xf43f5e, 0.95);
+            shield.fillStyle(0x38bdf8, 0.35);
+            shield.strokeCircle(0, 0, 42);
+            shield.fillCircle(0, 0, 42);
+
+            this.tweens.add({
+              targets: shield,
+              scaleX: 1.45,
+              scaleY: 1.45,
+              alpha: 0,
+              duration: 320,
+              ease: 'Cubic.easeOut',
+              onComplete: () => shield.destroy()
+            });
+
+            this.spawnExplosionBurst(sx, sy, 0.75);
+            this.spawnFloatingScore(sx, sy - 45, '-150 PTS ⚡', '#fb7185');
+
+            this.tweens.add({
+              targets: this.starship,
+              x: sx - 14,
+              alpha: 0.5,
+              duration: 65,
+              yoyo: true,
+              repeat: 3,
+              onUpdate: () => this.syncThrusterPosition(false),
+              onComplete: () => {
+                this.starship.setAlpha(1);
+                this.syncThrusterPosition(false);
+              }
+            });
+          }
+        });
+      }
+
+      // Reusable fiery plasma explosion + shockwave ring + debris sparks
+      spawnExplosionBurst(x, y, scale = 1.0) {
+        // 1. Expanding Shockwave Ring
+        const ring = this.add.graphics({ x, y }).setDepth(25);
+        ring.lineStyle(4 * scale, 0xfef08a, 0.95);
+        ring.strokeCircle(0, 0, 14 * scale);
+        this.tweens.add({
+          targets: ring,
+          scaleX: 3.4,
+          scaleY: 3.4,
+          alpha: 0,
+          duration: 360,
+          ease: 'Cubic.easeOut',
+          onComplete: () => ring.destroy()
+        });
+
+        // 2. Layered Fireball Flash
+        const outerFire = this.add.circle(x, y, 28 * scale, 0xef4444, 0.9).setDepth(24);
+        const midFire = this.add.circle(x, y, 19 * scale, 0xf97316, 0.95).setDepth(25);
+        const coreFlash = this.add.circle(x, y, 11 * scale, 0xffffff, 1).setDepth(26);
+
+        this.tweens.add({
+          targets: [outerFire, midFire, coreFlash],
+          scale: 1.75,
+          alpha: 0,
+          duration: 320,
+          ease: 'Quad.easeOut',
+          onComplete: () => {
+            outerFire.destroy();
+            midFire.destroy();
+            coreFlash.destroy();
+          }
+        });
+
+        // 3. High-velocity plasma sparks & smoke puffs
+        const sparkColors = [0xffffff, 0xfef08a, 0xf97316, 0xef4444, 0x38bdf8];
+        for (let i = 0; i < 16; i++) {
+          const sp = this.add.circle(
+            x,
+            y,
+            Phaser.Math.FloatBetween(2, 4.5) * scale,
+            Phaser.Utils.Array.GetRandom(sparkColors),
+            1
+          ).setDepth(25);
+
+          const ang = Math.random() * Math.PI * 2;
+          const dist = Phaser.Math.Between(30, 85) * scale;
+          this.tweens.add({
+            targets: sp,
+            x: x + Math.cos(ang) * dist,
+            y: y + Math.sin(ang) * dist,
+            alpha: 0,
+            scale: 0.1,
+            duration: Phaser.Math.Between(240, 480),
+            ease: 'Cubic.easeOut',
+            onComplete: () => sp.destroy()
+          });
+        }
+      }
+
+      updateBossHPUI() {
+        const hpText = document.getElementById('boss-hp-text');
+        const hpBar = document.getElementById('boss-hp-bar');
+        hpText.innerText = `${Math.max(0, this.bossHP)} / 4 HP`;
+        hpBar.style.width = `${Math.max(0, (this.bossHP / 4) * 100)}%`;
+      }
+
+      /* ------------------------------------------------------------------------
+         DROP MISTAKE
+         ------------------------------------------------------------------------ */
+      onWrongDrop(planet, target) {
+        this.errors++;
+        this.streak = 0;
+        this.score = Math.max(0, this.score - 50);
+
+        sound.playWrong();
+        this.cameras.main.shake(200, 0.006);
+
+        const loc = I18N[currentLanguage];
+        this.spawnFloatingScore(target.x, target.y - 25, loc.wrongText, '#f87171');
+
+        target.halo.clear();
+        target.halo.lineStyle(3.5, 0xef4444, 1);
+        target.halo.strokeCircle(0, 0, target.radius);
+        this.time.delayedCall(400, () => this.restoreTargetHalos());
+
+        this.tweens.add({
+          targets: planet,
+          x: target.x + 12,
+          y: target.y,
+          scale: 1.0,
+          duration: 50,
+          yoyo: true,
+          repeat: 4,
+          onComplete: () => this.returnToTray(planet)
+        });
+
+        this.syncHUD();
+      }
+
+      returnToTray(planet) {
+        this.tweens.add({
+          targets: planet,
+          x: planet.homeX,
+          y: planet.homeY,
+          scale: 1.0,
+          duration: 320,
+          ease: 'Cubic.easeOut'
+        });
+
+        if (planet.label) {
+          this.tweens.add({
+            targets: planet.label,
+            x: planet.homeX,
+            y: planet.homeY + planet.spec.radius + 14,
+            duration: 320,
+            ease: 'Cubic.easeOut'
+          });
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         VISUAL EFFECTS & PARTICLES
+         ------------------------------------------------------------------------ */
+      spawnConfetti(x, y) {
+        for (let i = 0; i < 20; i++) {
+          const spark = this.add.circle(x, y, Phaser.Math.Between(3, 6), Phaser.Utils.Array.GetRandom([0xf59e0b, 0x38bdf8, 0x10b981, 0xffffff, 0xf43f5e]));
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Phaser.Math.Between(45, 110);
+
+          this.tweens.add({
+            targets: spark,
+            x: x + Math.cos(angle) * dist,
+            y: y + Math.sin(angle) * dist,
+            alpha: 0,
+            scale: 0.2,
+            duration: Phaser.Math.Between(400, 700),
+            ease: 'Cubic.easeOut',
+            onComplete: () => spark.destroy()
+          });
+        }
+      }
+
+      spawnFloatingScore(x, y, msg, colorStr) {
+        const txt = this.add.text(x, y, msg, {
+          fontFamily: 'Fredoka, sans-serif',
+          fontSize: '19px',
+          fontStyle: 'bold',
+          color: colorStr,
+          align: 'center',
+          stroke: '#050713',
+          strokeThickness: 5
+        }).setOrigin(0.5).setScale(0.85).setDepth(30);
+
+        // Pop-in & float upward over 2.3 seconds
+        this.tweens.add({
+          targets: txt,
+          y: y - 58,
+          scale: 1.2,
+          duration: 2300,
+          ease: 'Cubic.easeOut'
+        });
+
+        // Keep full opacity for 1.6s, then smoothly fade out over the last 0.7s
+        this.tweens.add({
+          targets: txt,
+          alpha: 0,
+          delay: 1600,
+          duration: 700,
+          ease: 'Quad.easeIn',
+          onComplete: () => txt.destroy()
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         VICTORY & DEFEAT SEQUENCES
+         ------------------------------------------------------------------------ */
+      triggerVictory() {
+        if (this.isGameWon) return;
+        this.isGameWon = true;
+
+        // 1. Hide trivia overlay so the player watches the enemy dreadnought explode & flee!
+        document.getElementById('boss-battle-overlay').classList.add('hidden');
+
+        if (this.bossUfo) {
+          const baseX = this.bossUfo.x;
+          const baseY = this.bossUfo.y;
+
+          // Violent shuddering while chain of explosions erupts across the hull
+          this.tweens.add({
+            targets: this.bossUfo,
+            x: baseX + 10,
+            y: baseY - 8,
+            angle: { from: -10, to: 12 },
+            duration: 75,
+            yoyo: true,
+            repeat: 16
+          });
+
+          const blastOffsets = [
+            { dx: -22, dy: -12, scale: 1.0, delay: 0 },
+            { dx: 24,  dy: 14,  scale: 1.15, delay: 260 },
+            { dx: -10, dy: 18,  scale: 1.05, delay: 520 },
+            { dx: 18,  dy: -16, scale: 1.25, delay: 780 },
+            { dx: 0,   dy: 0,   scale: 1.65, delay: 1080 }
+          ];
+
+          blastOffsets.forEach((b, idx) => {
+            this.time.delayedCall(b.delay, () => {
+              if (!this.bossUfo) return;
+              sound.playExplosion(b.scale);
+              this.cameras.main.shake(220, 0.011 * b.scale);
+              this.spawnExplosionBurst(this.bossUfo.x + b.dx, this.bossUfo.y + b.dy, b.scale);
+
+              this.bossUfo.setTintFill(idx % 2 === 0 ? 0xffffff : 0xf43f5e);
+              this.time.delayedCall(90, () => {
+                if (this.bossUfo) this.bossUfo.setTint(0xfb7185);
+              });
+            });
+          });
+
+          // 2. After explosions, crippled Boss Dreadnought spins wildly and flees into deep space!
+          this.time.delayedCall(1450, () => {
+            if (this.bossUfo) {
+              this.bossUfo.clearTint();
+              sound.playWarp();
+
+              this.tweens.add({
+                targets: this.bossUfo,
+                x: 1480,
+                y: -140,
+                angle: 1080,
+                scale: 0.08,
+                duration: 1250,
+                ease: 'Cubic.easeIn',
+                onUpdate: () => {
+                  // Trailing smoke & sparks as it flees
+                  if (Math.random() < 0.7) {
+                    const smoke = this.add.circle(
+                      this.bossUfo.x + Phaser.Math.Between(-10, 10),
+                      this.bossUfo.y + Phaser.Math.Between(-10, 10),
+                      Phaser.Math.FloatBetween(4, 9),
+                      Phaser.Utils.Array.GetRandom([0x475569, 0xf97316, 0xef4444]),
+                      0.75
+                    ).setDepth(19);
+                    this.tweens.add({
+                      targets: smoke,
+                      alpha: 0,
+                      scale: 1.8,
+                      duration: 380,
+                      onComplete: () => smoke.destroy()
+                    });
+                  }
+                }
+              });
+            }
+          });
+        }
+
+        // 3. Zoom camera back out, return to space BGM, play fanfare, launch celebratory confetti & open Victory Modal
+        this.time.delayedCall(2500, () => {
+          sound.setBGMMode('game');
+          sound.playFanfare();
+          this.cameras.main.pan(640, 360, 1000, 'Cubic.easeInOut');
+          this.cameras.main.zoomTo(1.0, 1000, 'Cubic.easeInOut');
+          this.cameras.main.flash(500, 255, 255, 255);
+
+          for (let i = 0; i < 6; i++) {
+            this.time.delayedCall(i * 280, () => {
+              const rx = Phaser.Math.Between(200, 1080);
+              const ry = Phaser.Math.Between(100, 450);
+              this.spawnConfetti(rx, ry);
+            });
+          }
+
+          const modal = document.getElementById('victory-modal');
+          const modalScore = document.getElementById('modal-score');
+          const modalStreak = document.getElementById('modal-streak');
+          const modalErrors = document.getElementById('modal-errors');
+          const modalAcc = document.getElementById('modal-accuracy');
+
+          modalScore.innerText = this.score;
+          modalStreak.innerText = `${this.bestStreak}x`;
+          modalErrors.innerText = this.errors;
+
+          const totalAttempts = this.placedCount + this.errors;
+          const accuracy = totalAttempts > 0 ? Math.round((this.placedCount / totalAttempts) * 100) : 100;
+          modalAcc.innerText = `${accuracy}%`;
+
+          this.updateModalTexts();
+
+          modal.classList.remove('hidden');
+          setTimeout(() => {
+            document.getElementById('victory-card').classList.remove('scale-95');
+            document.getElementById('victory-card').classList.add('scale-100');
+          }, 50);
+        });
+      }
+
+      triggerDefeat() {
+        sound.setBGMMode('game');
+        document.getElementById('boss-battle-overlay').classList.add('hidden');
+        this.cameras.main.pan(640, 360, 800, 'Cubic.easeInOut');
+        this.cameras.main.zoomTo(1.0, 800, 'Cubic.easeInOut');
+        document.getElementById('game-over-modal').classList.remove('hidden');
+      }
+
+      /* ------------------------------------------------------------------------
+         LOCALIZATION & HUD RE-RENDERING
+         ------------------------------------------------------------------------ */
+      applyLanguage(lang) {
+        currentLanguage = lang;
+        const loc = I18N[lang] || I18N.es;
+
+        const domBanner = document.getElementById('instruction-banner-text');
+        if (domBanner) domBanner.innerText = loc.instructionsBanner;
+        if (this.sunLabel) this.sunLabel.setText(loc.sunName);
+
+        this.planets.forEach(p => {
+          if (p.label && p.spec) {
+            p.label.setText(p.spec.names[lang] || p.spec.names.es);
+          }
+        });
+
+        document.getElementById('score-title-label').innerText = loc.score;
+        document.getElementById('streak-title-label').innerText = loc.streak;
+        document.getElementById('labels-header-text').innerText = loc.labels;
+        document.getElementById('label-state').innerText = this.showLabels ? loc.labelsOn : loc.labelsOff;
+
+        this.updateModalTexts();
+        this.syncHUD();
+      }
+
+      updateModalTexts() {
+        const loc = I18N[currentLanguage] || I18N.es;
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const lScore = document.getElementById('modal-label-score');
+        const lStreak = document.getElementById('modal-label-streak');
+        const lErr = document.getElementById('modal-label-errors');
+        const lAcc = document.getElementById('modal-label-acc');
+        const btnPlay = document.getElementById('btn-play-again-text');
+
+        if (modalTitle) modalTitle.innerText = loc.victoryTitle;
+        if (modalSubtitle) modalSubtitle.innerText = loc.victoryDesc;
+        if (lScore) lScore.innerText = loc.finalScore;
+        if (lStreak) lStreak.innerText = loc.bestStreak;
+        if (lErr) lErr.innerText = loc.mistakes;
+        if (lAcc) lAcc.innerText = loc.accuracy;
+        if (btnPlay) btnPlay.innerText = loc.playAgain;
+
+        // Fact modal
+        const factBadge = document.getElementById('fact-modal-badge');
+        const factBtn = document.getElementById('btn-fact-continue');
+        if (factBadge) factBadge.innerText = loc.transmissionBadge;
+        if (factBtn) factBtn.innerHTML = `<span>${loc.transmissionBtn}</span> <i class="fa-solid fa-arrow-right"></i>`;
+
+        if (this.activeFactPlanetId) {
+          const spec = PLANET_SPECS.find(p => p.id === this.activeFactPlanetId);
+          const factEntry = this.sessionFacts[this.activeFactPlanetId];
+          const pName = document.getElementById('fact-planet-name');
+          const pBody = document.getElementById('fact-modal-body');
+          if (spec && pName) pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
+          if (factEntry && pBody) pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+        }
+
+        // Boss battle overlay
+        const bossBadgeEl = document.getElementById('boss-badge-text');
+        const bossTitleEl = document.getElementById('boss-title-text');
+        const bossShieldEl = document.getElementById('boss-hp-label');
+        const triviaRewardEl = document.getElementById('trivia-reward-badge');
+        if (bossBadgeEl) bossBadgeEl.innerText = loc.bossBadge;
+        if (bossTitleEl) bossTitleEl.innerText = loc.bossTitle;
+        if (bossShieldEl) bossShieldEl.innerText = loc.bossShield;
+        if (triviaRewardEl) triviaRewardEl.innerText = loc.triviaReward;
+
+        if (this.isBossActive && !this.isGameWon && this.bossHP > 0) {
+          this.renderBossQuestion();
+        }
+
+        // Defeat modal
+        const defTitle = document.getElementById('defeat-title');
+        const defDesc = document.getElementById('defeat-desc');
+        const defBtn = document.getElementById('defeat-btn-retry');
+        if (defTitle) defTitle.innerText = loc.defeatTitle;
+        if (defDesc) defDesc.innerText = loc.defeatDesc;
+        if (defBtn) defBtn.innerText = loc.retryBtn;
+      }
+
+      syncHUD() {
+        const scoreEl = document.getElementById('score-text');
+        const streakEl = document.getElementById('streak-text');
+        const streakIcon = document.getElementById('streak-icon');
+        const multBadge = document.getElementById('multiplier-badge');
+        const loc = I18N[currentLanguage] || I18N.es;
+
+        if (scoreEl) scoreEl.innerText = this.score;
+        if (streakEl) streakEl.innerText = this.streak;
+
+        if (streakIcon && multBadge) {
+          if (this.streak > 1) {
+            streakIcon.classList.remove('text-slate-500');
+            streakIcon.classList.add('text-amber-400', 'streak-fire-active');
+            multBadge.classList.remove('hidden');
+            multBadge.innerText = `+${this.streak * 50} ${loc.bonus}`;
+          } else {
+            streakIcon.classList.remove('text-amber-400', 'streak-fire-active');
+            streakIcon.classList.add('text-slate-500');
+            multBadge.classList.add('hidden');
+          }
+        }
+      }
+
+      toggleLabels() {
+        this.showLabels = !this.showLabels;
+        this.planets.forEach(p => {
+          if (p.label) p.label.setVisible(this.showLabels);
+        });
+
+        const loc = I18N[currentLanguage] || I18N.es;
+        const labelState = document.getElementById('label-state');
+        labelState.innerText = this.showLabels ? loc.labelsOn : loc.labelsOff;
+        labelState.className = this.showLabels ? 'text-emerald-400 font-black uppercase' : 'text-slate-400 font-black uppercase';
+      }
+    }
+
+    /* ==========================================================================
+       PHASER CONFIGURATION & INITIALIZATION
+       ========================================================================== */
+    const config = {
+      type: Phaser.AUTO,
+      parent: 'game-container',
+      width: 1280,
+      height: 720,
+      scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      },
+      scene: [SolarSystemGameScene],
+      backgroundColor: '#030712'
+    };
+
+    let game = new Phaser.Game(config);
+
+    /* ==========================================================================
+       GLOBAL LANGUAGE & DOM HANDLERS
+       ========================================================================== */
+    function setGlobalLanguage(lang) {
+      currentLanguage = lang;
+      const loc = I18N[lang] || I18N.es;
+
+      // Update Start Screen Elements
+      document.getElementById('start-badge-text').innerText = loc.startBadge;
+      document.getElementById('start-subtitle-text').innerText = loc.startSubtitle;
+      document.getElementById('start-desc-text').innerText = loc.startDesc;
+      document.getElementById('btn-start-text').innerText = loc.playNow;
+      document.getElementById('start-sound-text').innerText = sound.enabled ? loc.soundActive : loc.soundMuted;
+
+      // Update Language Button Highlights (HUD & Start screen)
+      ['es', 'en', 'pt'].forEach(code => {
+        const hudBtn = document.getElementById(`lang-btn-${code}`);
+        if (hudBtn) {
+          hudBtn.className = code === lang
+            ? 'comic-btn px-2.5 py-1 rounded-xl font-black text-xs bg-amber-400 text-slate-950 transition-all'
+            : 'comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all';
+        }
+
+        const startBtns = document.querySelectorAll(`.start-lang-btn[data-lang="${code}"]`);
+        startBtns.forEach(btn => {
+          btn.className = code === lang
+            ? 'start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-amber-400 text-slate-950'
+            : 'start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white';
+        });
+      });
+
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      if (scene) scene.applyLanguage(lang);
+    }
+
+    function restartGameSession() {
+      sound.setBGMMode('game');
+      // Hide modals
+      document.getElementById('victory-modal').classList.add('hidden');
+      const vCard = document.getElementById('victory-card');
+      if (vCard) {
+        vCard.classList.remove('scale-100');
+        vCard.classList.add('scale-95');
+      }
+      document.getElementById('game-over-modal').classList.add('hidden');
+      document.getElementById('boss-battle-overlay').classList.add('hidden');
+      document.getElementById('fact-modal').classList.add('hidden');
+
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      if (scene) {
+        scene.tweens.killAll();
+        scene.scene.restart();
+      }
+    }
+
+    window.onload = function() {
+      // Attempt to initialize subtle Start Screen BGM (will unlock on first interaction if blocked by browser autoplay policy)
+      sound.setBGMMode('start');
+      sound.init();
+
+      // Start Game Action Button
+      document.getElementById('btn-start-game').addEventListener('click', () => {
+        sound.playWarp();
+        sound.setBGMMode('game');
+        const startScreen = document.getElementById('start-screen');
+        startScreen.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          startScreen.style.display = 'none';
+        }, 700);
+      });
+
+      // Sound Toggles
+      const toggleAudio = () => {
+        sound.setMuted(sound.enabled);
+        const icon = document.getElementById('sound-icon');
+        const startIcon = document.getElementById('start-sound-icon');
+        const startText = document.getElementById('start-sound-text');
+        const loc = I18N[currentLanguage] || I18N.es;
+
+        if (sound.enabled) {
+          icon.className = 'fa-solid fa-volume-high';
+          startIcon.className = 'fa-solid fa-volume-high text-cyan-400';
+          startText.innerText = loc.soundActive;
+          sound.playPickup();
+        } else {
+          icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+          startIcon.className = 'fa-solid fa-volume-xmark text-slate-500';
+          startText.innerText = loc.soundMuted;
+        }
+      };
+
+      document.getElementById('btn-sound').addEventListener('click', toggleAudio);
+      document.getElementById('btn-start-sound-toggle').addEventListener('click', toggleAudio);
+
+      // Labels Toggle
+      document.getElementById('btn-toggle-labels').addEventListener('click', () => {
+        const scene = game.scene.getScene('SolarSystemGameScene');
+        if (scene) scene.toggleLabels();
+      });
+
+      // Header Restart
+      document.getElementById('btn-restart').addEventListener('click', restartGameSession);
+
+      // Initialize default language
+      setGlobalLanguage('es');
+    };
+  </script>
+</body>
+</html>
