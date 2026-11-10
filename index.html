@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Misión CTSEO - Expedición Sistema Solar</title>
 
+  <!-- Favicon SVG (Saturn with Glowing Ring & Starlight) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='p' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='50%25' stop-color='%230284c7'/%3E%3Cstop offset='100%25' stop-color='%231e1b4b'/%3E%3C/linearGradient%3E%3ClinearGradient id='r' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%23f59e0b' stop-opacity='0.2'/%3E%3Cstop offset='50%25' stop-color='%23fde047'/%3E%3Cstop offset='100%25' stop-color='%23f59e0b' stop-opacity='0.2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23030712'/%3E%3Cellipse cx='32' cy='32' rx='25' ry='8' fill='none' stroke='url(%23r)' stroke-width='3.5' transform='rotate(-22 32 32)'/%3E%3Ccircle cx='32' cy='32' r='14' fill='url(%23p)'/%3E%3Cellipse cx='32' cy='32' rx='25' ry='8' fill='none' stroke='url(%23r)' stroke-width='3.5' stroke-dasharray='38 40' stroke-dashoffset='-20' transform='rotate(-22 32 32)'/%3E%3Ccircle cx='46' cy='18' r='1.5' fill='%23ffffff'/%3E%3Ccircle cx='18' cy='46' r='1' fill='%2338bdf8'/%3E%3C/svg%3E">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -1522,7 +1525,7 @@
           }
         }
         if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
+          this.ctx.resume().catch(() => {});
         }
         if (this.enabled && !this.bgmTimer && this.bgmMode) {
           this.startBGMLoop();
@@ -2354,9 +2357,14 @@
     const sound = new RetroAudioEngine();
     const unlockAudio = () => {
       sound.init();
+      // Also unlock Phaser's WebAudio context safely if present
+      if (typeof game !== 'undefined' && game && game.sound && game.sound.context && game.sound.context.state === 'suspended') {
+        game.sound.context.resume().catch(() => {});
+      }
     };
-    window.addEventListener('pointerdown', unlockAudio, { once: true });
-    window.addEventListener('keydown', unlockAudio, { once: true });
+    window.addEventListener('pointerdown', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
+    window.addEventListener('touchstart', unlockAudio, { passive: true });
 
     function checkIsMobileLayout() {
       return window.innerWidth < 768 || window.innerHeight > window.innerWidth;
@@ -2414,6 +2422,7 @@
         this.ufoHpContainer = null;
         this.shipHpFill = null;
         this.ufoHpFill = null;
+        this.starshipShieldArc = null;
 
         this.orbitTargets = [];
         this.planets = [];
@@ -3830,20 +3839,79 @@
             this.ufoHpContainer.setPosition(this.bossUfo.x, this.bossUfo.y - 62);
           }
 
-          // Continuous smoke & fire when either ship is at or below 25% HP
-          if (!this.lastDamageFxTime || time - this.lastDamageFxTime > 55) {
-            this.lastDamageFxTime = time;
+          // Health ratios during boss showdown
+          const bossMax = this.bossMaxHP || 6;
+          const bossRatio = Phaser.Math.Clamp((this.bossHP || 0) / bossMax, 0, 1);
+          const pMax = Math.max(450, this.playerMaxBattleScore || 450);
+          const playerRatio = Phaser.Math.Clamp(this.score / pMax, 0, 1);
 
-            const bossRatio = (this.bossHP || 0) / (this.bossMaxHP || 4);
-            if (this.bossUfo && this.bossHP > 0 && bossRatio <= 0.25) {
-              this.spawnDamageFireAndSmoke(this.bossUfo.x, this.bossUfo.y, 30, this.bossUfo.depth);
-            }
-
-            const playerRatio = Phaser.Math.Clamp(this.score / (this.playerMaxBattleScore || 450), 0, 1);
-            if (this.starship && !this.isGameWon && playerRatio <= 0.25) {
-              this.spawnDamageFireAndSmoke(this.starship.x, this.starship.y, 22, this.starship.depth);
+          // Update Starship Energy Shield Dome: active while player HP > 65%, destroyed at <= 65%
+          if (this.starshipShieldArc && this.starship) {
+            if (this.starship.active && !this.isGameWon && playerRatio > 0.65) {
+              this.starshipShieldArc.setVisible(true);
+              this.starshipShieldArc.setPosition(this.starship.x, this.starship.y);
+              this.starshipShieldArc.setRotation(this.starship.rotation);
+              // Dynamic shield hum/flicker
+              const pulse = 0.65 + Math.sin(time * 0.008) * 0.2;
+              this.starshipShieldArc.setAlpha(pulse);
+            } else {
+              if (this.starshipShieldArc.visible) {
+                // Shield breaking collapse burst effect
+                this.starshipShieldArc.setVisible(false);
+                this.spawnShieldShatterFX(this.starship.x, this.starship.y, this.starship.rotation);
+              }
             }
           }
+
+          // Continuous Damage FX (Smoke, Fire & Sparks):
+          // - Player Starship: catches fire when HP <= 45%
+          // - Zorgon Boss: starts burning at HP <= 65%, intensifies at HP <= 30%
+          if (!this.lastDamageFxTime || time - this.lastDamageFxTime > 45) {
+            this.lastDamageFxTime = time;
+
+            // Player Starship fire & smoke (at or below 45% HP)
+            if (this.starship && !this.isGameWon && playerRatio <= 0.45) {
+              const shipIntensity = playerRatio <= 0.22 ? 2 : 1;
+              for (let i = 0; i < shipIntensity; i++) {
+                this.spawnDamageFireAndSmoke(this.starship.x, this.starship.y, 22, this.starship.depth);
+              }
+            }
+
+            // Commander Zorgon fire & smoke (starts at 65% HP, intensifies at 30% HP)
+            if (this.bossUfo && this.bossHP > 0 && bossRatio <= 0.65) {
+              const zorgonIntensity = bossRatio <= 0.30 ? 2 : 1;
+              for (let i = 0; i < zorgonIntensity; i++) {
+                this.spawnDamageFireAndSmoke(this.bossUfo.x, this.bossUfo.y, bossRatio <= 0.30 ? 38 : 28, this.bossUfo.depth);
+              }
+            }
+          }
+        }
+      }
+
+      spawnShieldShatterFX(cx, cy, rot) {
+        sound.playExplosion(0.5);
+        this.cameras.main.shake(180, 0.006);
+        for (let i = 0; i < 14; i++) {
+          const sparkAngle = rot - 0.9 + Math.random() * 1.8;
+          const spark = this.add.circle(
+            cx + Math.cos(sparkAngle) * 44,
+            cy + Math.sin(sparkAngle) * 44,
+            Phaser.Math.FloatBetween(2.5, 4.5),
+            Phaser.Utils.Array.GetRandom([0x38bdf8, 0x06b6d4, 0x67e8f9, 0xffffff]),
+            1
+          ).setDepth(26);
+
+          const dist = Phaser.Math.Between(25, 60);
+          this.tweens.add({
+            targets: spark,
+            x: spark.x + Math.cos(sparkAngle) * dist,
+            y: spark.y + Math.sin(sparkAngle) * dist,
+            alpha: 0,
+            scale: 0.1,
+            duration: Phaser.Math.Between(260, 480),
+            ease: 'Cubic.easeOut',
+            onComplete: () => spark.destroy()
+          });
         }
       }
 
@@ -4051,6 +4119,33 @@
 
         // Create floating HP bars right above both ships
         this.createBossFloatingHPBars();
+
+        // Create Player Frontal Energy Shield Arc (Visible while Player HP > 65%)
+        if (this.starshipShieldArc) this.starshipShieldArc.destroy();
+        const shieldG = this.add.graphics();
+        shieldG.lineStyle(5.5, 0x38bdf8, 0.95);
+        shieldG.beginPath();
+        // Frontal arc extending in front of the nose (-0.95 rad to +0.95 rad)
+        shieldG.arc(0, 0, 46, -0.95, 0.95, false);
+        shieldG.strokePath();
+
+        // Inner glowing core
+        shieldG.lineStyle(2.5, 0xffffff, 1);
+        shieldG.beginPath();
+        shieldG.arc(0, 0, 46, -0.85, 0.85, false);
+        shieldG.strokePath();
+
+        // Outer soft cyan aura
+        shieldG.lineStyle(10, 0x0284c7, 0.35);
+        shieldG.beginPath();
+        shieldG.arc(0, 0, 46, -0.98, 0.98, false);
+        shieldG.strokePath();
+
+        shieldG.setDepth(22);
+        shieldG.setPosition(this.starship.x, this.starship.y);
+        shieldG.setRotation(this.starship.rotation);
+        shieldG.setVisible(true);
+        this.starshipShieldArc = shieldG;
 
         sound.playWarp();
         this.cameras.main.shake(300, 0.008);
@@ -4624,6 +4719,10 @@
 
         // 1. Hide trivia overlay & floating HP bars so the player watches the enemy dreadnought explode & flee!
         document.getElementById('boss-battle-overlay').classList.add('hidden');
+        if (this.starshipShieldArc) {
+          this.starshipShieldArc.destroy();
+          this.starshipShieldArc = null;
+        }
         if (this.shipHpContainer) {
           this.tweens.add({ targets: this.shipHpContainer, alpha: 0, duration: 300 });
         }
@@ -4768,6 +4867,10 @@
 
       triggerDefeat() {
         sound.setBGMMode('game');
+        if (this.starshipShieldArc) {
+          this.starshipShieldArc.destroy();
+          this.starshipShieldArc = null;
+        }
         document.getElementById('boss-battle-overlay').classList.add('hidden');
         this.cameras.main.pan(this.gameW / 2, this.gameH / 2, 800, 'Cubic.easeInOut', true);
         this.cameras.main.zoomTo(1.0, 800, 'Cubic.easeInOut', true);
@@ -4934,6 +5037,9 @@
       parent: 'game-container',
       width: initialIsMobile ? 720 : 1280,
       height: initialIsMobile ? 1280 : 720,
+      audio: {
+        noAudio: true
+      },
       input: {
         touch: {
           capture: false
@@ -5289,12 +5395,11 @@
     }
 
     window.onload = function() {
-      // Attempt to initialize subtle Start Screen BGM (will unlock on first interaction if blocked by browser autoplay policy)
-      sound.setBGMMode('start');
-      sound.init();
+      // User gesture listeners will unlock audio on first interaction without triggering browser warnings
 
       // Start Game Action Button
       document.getElementById('btn-start-game').addEventListener('click', () => {
+        sound.init();
         sound.playWarp();
         sound.setBGMMode('game');
         const startScreen = document.getElementById('start-screen');
