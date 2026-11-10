@@ -425,8 +425,8 @@
       </div>
 
       <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-lg sm:text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 relative z-10">
-        <span>¡ENTENDIDO, CONTINUAR RUTA!</span>
-        <i class="fa-solid fa-arrow-right"></i>
+        <span>¡TERMINAR TRANSMISIÓN!</span>
+        <i class="fa-solid fa-satellite-dish"></i>
       </button>
     </div>
   </div>
@@ -863,8 +863,8 @@
         accuracy: "Precisión",
         playAgain: "Jugar de Nuevo",
         transmissionBadge: "TRANSMISIÓN DE NAVEGACIÓN",
-        transmissionBtn: "¡ENTENDIDO, CONTINUAR RUTA!",
-        transmissionWait: "Leyendo datos ({seconds}s)...",
+        transmissionBtn: "¡TERMINAR TRANSMISIÓN!",
+        transmissionWait: "Conectando ({seconds}sec)...",
         bossTitle: "COMANDANTE ZORGON",
         bossBadge: "JEFE ALIENÍGENA",
         bossShield: "ESCUDO NODRIZA",
@@ -924,8 +924,8 @@
         accuracy: "Accuracy",
         playAgain: "Play Again",
         transmissionBadge: "NAVIGATION TRANSMISSION",
-        transmissionBtn: "ROGER THAT, ADVANCE!",
-        transmissionWait: "Reading intel ({seconds}s)...",
+        transmissionBtn: "END TRANSMISSION!",
+        transmissionWait: "Connecting ({seconds}sec)...",
         bossTitle: "COMMANDER ZORGON",
         bossBadge: "ALIEN WAR BOSS",
         bossShield: "MOTHERSHIP SHIELD",
@@ -985,8 +985,8 @@
         accuracy: "Precisão",
         playAgain: "Jogar Novamente",
         transmissionBadge: "TRANSMISSÃO DE NAVEGAÇÃO",
-        transmissionBtn: "ENTENDIDO, AVANÇAR!",
-        transmissionWait: "Lendo dados ({seconds}s)...",
+        transmissionBtn: "TERMINAR TRANSMISSÃO!",
+        transmissionWait: "Conectando ({seconds}sec)...",
         bossTitle: "COMANDANTE ZORGON",
         bossBadge: "CHEFE ALIENÍGENA",
         bossShield: "ESCUDO NAVE-MÃE",
@@ -3857,13 +3857,13 @@
             contBtn.disabled = true;
             contBtn.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
             contBtn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
-            const waitText = (loc.transmissionWait || "Leyendo datos ({seconds}s)...").replace('{seconds}', remainingSeconds);
-            contBtn.innerHTML = `<i class="fa-solid fa-hourglass-half animate-spin text-amber-400 mr-2 text-sm"></i><span>${waitText}</span>`;
+            const waitText = (loc.transmissionWait || "Conectando ({seconds}sec)...").replace('{seconds}', remainingSeconds);
+            contBtn.innerHTML = `<i class="fa-solid fa-satellite-dish animate-pulse text-amber-400 mr-2 text-sm"></i><span>${waitText}</span>`;
           } else {
             contBtn.disabled = false;
             contBtn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
             contBtn.classList.add('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
-            contBtn.innerHTML = `<span>${loc.transmissionBtn || "¡ENTENDIDO, CONTINUAR RUTA!"}</span> <i class="fa-solid fa-arrow-right ml-2"></i>`;
+            contBtn.innerHTML = `<span>${loc.transmissionBtn || "¡TERMINAR TRANSMISIÓN!"}</span> <i class="fa-solid fa-satellite-dish ml-2"></i>`;
           }
         };
 
