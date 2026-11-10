@@ -200,6 +200,12 @@
         <span id="btn-scoreboard-text">TOP 10</span>
       </button>
 
+      <!-- CREDITS MODAL TRIGGER BUTTON -->
+      <button id="btn-credits" onclick="openCreditsModal()" class="comic-btn glass-card px-3.5 py-2 rounded-xl bg-slate-950/85 hover:bg-slate-900 text-purple-300 hover:text-white font-black font-sci-fi text-xs tracking-wider uppercase border border-purple-400/50 shadow-lg flex items-center space-x-1.5 cursor-pointer">
+        <i class="fa-solid fa-users text-purple-400"></i>
+        <span id="btn-credits-text">CRÉDITOS</span>
+      </button>
+
       <!-- AUDIO TOGGLE BUTTON -->
       <button id="btn-start-sound-toggle" class="glass-card px-3.5 py-2 rounded-xl text-slate-200 hover:text-white flex items-center space-x-1.5 cursor-pointer">
         <i id="start-sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
@@ -640,6 +646,101 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       8C. CREDITS MODAL (Design, Planning & Development Team + Programmer)
+       ========================================================================= -->
+  <div id="credits-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-6 max-w-2xl w-full text-center shadow-2xl relative border-2 border-purple-400/60">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-purple-950/90 border border-purple-400/50 text-xs font-black text-purple-300 uppercase tracking-widest font-sci-fi">
+          <i class="fa-solid fa-users-gear text-amber-400"></i>
+          <span id="credits-modal-title">CRÉDITOS DE LA MISIÓN</span>
+        </div>
+        <button onclick="closeCreditsModal()" class="w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors text-lg cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Design, Planning & Development Team Heading -->
+      <div class="mb-2.5">
+        <h4 id="credits-team-heading" class="text-xs sm:text-sm font-black uppercase tracking-wider text-cyan-300 font-sci-fi bg-cyan-950/60 border border-cyan-500/30 rounded-xl py-1.5 px-3 inline-block">
+          Equipo de Diseño, Planeamiento y Desarrollo
+        </h4>
+      </div>
+
+      <!-- 6 Team Members Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-3.5">
+        <!-- Vanessa Cordero -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Vanessa.png" alt="Vanessa Cordero" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Vanessa Cordero</span>
+        </div>
+
+        <!-- Abigail Vogan -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Abigail.png" alt="Abigail Vogan" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Abigail Vogan</span>
+        </div>
+
+        <!-- Marco Lopez -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Marco.png" alt="Marco Lopez" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Marco Lopez</span>
+        </div>
+
+        <!-- Valeria Céspedes -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Valeria.png" alt="Valeria Céspedes" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Valeria Céspedes</span>
+        </div>
+
+        <!-- Gabriel Araya -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Gabriel.png" alt="Gabriel Araya" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Gabriel Araya</span>
+        </div>
+
+        <!-- Victoria Tovar -->
+        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
+            <img src="personajes/Victoria.png" alt="Victoria Tovar" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+          </div>
+          <span class="text-xs sm:text-sm font-black text-white leading-tight">Victoria Tovar</span>
+        </div>
+      </div>
+
+      <!-- Programmer Section (Francisco Tovar) -->
+      <div class="bg-gradient-to-r from-indigo-950/90 via-slate-900/95 to-purple-950/90 border-2 border-amber-400/60 rounded-2xl p-2.5 sm:p-3 mb-3.5 flex items-center justify-center space-x-4 shadow-xl">
+        <div class="w-20 h-24 sm:w-24 sm:h-28 rounded-xl bg-gradient-to-b from-amber-500/20 via-purple-900/30 to-slate-950 border border-amber-400/50 flex items-end justify-center overflow-hidden shrink-0 shadow-inner">
+          <img src="FranciscoTovar.png" alt="Francisco Tovar" class="h-[96%] w-auto object-contain object-bottom drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] select-none" />
+        </div>
+        <div class="text-left">
+          <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-[10px] sm:text-xs font-black text-amber-300 uppercase tracking-widest font-sci-fi mb-1">
+            <i class="fa-solid fa-code text-amber-400"></i>
+            <span id="credits-programmer-role">Programador</span>
+          </div>
+          <div class="text-base sm:text-xl font-black text-white font-sci-fi tracking-wide">Francisco Tovar</div>
+        </div>
+      </div>
+
+      <button onclick="closeCreditsModal()" class="comic-btn w-full py-3 rounded-2xl bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-500 hover:from-purple-400 hover:to-cyan-400 text-white font-black font-sci-fi text-base sm:text-sm tracking-wider uppercase border border-purple-300 flex items-center justify-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-check"></i>
+        <span id="btn-credits-close-text">¡ENTENDIDO!</span>
+      </button>
+    </div>
+  </div>
+
 
   <!-- =========================================================================
        9. JAVASCRIPT LOGIC & AUDIO SYNTHESIZER
@@ -703,7 +804,11 @@
         zorgonIntroBtn: "¡ACEPTAR EL DESAFÍO!",
         zorgonDefeatedBadge: "NAVE NODRIZA EN RETIRADA",
         zorgonDefeatedSpeech: "\"¡Hoy han probado su conocimiento y me retiro, pero volveré y me vengaré de ustedes y su pequeño sistema!\"",
-        zorgonDefeatedBtn: "¡CELEBRAR LA VICTORIA!"
+        zorgonDefeatedBtn: "¡CELEBRAR LA VICTORIA!",
+        creditsBtn: "CRÉDITOS",
+        creditsTitle: "CRÉDITOS DE LA MISIÓN",
+        creditsTeamHeading: "Equipo de Diseño, Planeamiento y Desarrollo",
+        creditsProgrammerRole: "Programador"
       },
       en: {
         startBadge: "Interactive Orbital Simulator",
@@ -759,7 +864,11 @@
         zorgonIntroBtn: "ACCEPT THE CHALLENGE!",
         zorgonDefeatedBadge: "MOTHERSHIP IN RETREAT",
         zorgonDefeatedSpeech: "\"Today you have proven your knowledge and I retreat, but I will return and take revenge on you and your puny system!\"",
-        zorgonDefeatedBtn: "CELEBRATE VICTORY!"
+        zorgonDefeatedBtn: "CELEBRATE VICTORY!",
+        creditsBtn: "CREDITS",
+        creditsTitle: "MISSION CREDITS",
+        creditsTeamHeading: "Design, Planning & Development Team",
+        creditsProgrammerRole: "Programmer"
       },
       pt: {
         startBadge: "Simulador Orbital Interativo",
@@ -815,7 +924,11 @@
         zorgonIntroBtn: "ACEITAR O DESAFIO!",
         zorgonDefeatedBadge: "NAVE-MÃE EM RETIRADA",
         zorgonDefeatedSpeech: "\"Hoje vocês provaram seu conhecimento e eu me retiro, mas voltarei e me vingarei de vocês e do seu pequeno sistema!\"",
-        zorgonDefeatedBtn: "CELEBRAR A VITÓRIA!"
+        zorgonDefeatedBtn: "CELEBRAR A VITÓRIA!",
+        creditsBtn: "CRÉDITOS",
+        creditsTitle: "CRÉDITOS DA MISSÃO",
+        creditsTeamHeading: "Equipe de Design, Planejamento e Desenvolvimento",
+        creditsProgrammerRole: "Programador"
       }
     };
 
@@ -4695,6 +4808,17 @@
       if (sbClose) sbClose.innerText = loc.howToPlayClose;
       renderScoreboardList(lastSavedScoreId);
 
+      const credBtnText = document.getElementById('btn-credits-text');
+      const credTitle = document.getElementById('credits-modal-title');
+      const credTeam = document.getElementById('credits-team-heading');
+      const credProg = document.getElementById('credits-programmer-role');
+      const credClose = document.getElementById('btn-credits-close-text');
+      if (credBtnText) credBtnText.innerText = loc.creditsBtn;
+      if (credTitle) credTitle.innerText = loc.creditsTitle;
+      if (credTeam) credTeam.innerText = loc.creditsTeamHeading;
+      if (credProg) credProg.innerText = loc.creditsProgrammerRole;
+      if (credClose) credClose.innerText = loc.howToPlayClose;
+
       // Update Language Dropdowns in HUD & Start Screen
       const hudSelect = document.getElementById('hud-lang-select');
       if (hudSelect) hudSelect.value = lang;
@@ -4723,6 +4847,8 @@
       if (zDefModal) zDefModal.classList.add('hidden');
       const sbModal = document.getElementById('scoreboard-modal');
       if (sbModal) sbModal.classList.add('hidden');
+      const credModal = document.getElementById('credits-modal');
+      if (credModal) credModal.classList.add('hidden');
       const instrBar = document.getElementById('instructions-bar');
       if (instrBar) instrBar.classList.remove('hidden');
 
@@ -4742,6 +4868,18 @@
     function closeHowToPlayModal() {
       sound.playPickup();
       const modal = document.getElementById('how-to-play-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openCreditsModal() {
+      sound.playPickup();
+      const modal = document.getElementById('credits-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCreditsModal() {
+      sound.playPickup();
+      const modal = document.getElementById('credits-modal');
       if (modal) modal.classList.add('hidden');
     }
 
