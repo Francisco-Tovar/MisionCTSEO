@@ -175,6 +175,21 @@
       box-shadow: 0 0 30px rgba(239, 68, 68, 0.85), inset 0 0 15px rgba(244, 63, 94, 0.5);
     }
 
+    /* Typewriter Cursor Blink */
+    @keyframes typeCursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .typewriter-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.15em;
+      vertical-align: text-bottom;
+      background-color: #38bdf8;
+      margin-left: 2px;
+      animation: typeCursorBlink 0.75s infinite;
+    }
+
     #game-container canvas {
       display: block;
       margin: 0 auto;
@@ -2451,6 +2466,10 @@
           clearInterval(this.factCountdownTimer);
           this.factCountdownTimer = null;
         }
+        if (this.factTypewriterTimer) {
+          clearInterval(this.factTypewriterTimer);
+          this.factTypewriterTimer = null;
+        }
         this.bossMaxHP = 6;
         this.bossHP = 6;
         this.currentTriviaIndex = 0;
@@ -3814,10 +3833,14 @@
         const factEntry = this.sessionFacts[planetId];
         if (!factEntry) return;
 
-        // Clear any previous fact countdown timer
+        // Clear any previous fact timers
         if (this.factCountdownTimer) {
           clearInterval(this.factCountdownTimer);
           this.factCountdownTimer = null;
+        }
+        if (this.factTypewriterTimer) {
+          clearInterval(this.factTypewriterTimer);
+          this.factTypewriterTimer = null;
         }
 
         // Pick a character from /personajes/*.png, ensuring no repeats within the last 5 transmissions
@@ -3845,7 +3868,25 @@
         const pBody = document.getElementById('fact-modal-body');
 
         pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
-        pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+        const fullFactText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+
+        // Typewriter Effect: Complete smoothly in ~3.8 seconds (just under the 5-second countdown)
+        pBody.innerHTML = '<span class="typewriter-cursor"></span>';
+        let charIndex = 0;
+        const totalChars = fullFactText.length;
+        const targetDurationMs = 3800; // Finish in ~3.8s (< 5.0s)
+        const typeIntervalMs = Math.max(16, Math.floor(targetDurationMs / Math.max(1, totalChars)));
+
+        this.factTypewriterTimer = setInterval(() => {
+          charIndex++;
+          if (charIndex <= totalChars) {
+            pBody.innerHTML = escapeHtmlText(fullFactText.slice(0, charIndex)) + '<span class="typewriter-cursor"></span>';
+          } else {
+            clearInterval(this.factTypewriterTimer);
+            this.factTypewriterTimer = null;
+            pBody.innerHTML = escapeHtmlText(fullFactText);
+          }
+        }, typeIntervalMs);
 
         // Enforce 5-second reading timer before enabling the continue button
         const contBtn = document.getElementById('btn-fact-continue');
@@ -3876,6 +3917,12 @@
           if (remainingSeconds <= 0) {
             clearInterval(this.factCountdownTimer);
             this.factCountdownTimer = null;
+            // Ensure full text is displayed if typewriter hasn't finished
+            if (this.factTypewriterTimer) {
+              clearInterval(this.factTypewriterTimer);
+              this.factTypewriterTimer = null;
+              pBody.innerHTML = escapeHtmlText(fullFactText);
+            }
             sound.playPickup();
           }
         }, 1000);
@@ -3885,6 +3932,10 @@
           if (this.factCountdownTimer) {
             clearInterval(this.factCountdownTimer);
             this.factCountdownTimer = null;
+          }
+          if (this.factTypewriterTimer) {
+            clearInterval(this.factTypewriterTimer);
+            this.factTypewriterTimer = null;
           }
           modal.classList.add('hidden');
           this.activeFactPlanetId = null;
