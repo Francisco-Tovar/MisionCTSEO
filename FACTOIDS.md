@@ -431,3 +431,4 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
 - **Pregunta:** ¿Qué tonalidad azul intensa distingue a Neptuno en el Sistema Solar?
   - **Correcta:** `Azul cobalto intenso`
   - **Distractores:** `Verde esmeralda` | `Blanco plateado`
+

@@ -1,0 +1,478 @@
+================================================================================
+MISIÓN CTSEO - BASE DE DATOS COMPLETA DE FACTOIDS Y TRIVIA
+Guía Oficial de Preguntas y Respuestas para los 8 Planetas
+================================================================================
+
+Total: 48 Factoids (6 por planeta)
+Idiomas: Español (ES), Inglés (EN) y Portugués (PT)
+
+--------------------------------------------------------------------------------
+1. MERCURIO
+--------------------------------------------------------------------------------
+
+[Factoid 1.1: Temperaturas Extremas]
+• Dato en Español: Mercurio es el planeta más cercano al Sol y experimenta cambios extremos: ¡430°C de día y -180°C de noche!
+• Fact in English: Mercury is the closest planet to the Sun and has extreme temperatures: 430°C by day and -180°C at night!
+• Facto em Português: Mercúrio é o mais próximo do Sol e sofre extremos: 430°C de dia e -180°C à noite!
+- Pregunta: ¿Qué temperatura nocturna extrema registra Mercurio?
+  * RESPUESTA CORRECTA: -180°C
+  * Opción incorrecta 1: 0°C
+  * Opción incorrecta 2: -50°C
+
+[Factoid 1.2: El Planeta Más Pequeño]
+• Dato en Español: Mercurio es el planeta más pequeño de los ocho, midiendo apenas un poco más que nuestra Luna.
+• Fact in English: Mercury is the smallest of all 8 planets, only slightly larger than Earth's Moon.
+• Facto em Português: Mercúrio é o menor dos oito planetas, apenas um pouco maior que nossa Lua.
+- Pregunta: ¿Cómo se compara el tamaño de Mercurio en el Sistema Solar?
+  * RESPUESTA CORRECTA: Es el más pequeño
+  * Opción incorrecta 1: Es el más grande
+  * Opción incorrecta 2: Igual a Júpiter
+
+[Factoid 1.3: Velocidad Orbital y Año Corto]
+• Dato en Español: Un año en Mercurio dura solo 88 días terrestres gracias a su tremenda velocidad orbital.
+• Fact in English: A year on Mercury lasts only 88 Earth days due to its immense orbital velocity.
+• Facto em Português: Um ano em Mercúrio dura apenas 88 dias terrestres devido à sua incrível velocidade orbital.
+- Pregunta: ¿Cuántos días terrestres dura un año completo en Mercurio?
+  * RESPUESTA CORRECTA: 88 días
+  * Opción incorrecta 1: 365 días
+  * Opción incorrecta 2: 24 días
+
+[Factoid 1.4: Sin Lunas ni Anillos]
+• Dato en Español: Mercurio no tiene lunas ni anillos a su alrededor debido a la cercanía y gravedad del Sol.
+• Fact in English: Mercury possesses no moons or rings around it because of the Sun's immense gravitational pull.
+• Facto em Português: Mercúrio não possui luas nem anéis devido à proximidade e imensa gravidade do Sol.
+- Pregunta: ¿Cuántas lunas naturales orbitan alrededor de Mercurio?
+  * RESPUESTA CORRECTA: Cero lunas
+  * Opción incorrecta 1: Dos lunas
+  * Opción incorrecta 2: Una luna
+
+[Factoid 1.5: Cráteres y la Cuenca Caloris]
+• Dato en Español: La superficie de Mercurio está repleta de cráteres, siendo el más gigantesco la Cuenca Caloris.
+• Fact in English: Mercury's surface is covered with craters, the most colossal being the Caloris Basin.
+• Facto em Português: A superfície de Mercúrio é cheia de crateras, sendo a maior a Bacia Caloris.
+- Pregunta: ¿Cómo se llama el cráter o cuenca de impacto más enorme de Mercurio?
+  * RESPUESTA CORRECTA: Cuenca Caloris
+  * Opción incorrecta 1: Mar de la Tranquilidad
+  * Opción incorrecta 2: Cráter Copérnico
+
+[Factoid 1.6: Núcleo Metálico Gigante]
+• Dato en Español: Mercurio tiene un núcleo de hierro gigante que ocupa cerca del 85% del radio de todo el planeta.
+• Fact in English: Mercury has an enormous metallic iron core that makes up about 85% of the planet's radius.
+• Facto em Português: Mercúrio possui um núcleo de ferro gigantesco que ocupa cerca de 85% do seu raio.
+- Pregunta: ¿De qué material metálico está compuesto principalmente el enorme núcleo de Mercurio?
+  * RESPUESTA CORRECTA: Hierro metálico
+  * Opción incorrecta 1: Oro puro
+  * Opción incorrecta 2: Plomo fundido
+
+
+--------------------------------------------------------------------------------
+2. VENUS
+--------------------------------------------------------------------------------
+
+[Factoid 2.1: El Más Caliente (Efecto Invernadero)]
+• Dato en Español: Venus es el planeta más caliente de todos (465°C) debido a un potente efecto invernadero descontrolado.
+• Fact in English: Venus is the hottest planet of all (465°C) due to a runaway greenhouse effect trapped by dense clouds.
+• Facto em Português: Vênus é o planeta mais quente de todos (465°C) devido ao forte efeito estufa descontrolado.
+- Pregunta: ¿Por qué Venus es el planeta más caliente a pesar de no ser el primero?
+  * RESPUESTA CORRECTA: Efecto invernadero descontrolado
+  * Opción incorrecta 1: Está hecho de magma líquido
+  * Opción incorrecta 2: No tiene atmósfera
+
+[Factoid 2.2: Rotación Retrógrada]
+• Dato en Español: Venus gira al revés (rotación retrógrada): en Venus el Sol sale por el oeste y se pone por el este.
+• Fact in English: Venus rotates backwards (retrograde): on Venus the Sun rises in the west and sets in the east.
+• Facto em Português: Vênus gira ao contrário (rotação retrógrada): lá o Sol nasce no oeste e se põe no leste.
+- Pregunta: ¿Por qué punto cardinal sale el Sol en el planeta Venus?
+  * RESPUESTA CORRECTA: Por el Oeste
+  * Opción incorrecta 1: Por el Este
+  * Opción incorrecta 2: Por el Norte
+
+[Factoid 2.3: Día Más Largo que su Año]
+• Dato en Español: Un solo día en Venus dura más que su año completo: rota tan lento que tarda 243 días terrestres.
+• Fact in English: A single day on Venus is longer than its entire year: it rotates so slowly it takes 243 Earth days.
+• Facto em Português: Um único dia em Vênus dura mais que seu ano inteiro: ele leva 243 dias terrestres para girar.
+- Pregunta: ¿Qué curiosidad temporal ocurre en Venus entre su día y su año?
+  * RESPUESTA CORRECTA: Su día dura más que su año
+  * Opción incorrecta 1: Su año dura 10 días
+  * Opción incorrecta 2: No tiene noche
+
+[Factoid 2.4: Nubes de Ácido Sulfúrico]
+• Dato en Español: Las nubes espesas de Venus no están hechas de agua, ¡sino de gotas corrosivas de ácido sulfúrico!
+• Fact in English: Venus' thick perpetual cloud cover is made of corrosive sulfuric acid droplets, not water!
+• Facto em Português: As nuvens densas de Vênus não são feitas de água, mas de ácido sulfúrico corrosivo!
+- Pregunta: ¿De qué compuesto corrosivo están compuestas las nubes espesas de Venus?
+  * RESPUESTA CORRECTA: Ácido sulfúrico
+  * Opción incorrecta 1: Vapor de agua puro
+  * Opción incorrecta 2: Alcohol etílico
+
+[Factoid 2.5: Presión Aplastante]
+• Dato en Español: La presión atmosférica en la superficie de Venus es 90 veces más aplastante que la de la Tierra.
+• Fact in English: Atmospheric pressure on Venus' surface is 90 times greater than Earth's, like deep underwater.
+• Facto em Português: A pressão atmosférica na superfície de Vênus é 90 vezes mais esmagadora que a da Terra.
+- Pregunta: ¿Cuántas veces más potente es la presión en la superficie de Venus comparada con la Tierra?
+  * RESPUESTA CORRECTA: 90 veces más
+  * Opción incorrecta 1: Igual que en la Tierra
+  * Opción incorrecta 2: La mitad
+
+[Factoid 2.6: El Gemelo de la Tierra]
+• Dato en Español: A Venus se le llama el 'gemelo de la Tierra' porque tienen casi el mismo tamaño, masa y composición.
+• Fact in English: Venus is often called 'Earth's twin' because it shares very similar size, mass, and density.
+• Facto em Português: Vênus é chamado de 'gêmeo da Terra' por ter tamanho, massa e composição muito parecidos.
+- Pregunta: ¿Por qué se le conoce tradicionalmente a Venus como el planeta gemelo de la Tierra?
+  * RESPUESTA CORRECTA: Tamaño y masa muy parecidos
+  * Opción incorrecta 1: Tiene los mismos océanos
+  * Opción incorrecta 2: Tiene bosques verdes
+
+
+--------------------------------------------------------------------------------
+3. TIERRA
+--------------------------------------------------------------------------------
+
+[Factoid 3.1: Agua Líquida y Vida]
+• Dato en Español: La Tierra es el único planeta conocido que posee agua líquida en superficie y alberga vida biológica.
+• Fact in English: Earth is the only known celestial planet with stable liquid water oceans and confirmed life.
+• Facto em Português: A Terra é o único planeta conhecido com oceanos de água líquida e vida confirmada.
+- Pregunta: ¿Qué elemento fundamental de la superficie hace única a la Tierra en el sistema?
+  * RESPUESTA CORRECTA: Agua líquida y vida
+  * Opción incorrecta 1: Anillos gigantes
+  * Opción incorrecta 2: Lluvia de diamantes
+
+[Factoid 3.2: 71% de Océanos]
+• Dato en Español: El 71% de la superficie de la Tierra está cubierta por océanos de agua salada.
+• Fact in English: Approximately 71% of the Earth's surface is covered by liquid saltwater oceans.
+• Facto em Português: Aproximadamente 71% da superfície da Terra é coberta por oceanos de água salgada.
+- Pregunta: ¿Qué porcentaje aproximado de la Tierra está cubierto por agua?
+  * RESPUESTA CORRECTA: 71%
+  * Opción incorrecta 1: 35%
+  * Opción incorrecta 2: 95%
+
+[Factoid 3.3: Campo Magnético Protector]
+• Dato en Español: El campo magnético terrestre nos defiende de la radiación cósmica y las tormentas solares.
+• Fact in English: Earth's strong magnetic field deflects dangerous cosmic radiation and solar storms.
+• Facto em Português: O campo magnético terrestre nos protege da radiação cósmica e tempestades solares.
+- Pregunta: ¿Qué escudo natural protege a la Tierra de las tormentas solares?
+  * RESPUESTA CORRECTA: El campo magnético
+  * Opción incorrecta 1: La Luna
+  * Opción incorrecta 2: Los volcanes
+
+[Factoid 3.4: Atmósfera de Nitrógeno y Oxígeno]
+• Dato en Español: La atmósfera de la Tierra está formada por 78% de nitrógeno y 21% de oxígeno indispensable para respirar.
+• Fact in English: Earth's atmosphere consists of approximately 78% nitrogen and 21% breathable oxygen.
+• Facto em Português: A atmosfera da Terra é composta por 78% de nitrogênio e 21% de oxigênio essencial à respiração.
+- Pregunta: ¿Cuál es el gas más abundante en el aire que respiramos en la Tierra?
+  * RESPUESTA CORRECTA: Nitrógeno (78%)
+  * Opción incorrecta 1: Oxígeno (100%)
+  * Opción incorrecta 2: Dióxido de carbono
+
+[Factoid 3.5: Esferoide Oblato]
+• Dato en Español: La Tierra no es una esfera perfecta: está ligeramente achatada en los polos por su rotación centrífuga.
+• Fact in English: Earth is an oblate spheroid, flattened slightly at the poles and bulging at the equator.
+• Facto em Português: A Terra é um esferoide oblato, ligeiramente achatada nos polos devido à rotação.
+- Pregunta: ¿Cuál es la forma geométrica verdadera y precisa del planeta Tierra?
+  * RESPUESTA CORRECTA: Esferoide oblato (achatada)
+  * Opción incorrecta 1: Cilindro espacial
+  * Opción incorrecta 2: Plana y cuadrada
+
+[Factoid 3.6: Estabilidad por la Luna]
+• Dato en Español: La Luna estabiliza la inclinación del eje de la Tierra, evitando cambios climáticos catastróficos.
+• Fact in English: The Moon's gravitational pull stabilizes Earth's axial tilt, keeping the global climate stable.
+• Facto em Português: A Lua estabiliza a inclinação do eixo da Terra, mantendo o clima global estável.
+- Pregunta: ¿Qué importante función ejerce la Luna sobre el eje y clima de la Tierra?
+  * RESPUESTA CORRECTA: Estabiliza el eje e inclinación
+  * Opción incorrecta 1: Frena la órbita al Sol
+  * Opción incorrecta 2: Crea volcanes
+
+
+--------------------------------------------------------------------------------
+4. MARTE
+--------------------------------------------------------------------------------
+
+[Factoid 4.1: Monte Olimpo]
+• Dato en Español: Marte alberga el Monte Olimpo, el volcán más colosal del Sistema Solar: ¡tres veces más alto que el Everest!
+• Fact in English: Mars hosts Olympus Mons, the largest volcano in the Solar System: three times taller than Mount Everest!
+• Facto em Português: Marte abriga o Monte Olimpo, o maior vulcão do Sistema Solar: três vezes mais alto que o Everest!
+- Pregunta: ¿Cómo se llama el volcán colosal ubicado en Marte?
+  * RESPUESTA CORRECTA: Monte Olimpo
+  * Opción incorrecta 1: Monte Vesubio
+  * Opción incorrecta 2: Cráter Kepler
+
+[Factoid 4.2: Herrumbre y Óxidos de Hierro]
+• Dato en Español: Marte es de color rojo porque su regolito y rocas contienen abundantes óxidos de hierro (herrumbre).
+• Fact in English: Mars appears distinctively red because its soil and rocks are rich in iron oxide (rust).
+• Facto em Português: Marte é vermelho porque seu solo é rico em óxido de ferro (ferrugem).
+- Pregunta: ¿Qué mineral da el característico color rojizo al planeta Marte?
+  * RESPUESTA CORRECTA: Óxido de hierro (óxido)
+  * Opción incorrecta 1: Azufre volcánico
+  * Opción incorrecta 2: Cobre oxidado
+
+[Factoid 4.3: Fobos y Deimos]
+• Dato en Español: Marte posee dos lunas diminutas con forma de asteroide llamadas Fobos y Deimos.
+• Fact in English: Mars is orbited by two tiny potato-shaped moons called Phobos and Deimos.
+• Facto em Português: Marte possui duas luas minúsculas com formato irregular chamadas Fobos e Deimos.
+- Pregunta: ¿Cuáles son las dos lunas que orbitan el planeta rojo?
+  * RESPUESTA CORRECTA: Fobos y Deimos
+  * Opción incorrecta 1: Europa y Titán
+  * Opción incorrecta 2: Ío y Calisto
+
+[Factoid 4.4: Valles Marineris]
+• Dato en Español: Marte tiene el cañón más gigantesco del sistema, Valles Marineris, 4 veces más profundo que el Gran Cañón.
+• Fact in English: Mars features Valles Marineris, a canyon system 4 times deeper and 10 times longer than the Grand Canyon.
+• Facto em Português: Marte possui o cânion Valles Marineris, 4 vezes mais profundo que o Grand Canyon.
+- Pregunta: ¿Cómo se llama el descomunal sistema de cañones ubicado en Marte?
+  * RESPUESTA CORRECTA: Valles Marineris
+  * Opción incorrecta 1: Fosa de las Marianas
+  * Opción incorrecta 2: Garganta del Nilo
+
+[Factoid 4.5: Tormentas Globales de Polvo]
+• Dato en Español: En Marte se desatan tormentas de polvo gigantescas que pueden envolver a todo el planeta por meses.
+• Fact in English: Mars regularly experiences massive planet-wide dust storms that can obscure the entire surface.
+• Facto em Português: Marte sofre tempestades de poeira colossais capazes de cobrir o planeta inteiro por meses.
+- Pregunta: ¿Qué fenómeno meteorológico extremo puede envolver a todo el planeta Marte?
+  * RESPUESTA CORRECTA: Tormentas globales de polvo
+  * Opción incorrecta 1: Tsunamis de vapor
+  * Opción incorrecta 2: Lluvias torrenciales
+
+[Factoid 4.6: El Día Marciano (Sol)]
+• Dato en Español: Un día en Marte (llamado 'sol') dura casi igual que en la Tierra: exactamente 24 horas y 37 minutos.
+• Fact in English: A day on Mars (called a 'sol') lasts almost the same as on Earth: 24 hours and 37 minutes.
+• Facto em Português: Um dia em Marte (chamado 'sol') dura quase o mesmo que na Terra: 24 horas e 37 minutos.
+- Pregunta: ¿Cuánto dura aproximadamente un día marciano o 'sol'?
+  * RESPUESTA CORRECTA: 24 horas y 37 minutos
+  * Opción incorrecta 1: 48 horas
+  * Opción incorrecta 2: 10 horas
+
+
+--------------------------------------------------------------------------------
+5. JÚPITER
+--------------------------------------------------------------------------------
+
+[Factoid 5.1: 1.300 Tierras en su Interior]
+• Dato en Español: Júpiter es tan inmenso que en su interior podrían caber más de 1.300 planetas como la Tierra.
+• Fact in English: Jupiter is so colossal that over 1,300 Earths could fit inside its volume.
+• Facto em Português: Júpiter é tão imenso que mais de 1.300 planetas Terra caberiam dentro dele.
+- Pregunta: ¿Aproximadamente cuántas Tierras cabrían dentro del gigante Júpiter?
+  * RESPUESTA CORRECTA: Más de 1.300
+  * Opción incorrecta 1: Unas 50
+  * Opción incorrecta 2: Solo 10
+
+[Factoid 5.2: La Gran Mancha Roja]
+• Dato en Español: La Gran Mancha Roja de Júpiter es un anticiclón gigantesco que lleva activo más de 300 años.
+• Fact in English: Jupiter's Great Red Spot is a monster storm that has raged continuously for over 300 years.
+• Facto em Português: A Grande Mancha Vermelha de Júpiter é uma tempestade colossal ativa há mais de 300 anos.
+- Pregunta: ¿Qué es verdaderamente la Gran Mancha Roja de Júpiter?
+  * RESPUESTA CORRECTA: Una tormenta gigante de siglos
+  * Opción incorrecta 1: Un océano de fuego
+  * Opción incorrecta 2: Un cráter de meteorito
+
+[Factoid 5.3: Rotación Rápida]
+• Dato en Español: Júpiter tiene el día más veloz: ¡completa una rotación sobre su eje en menos de 10 horas!
+• Fact in English: Jupiter has the fastest rotation in the system: it spins completely in under 10 hours!
+• Facto em Português: Júpiter tem o dia mais rápido: completa uma rotação sobre seu eixo em menos de 10 horas!
+- Pregunta: ¿Cuánto tarda Júpiter en dar un giro sobre su propio eje?
+  * RESPUESTA CORRECTA: Menos de 10 horas
+  * Opción incorrecta 1: 24 horas
+  * Opción incorrecta 2: 48 horas
+
+[Factoid 5.4: Ganímedes, la Mayor Luna]
+• Dato en Español: Júpiter tiene la luna más grande del Sistema Solar llamada Ganímedes, ¡más grande que Mercurio!
+• Fact in English: Jupiter is orbited by Ganymede, the largest moon in the Solar System, even larger than Mercury!
+• Facto em Português: Júpiter possui a maior lua do Sistema Solar chamada Ganimedes, maior que o planeta Mercúrio!
+- Pregunta: ¿Cómo se llama la luna más descomunal de Júpiter y de todo el Sistema Solar?
+  * RESPUESTA CORRECTA: Ganímedes
+  * Opción incorrecta 1: Europa
+  * Opción incorrecta 2: Titán
+
+[Factoid 5.5: Sin Superficie Sólida (Hidrógeno y Helio)]
+• Dato en Español: Júpiter no tiene superficie sólida: es una esfera inmensa compuesta principalmente de hidrógeno y helio.
+• Fact in English: Jupiter has no solid ground: it is a massive fluid ball made mostly of hydrogen and helium gas.
+• Facto em Português: Júpiter não tem superfície sólida: é uma esfera gigante composta de hidrogênio e hélio.
+- Pregunta: ¿De qué gases está formado primordialmente el gigante Júpiter?
+  * RESPUESTA CORRECTA: Hidrógeno y helio
+  * Opción incorrecta 1: Oxígeno y nitrógeno
+  * Opción incorrecta 2: Hierro y níquel
+
+[Factoid 5.6: Ío y su Vulcanismo Extremo]
+• Dato en Español: La luna Ío de Júpiter es el objeto geológicamente más volcánico y activo de todo el Sistema Solar.
+• Fact in English: Jupiter's moon Io is the most volcanically active body in the entire Solar System.
+• Facto em Português: A lua Ío de Júpiter é o corpo mais vulcânico e geologicamente ativo do Sistema Solar.
+- Pregunta: ¿Qué luna de Júpiter posee cientos de volcanes en constante erupción?
+  * RESPUESTA CORRECTA: Ío
+  * Opción incorrecta 1: Calisto
+  * Opción incorrecta 2: Nereida
+
+
+--------------------------------------------------------------------------------
+6. SATURNO
+--------------------------------------------------------------------------------
+
+[Factoid 6.1: Anillos de Hielo y Roca]
+• Dato en Español: Los anillos espectaculares de Saturno están compuestos en un 99% por fragmentos de hielo puro y roca.
+• Fact in English: Saturn's dazzling rings are composed 99% of pure water ice chunks, dust, and rock fragments.
+• Facto em Português: Os anéis espetaculares de Saturno são formados 99% por pedaços de gelo de água pura e rocha.
+- Pregunta: ¿Cuál es el componente primordial de los anillos de Saturno?
+  * RESPUESTA CORRECTA: Hielo de agua y roca
+  * Opción incorrecta 1: Lava volcánica
+  * Opción incorrecta 2: Plástico estelar
+
+[Factoid 6.2: Densidad Menor que el Agua]
+• Dato en Español: Saturno es el planeta menos denso: es menos denso que el agua, ¡flotaría en una bañera cósmica!
+• Fact in English: Saturn is the least dense planet: less dense than liquid water, it would float in an enormous pool!
+• Facto em Português: Saturno é o menos denso: tem densidade menor que a água, flutuaria numa banheira cósmica!
+- Pregunta: ¿Qué sucedería con Saturno si se colocara en una piscina gigante de agua?
+  * RESPUESTA CORRECTA: Flotaría
+  * Opción incorrecta 1: Se hundiría como plomo
+  * Opción incorrecta 2: Se disolvería al instante
+
+[Factoid 6.3: Titán (Lagos de Metano)]
+• Dato en Español: Saturno tiene a Titán, la única luna del Sistema Solar con atmósfera densa y lagos de metano líquido.
+• Fact in English: Saturn's moon Titan is the only moon in the system with a thick atmosphere and liquid methane lakes.
+• Facto em Português: Saturno tem Titã, a única lua com atmosfera espessa e lagos de metano líquido.
+- Pregunta: ¿Qué luna de Saturno tiene lagos de metano líquido y atmósfera densa?
+  * RESPUESTA CORRECTA: Titán
+  * Opción incorrecta 1: Encélado
+  * Opción incorrecta 2: Mimas
+
+[Factoid 6.4: El Hexágono Polar]
+• Dato en Español: En el polo norte de Saturno gira una tormenta geométrica insólita con forma de hexágono perfecto.
+• Fact in English: Saturn's north pole features an astonishing perpetual storm shaped like a geometric hexagon.
+• Facto em Português: O polo norte de Saturno abriga uma tempestade bizarra com formato de hexágono perfeito.
+- Pregunta: ¿Qué forma geométrica tiene la misteriosa tormenta polar en el norte de Saturno?
+  * RESPUESTA CORRECTA: Un hexágono
+  * Opción incorrecta 1: Un triángulo
+  * Opción incorrecta 2: Un círculo perfecto
+
+[Factoid 6.5: Encélado y sus Géiseres]
+• Dato en Español: La luna Encélado de Saturno dispara géiseres de vapor y hielo de agua desde un océano subterráneo.
+• Fact in English: Saturn's icy moon Enceladus spews towering water plumes from a global subsurface ocean.
+• Facto em Português: A lua Encélado de Saturno expele gêiseres de vapor e gelo de um oceano subterrâneo.
+- Pregunta: ¿Qué luna helada de Saturno dispara columnas de géiseres al espacio desde su océano oculto?
+  * RESPUESTA CORRECTA: Encélado
+  * Opción incorrecta 1: Fobos
+  * Opción incorrecta 2: Tritón
+
+[Factoid 6.6: Grosor Mínimo de los Anillos]
+• Dato en Español: Aunque los anillos de Saturno miden 280.000 km de ancho, su grosor es de apenas unos 10 a 30 metros.
+• Fact in English: Though Saturn's main rings span 280,000 km across, they are paper-thin: only 10 to 30 meters thick!
+• Facto em Português: Embora os anéis de Saturno meçam 280.000 km de largura, sua espessura é de apenas 10 a 30 metros.
+- Pregunta: ¿Qué grosor aproximado tienen los discos de los anillos principales de Saturno?
+  * RESPUESTA CORRECTA: Entre 10 y 30 metros
+  * Opción incorrecta 1: 1.000 kilómetros
+  * Opción incorrecta 2: 100 kilómetros
+
+
+--------------------------------------------------------------------------------
+7. URANO
+--------------------------------------------------------------------------------
+
+[Factoid 7.1: Inclinación Axial de 98°]
+• Dato en Español: Urano rota prácticamente acostado de lado con una inclinación axial insólita de 98 grados.
+• Fact in English: Uranus rotates tilted completely on its side with a dramatic axial tilt of 98 degrees.
+• Facto em Português: Urano gira completamente de lado com uma inclinação axial incomum de 98 graus.
+- Pregunta: ¿Qué inclinación singular caracteriza la rotación del gigante Urano?
+  * RESPUESTA CORRECTA: Gira acostado a 98°
+  * Opción incorrecta 1: No tiene rotación
+  * Opción incorrecta 2: Inclinado a 5°
+
+[Factoid 7.2: La Atmósfera Más Fría (-224°C)]
+• Dato en Español: Urano es el planeta más frío del Sistema Solar, alcanzando temperaturas mínimas de -224°C.
+• Fact in English: Uranus holds the record for the coldest atmosphere in the planetary system, reaching -224°C.
+• Facto em Português: Urano possui a atmosfera mais fria do Sistema Solar, atingindo até -224°C.
+- Pregunta: ¿Qué récord de temperatura ostenta la atmósfera de Urano?
+  * RESPUESTA CORRECTA: La más fría (-224°C)
+  * Opción incorrecta 1: La más caliente
+  * Opción incorrecta 2: Temperatura media de 20°C
+
+[Factoid 7.3: Color Aguamarina por Metano]
+• Dato en Español: Urano debe su hermoso color aguamarina al metano en su atmósfera superior, que absorbe la luz roja.
+• Fact in English: Uranus gets its cyan-aquamarine hue from methane gas in its upper atmosphere absorbing red light.
+• Facto em Português: Urano tem sua bela cor azul-turquesa devido ao gás metano absorvendo a luz vermelha.
+- Pregunta: ¿Qué gas es responsable del color celeste aguamarina de Urano?
+  * RESPUESTA CORRECTA: Gas metano
+  * Opción incorrecta 1: Oxígeno puro
+  * Opción incorrecta 2: Helio pesado
+
+[Factoid 7.4: Descubierto por William Herschel (1781)]
+• Dato en Español: Urano fue el primer planeta descubierto con un telescopio moderno por William Herschel en 1781.
+• Fact in English: Uranus was the very first planet discovered using a modern telescope, by William Herschel in 1781.
+• Facto em Português: Urano foi o primeiro planeta descoberto com um telescópio moderno por William Herschel em 1781.
+- Pregunta: ¿Quién descubrió el planeta Urano con un telescopio en 1781?
+  * RESPUESTA CORRECTA: William Herschel
+  * Opción incorrecta 1: Galileo Galilei
+  * Opción incorrecta 2: Isaac Newton
+
+[Factoid 7.5: 13 Anillos Verticales]
+• Dato en Español: Urano posee 13 anillos oscuros y estrechos, que orbitan verticalmente alrededor de sus polos.
+• Fact in English: Uranus features 13 dark, narrow planetary rings that orbit nearly vertically due to its tilt.
+• Facto em Português: Urano possui 13 anéis escuros e estreitos que orbitam verticalmente devido à sua inclinação.
+- Pregunta: ¿Cuántos anillos delgados y oscuros se han identificado alrededor de Urano?
+  * RESPUESTA CORRECTA: 13 anillos
+  * Opción incorrecta 1: Cero anillos
+  * Opción incorrecta 2: 100 anillos
+
+[Factoid 7.6: Lunas de Shakespeare y Pope]
+• Dato en Español: Las lunas de Urano llevan nombres de personajes creados por William Shakespeare y Alexander Pope.
+• Fact in English: Uranus' moons are uniquely named after characters created by William Shakespeare and Alexander Pope.
+• Facto em Português: As luas de Urano têm nomes inspirados em personagens de William Shakespeare e Alexander Pope.
+- Pregunta: ¿De qué famoso autor literario provienen los nombres de la mayoría de lunas de Urano?
+  * RESPUESTA CORRECTA: William Shakespeare
+  * Opción incorrecta 1: Homero
+  * Opción incorrecta 2: Julio Verne
+
+
+--------------------------------------------------------------------------------
+8. NEPTUNO
+--------------------------------------------------------------------------------
+
+[Factoid 8.1: Vientos Supersónicos (+2.000 km/h)]
+• Dato en Español: Neptuno registra los vientos más feroces del Sistema Solar: ¡ráfagas supersónicas de más de 2.000 km/h!
+• Fact in English: Neptune unleashes the fiercest supersonic winds in the system, clocking over 2,000 km/h!
+• Facto em Português: Netuno registra os ventos mais ferozes do sistema: rajadas supersônicas de mais de 2.000 km/h!
+- Pregunta: ¿A qué velocidad pueden soplar los vientos supersónicos de Neptuno?
+  * RESPUESTA CORRECTA: Más de 2.000 km/h
+  * Opción incorrecta 1: 100 km/h
+  * Opción incorrecta 2: 500 km/h
+
+[Factoid 8.2: Año de 165 Años Terrestres]
+• Dato en Español: Neptuno tarda 165 años terrestres en completar una sola vuelta orbital alrededor del Sol.
+• Fact in English: Neptune takes an incredible 165 Earth years to complete just one full orbit around the Sun.
+• Facto em Português: Netuno leva 165 anos terrestres para completar uma única volta ao redor do Sol.
+- Pregunta: ¿Cuánto tiempo le toma a Neptuno dar una órbita completa al Sol?
+  * RESPUESTA CORRECTA: 165 años terrestres
+  * Opción incorrecta 1: 12 años terrestres
+  * Opción incorrecta 2: 500 años terrestres
+
+[Factoid 8.3: Descubrimiento Matemático]
+• Dato en Español: Neptuno fue descubierto en 1846 mediante cálculos matemáticos antes de ser visto por telescopio.
+• Fact in English: Neptune was discovered in 1846 through pure mathematics before ever being seen in a telescope.
+• Facto em Português: Netuno foi descoberto em 1846 através de cálculos matemáticos antes de ser visto por telescópio.
+- Pregunta: ¿Cómo fue descubierto inicialmente el planeta Neptuno?
+  * RESPUESTA CORRECTA: Por cálculos matemáticos
+  * Opción incorrecta 1: Por una sonda espacial
+  * Opción incorrecta 2: Por casualidad a simple vista
+
+[Factoid 8.4: Tritón y Órbita Retrógrada]
+• Dato en Español: Tritón, la luna más grande de Neptuno, gira en sentido retrógrado: al revés de como rota el planeta.
+• Fact in English: Triton, Neptune's largest moon, orbits backwards (retrograde) in the opposite direction of Neptune's rotation.
+• Facto em Português: Tritão, a maior lua de Netuno, orbita em sentido retrógrado: no sentido oposto à rotação do planeta.
+- Pregunta: ¿Qué extraña órbita caracteriza a Tritón, la mayor luna de Neptuno?
+  * RESPUESTA CORRECTA: Orbita al revés (retrógrada)
+  * Opción incorrecta 1: No orbita, está fija
+  * Opción incorrecta 2: Orbita en zigzag
+
+[Factoid 8.5: Lluvias de Diamantes]
+• Dato en Español: En las profundidades extremas de Neptuno la presión puede comprimir carbono y generar lluvias de diamantes.
+• Fact in English: In the extreme high-pressure mantles of Neptune, methane may compress into raining diamonds.
+• Facto em Português: Nas profundezas de Netuno, a pressão pode comprimir o carbono gerando chuva de diamantes.
+- Pregunta: ¿Qué joya preciosa teórica puede formarse por la extrema presión dentro de Neptuno?
+  * RESPUESTA CORRECTA: Diamantes
+  * Opción incorrecta 1: Rubíes gigantes
+  * Opción incorrecta 2: Esmeraldas líquidas
+
+[Factoid 8.6: Azul Cobalto Profundo]
+• Dato en Español: Neptuno tiene un color azul ultramar mucho más vivo y profundo que Urano por un componente atmosférico aún misterioso.
+• Fact in English: Neptune displays a much more intense azure blue color than Uranus due to a still mysterious atmospheric compound.
+• Facto em Português: Netuno tem uma cor azul ultramarino mais vívida e intensa que Urano devido a um componente ainda misterioso.
+- Pregunta: ¿Qué tonalidad azul intensa distingue a Neptuno en el Sistema Solar?
+  * RESPUESTA CORRECTA: Azul cobalto intenso
+  * Opción incorrecta 1: Verde esmeralda
+  * Opción incorrecta 2: Blanco plateado
