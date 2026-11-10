@@ -34,7 +34,24 @@
       font-family: 'Fredoka', 'Inter', sans-serif;
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    #game-container, #game-container canvas {
       touch-action: none;
+    }
+
+    /* Scrollable modal cards on small mobile screens (e.g. iPhone SE) */
+    .modal-scroll-card {
+      max-height: calc(100vh - 24px);
+      max-height: calc(100dvh - 24px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      overscroll-behavior: contain;
+    }
+    .modal-scroll-card * {
+      touch-action: pan-y;
     }
 
     .font-sci-fi {
@@ -132,97 +149,143 @@
        ========================================================================= -->
   <div id="start-screen" class="fixed inset-0 z-50 flex flex-col justify-between items-center bg-[#020512] overflow-hidden transition-opacity duration-700">
     
-    <!-- Splashscreen Background Image -->
-    <div class="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center">
-      <img src="splashscreen.jpg" alt="Misión CTSEO Splashscreen" class="w-full h-full object-cover object-center select-none" />
+    <!-- Splashscreen Background Image (Randomly picks v1 or v2; Horizontal on Web, Vertical on Mobile) -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center bg-[#020512]">
+      <picture class="w-full h-full flex items-center justify-center">
+        <source id="splash-source-vert" media="(max-width: 767px), (orientation: portrait)" srcset="splashscreenvert.jpg" />
+        <img id="splash-img-main" src="splashscreen.jpg" alt="Misión CTSEO Splashscreen" class="w-full h-full object-cover object-center select-none" />
+      </picture>
       <!-- Subtle top/bottom gradient vignette for UI legibility without covering the characters or title -->
       <div class="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/90"></div>
     </div>
 
-    <!-- START SCREEN HEADER & LANGUAGE TOGGLE -->
-    <div class="relative z-20 w-full flex justify-between items-center p-4 sm:p-6 max-w-7xl">
-      <!-- Institution Seal -->
-      <div class="glass-card px-3.5 py-1.5 rounded-2xl flex items-center space-x-2.5 border-cyan-400/30">
-        <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-sci-fi font-black text-sm">
-          C
-        </div>
-        <span class="text-xs sm:text-sm font-extrabold text-white tracking-widest font-sci-fi">CTSEO</span>
-      </div>
-
-      <!-- Language selector on start screen -->
-      <div class="glass-card p-1 rounded-2xl flex items-center space-x-1 border-amber-400/30">
-        <button onclick="setGlobalLanguage('es')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-amber-400 text-slate-950" data-lang="es">ES</button>
-        <button onclick="setGlobalLanguage('en')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white" data-lang="en">EN</button>
-        <button onclick="setGlobalLanguage('pt')" class="start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white" data-lang="pt">PT</button>
+    <!-- START SCREEN HEADER: COMPACT LANGUAGE DROPDOWN -->
+    <div class="relative z-20 w-full flex justify-end items-center p-3 sm:p-5 max-w-7xl">
+      <div class="relative flex items-center">
+        <select id="start-lang-select" onchange="setGlobalLanguage(this.value)" aria-label="Idioma" class="comic-btn glass-card pl-3 pr-7 py-1.5 rounded-2xl font-black text-xs bg-slate-900/95 text-amber-300 border border-amber-500/40 cursor-pointer focus:outline-none appearance-none shadow-lg">
+          <option value="es" class="bg-slate-900 text-amber-300 font-bold">ES</option>
+          <option value="en" class="bg-slate-900 text-amber-300 font-bold">EN</option>
+          <option value="pt" class="bg-slate-900 text-amber-300 font-bold">PT</option>
+        </select>
+        <i class="fa-solid fa-chevron-down text-[9px] text-amber-300 pointer-events-none absolute right-2.5"></i>
       </div>
     </div>
 
-    <!-- START SCREEN BOTTOM HERO: BRIEFING & ACTION (Positioned at bottom so the artwork & title shine unobstructed) -->
-    <div class="relative z-20 flex flex-col items-center text-center px-4 max-w-2xl mt-auto pb-2">
-      <!-- Metallic Badge -->
-      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/85 border border-cyan-400/50 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-2 shadow-lg shadow-cyan-900/50 backdrop-blur-md">
-        <i class="fa-solid fa-rocket animate-bounce"></i>
-        <span id="start-badge-text">Simulador Orbital Interactivo</span>
-      </div>
-
-      <!-- Subtitle & Lore Briefing -->
-      <p id="start-subtitle-text" class="text-sm sm:text-lg font-bold text-sky-200 tracking-wide mb-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-        ¡Defendiendo el Sistema Solar de la Flota Alienígena!
-      </p>
-      <p id="start-desc-text" class="text-xs sm:text-sm text-slate-200 max-w-xl mb-4 leading-relaxed bg-slate-950/80 px-4 py-2.5 rounded-2xl border border-sky-400/30 backdrop-blur-md shadow-xl">
-        Coloca los planetas en su orden orbital verdadero para activar el perímetro de defensa. Cada planeta te revelará datos científicos vitales para vencer al Comandante Zorgon en una batalla de ingenio.
-      </p>
-
+    <!-- START SCREEN BOTTOM HERO: PLAY BUTTON + SUBTITLE BELOW IT -->
+    <div class="relative z-20 flex flex-col items-center text-center px-4 max-w-2xl mt-auto pb-1">
       <!-- BIG PLAY NOW BUTTON -->
-      <button id="btn-start-game" class="comic-btn group relative px-8 sm:px-12 py-3.5 sm:py-4 rounded-3xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black font-sci-fi text-lg sm:text-2xl tracking-wider uppercase border-2 border-amber-200 shadow-2xl shadow-amber-500/50 flex items-center justify-center space-x-3 cursor-pointer">
+      <button id="btn-start-game" class="comic-btn group relative px-8 sm:px-12 py-3.5 sm:py-4 rounded-3xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black font-sci-fi text-xl sm:text-2xl tracking-wider uppercase border-2 border-amber-200 shadow-2xl shadow-amber-500/50 flex items-center justify-center space-x-3 cursor-pointer mb-2.5">
         <i class="fa-solid fa-play text-slate-950 text-xl group-hover:scale-125 transition-transform"></i>
         <span id="btn-start-text">¡JUGAR AHORA!</span>
         <div class="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 rounded-full animate-ping"></div>
       </button>
+
+      <!-- Subtitle placed below Play Now button so cockpit artwork is unobstructed -->
+      <p id="start-subtitle-text" class="text-base sm:text-lg font-bold text-sky-200 tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+        ¡Defendiendo el Sistema Solar de la Flota Alienígena!
+      </p>
     </div>
 
-    <!-- START SCREEN FOOTER CONTROLS -->
-    <div class="relative z-20 w-full p-4 flex justify-end items-center text-xs text-slate-300 max-w-7xl">
-      <button id="btn-start-sound-toggle" class="glass-card px-3 py-1.5 rounded-xl text-slate-200 hover:text-white flex items-center space-x-2">
-        <i id="start-sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
-        <span id="start-sound-text">Audio: Activo</span>
+    <!-- START SCREEN FOOTER CONTROLS (How to Play, Top 10 & Audio Toggle together) -->
+    <div class="relative z-20 w-full p-3 sm:p-4 flex flex-wrap justify-center sm:justify-end items-center gap-2 sm:gap-2.5 text-xs text-slate-300 max-w-7xl">
+      <!-- HOW TO PLAY MODAL TRIGGER BUTTON -->
+      <button id="btn-how-to-play" onclick="openHowToPlayModal()" class="comic-btn glass-card px-3.5 py-2 rounded-xl bg-slate-950/85 hover:bg-slate-900 text-cyan-300 hover:text-white font-black font-sci-fi text-xs tracking-wider uppercase border border-cyan-400/50 shadow-lg flex items-center space-x-1.5 cursor-pointer">
+        <i class="fa-solid fa-circle-question text-cyan-400"></i>
+        <span id="btn-how-to-play-text">¿CÓMO JUGAR?</span>
       </button>
+
+      <!-- TOP 10 SCOREBOARD TRIGGER BUTTON -->
+      <button id="btn-scoreboard" onclick="openScoreboardModal()" class="comic-btn glass-card px-3.5 py-2 rounded-xl bg-slate-950/85 hover:bg-slate-900 text-amber-300 hover:text-white font-black font-sci-fi text-xs tracking-wider uppercase border border-amber-400/50 shadow-lg flex items-center space-x-1.5 cursor-pointer">
+        <i class="fa-solid fa-trophy text-amber-400"></i>
+        <span id="btn-scoreboard-text">TOP 10</span>
+      </button>
+
+      <!-- AUDIO TOGGLE BUTTON -->
+      <button id="btn-start-sound-toggle" class="glass-card px-3.5 py-2 rounded-xl text-slate-200 hover:text-white flex items-center space-x-1.5 cursor-pointer">
+        <i id="start-sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
+        <span id="start-sound-text" class="font-bold">Audio: Activo</span>
+      </button>
+    </div>
+
+    <!-- HOW TO PLAY MODAL (Inside Start Screen / Global) -->
+    <div id="how-to-play-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+      <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-7 max-w-lg w-full text-left shadow-2xl relative border-2 border-cyan-400/50">
+        <div class="flex items-center justify-between mb-3">
+          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-400/40 text-sm sm:text-xs font-black text-cyan-300 uppercase tracking-widest font-sci-fi">
+            <i class="fa-solid fa-gamepad text-amber-400"></i>
+            <span id="how-to-play-title">¿CÓMO JUGAR?</span>
+          </div>
+          <button onclick="closeHowToPlayModal()" class="w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors text-lg">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <p id="start-desc-text" class="text-base sm:text-sm text-slate-200 mb-4 leading-relaxed bg-slate-950/80 p-3.5 rounded-2xl border border-sky-400/30">
+          Coloca los planetas en su orden orbital verdadero para activar el perímetro de defensa. Cada planeta te revelará datos científicos vitales para vencer al Comandante Zorgon en una batalla de ingenio.
+        </p>
+
+        <div class="space-y-2.5 mb-5">
+          <div class="flex items-start space-x-3 bg-slate-900/80 p-3 rounded-2xl border border-slate-700/70">
+            <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 font-sci-fi font-black text-sm flex items-center justify-center shrink-0">1</span>
+            <p id="how-step-1" class="text-base sm:text-sm text-slate-200 font-medium leading-snug">
+              <strong class="text-amber-300">Ordena los Planetas:</strong> Arrastra cada planeta a su órbita correcta desde el Sol (#1 más cercano al #8 más lejano).
+            </p>
+          </div>
+          <div class="flex items-start space-x-3 bg-slate-900/80 p-3 rounded-2xl border border-slate-700/70">
+            <span class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 font-sci-fi font-black text-sm flex items-center justify-center shrink-0">2</span>
+            <p id="how-step-2" class="text-base sm:text-sm text-slate-200 font-medium leading-snug">
+              <strong class="text-cyan-300">Recibe las Transmisiones:</strong> Nuestra nave avanzará en línea desde el Sol y un tripulante te revelará un dato clave de cada planeta.
+            </p>
+          </div>
+          <div class="flex items-start space-x-3 bg-slate-900/80 p-3 rounded-2xl border border-slate-700/70">
+            <span class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-400/50 text-rose-300 font-sci-fi font-black text-sm flex items-center justify-center shrink-0">3</span>
+            <p id="how-step-3" class="text-base sm:text-sm text-slate-200 font-medium leading-snug">
+              <strong class="text-rose-300">Batalla de Ingenio:</strong> ¡Responde correctamente 4 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!
+            </p>
+          </div>
+        </div>
+
+        <button onclick="closeHowToPlayModal()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-check"></i>
+          <span id="btn-how-close-text">¡ENTENDIDO!</span>
+        </button>
+      </div>
     </div>
   </div>
 
 
   <!-- =========================================================================
-       2. TOP HUD BAR (Points & Streak always visible and unobstructed)
+       2. TOP HUD BAR (Compact for small mobile screens & desktop)
        ========================================================================= -->
-  <header id="main-hud" class="w-full shrink-0 z-20 flex justify-between items-center px-3 py-2 bg-slate-950/90 border-b border-indigo-950/70 shadow-lg">
+  <header id="main-hud" class="w-full shrink-0 z-20 flex justify-between items-center px-1.5 py-1 sm:px-3 sm:py-2 bg-slate-950/90 border-b border-indigo-950/70 shadow-lg gap-1">
     <!-- Score & Streak Group -->
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <!-- Title Badge -->
-      <div class="hidden md:flex glass-card px-3 py-1.5 rounded-2xl items-center space-x-2 border-cyan-500/30">
-        <span class="text-xs font-black tracking-wider uppercase text-cyan-400 font-sci-fi">🪐 MISIÓN CTSEO</span>
+    <div class="flex items-center space-x-1 sm:space-x-2.5 min-w-0">
+      <!-- Title Badge (CTSEO only, hidden on mobile to give full room to HUD controls) -->
+      <div class="hidden md:flex glass-card px-3 py-1.5 rounded-2xl items-center border-cyan-500/30 shrink-0">
+        <span class="text-xs font-black tracking-wider uppercase text-cyan-400 font-sci-fi">CTSEO</span>
       </div>
 
       <!-- Score Box -->
-      <div class="glass-card px-3 py-1.5 rounded-2xl flex items-center space-x-2 shadow-xl">
-        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-400/40">
-          <i class="fa-solid fa-trophy text-amber-400 text-xs sm:text-sm"></i>
+      <div class="glass-card px-2 py-1 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl flex items-center space-x-1.5 sm:space-x-2 shadow-xl shrink-0">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-500/20 flex items-center justify-center border border-amber-400/40">
+          <i class="fa-solid fa-trophy text-amber-400 text-[11px] sm:text-sm"></i>
         </div>
         <div>
-          <span id="score-title-label" class="text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Puntos</span>
-          <span id="score-text" class="text-base sm:text-lg font-black text-amber-300 drop-shadow leading-tight">0</span>
+          <span id="score-title-label" class="text-[8px] sm:text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Puntos</span>
+          <span id="score-text" class="text-sm sm:text-lg font-black text-amber-300 drop-shadow leading-tight">0</span>
         </div>
       </div>
 
       <!-- Streak Box -->
-      <div id="streak-container" class="glass-card px-3 py-1.5 rounded-2xl flex items-center space-x-2 shadow-xl transition-all">
-        <div id="streak-icon" class="text-base sm:text-lg text-slate-500 transition-all">
+      <div id="streak-container" class="glass-card px-2 py-1 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl flex items-center space-x-1 sm:space-x-2 shadow-xl transition-all shrink-0">
+        <div id="streak-icon" class="text-sm sm:text-lg text-slate-500 transition-all">
           <i class="fa-solid fa-fire"></i>
         </div>
         <div>
-          <span id="streak-title-label" class="text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Racha</span>
-          <div class="flex items-center space-x-1.5 leading-tight">
-            <span id="streak-text" class="text-base sm:text-lg font-black text-slate-300">0</span>
-            <span id="multiplier-badge" class="hidden text-[10px] bg-gradient-to-r from-amber-500 to-rose-500 text-white font-extrabold px-1.5 py-0.5 rounded-full shadow">
+          <span id="streak-title-label" class="text-[8px] sm:text-[9px] uppercase tracking-wider text-slate-400 font-bold block leading-none">Racha</span>
+          <div class="flex items-center space-x-1 leading-tight">
+            <span id="streak-text" class="text-sm sm:text-lg font-black text-slate-300">0</span>
+            <span id="multiplier-badge" class="hidden text-[9px] sm:text-[10px] bg-gradient-to-r from-amber-500 to-rose-500 text-white font-extrabold px-1 sm:px-1.5 py-0.5 rounded-full shadow">
               +0
             </span>
           </div>
@@ -231,39 +294,42 @@
     </div>
 
     <!-- Actions & Language Switcher Group -->
-    <div class="flex items-center space-x-1.5 sm:space-x-2">
-      <!-- Language Selector -->
-      <div class="glass-card p-1 rounded-2xl flex items-center space-x-1 border-amber-500/30">
-        <button id="lang-btn-es" onclick="setGlobalLanguage('es')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs bg-amber-400 text-slate-950 transition-all">ES</button>
-        <button id="lang-btn-en" onclick="setGlobalLanguage('en')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all">EN</button>
-        <button id="lang-btn-pt" onclick="setGlobalLanguage('pt')" class="comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all">PT</button>
+    <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+      <!-- Compact Language Dropdown -->
+      <div class="relative flex items-center">
+        <select id="hud-lang-select" onchange="setGlobalLanguage(this.value)" aria-label="Idioma" class="comic-btn glass-card pl-2.5 pr-6 py-1 sm:pl-3 sm:pr-7 sm:py-1.5 rounded-xl sm:rounded-2xl font-black text-xs bg-slate-900/95 text-amber-300 border border-amber-500/40 cursor-pointer focus:outline-none appearance-none">
+          <option value="es" class="bg-slate-900 text-amber-300 font-bold">ES</option>
+          <option value="en" class="bg-slate-900 text-amber-300 font-bold">EN</option>
+          <option value="pt" class="bg-slate-900 text-amber-300 font-bold">PT</option>
+        </select>
+        <i class="fa-solid fa-chevron-down text-[9px] text-amber-300 pointer-events-none absolute right-2"></i>
       </div>
 
       <!-- Name Labels Toggle -->
-      <button id="btn-toggle-labels" class="comic-btn glass-card px-2.5 py-1.5 rounded-2xl text-cyan-300 hover:text-white flex items-center space-x-1.5 text-xs font-bold border-cyan-500/30">
-        <i class="fa-solid fa-tags"></i>
-        <span id="labels-header-text" class="hidden sm:inline">Etiquetas:</span>
-        <span id="label-state" class="text-emerald-400 font-black uppercase">SÍ</span>
+      <button id="btn-toggle-labels" class="comic-btn glass-card px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl text-cyan-300 hover:text-white flex items-center space-x-1 text-xs font-bold border-cyan-500/30">
+        <i class="fa-solid fa-tags text-[11px] sm:text-xs"></i>
+        <span id="labels-header-text" class="hidden md:inline">Etiquetas:</span>
+        <span id="label-state" class="text-emerald-400 font-black uppercase text-[11px] sm:text-xs">SÍ</span>
       </button>
 
       <!-- Sound Toggle -->
-      <button id="btn-sound" class="comic-btn glass-card w-8 h-8 sm:w-9 sm:h-9 rounded-2xl text-indigo-300 hover:text-white flex items-center justify-center text-xs sm:text-sm border-indigo-500/30">
+      <button id="btn-sound" class="comic-btn glass-card w-7 h-7 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl text-indigo-300 hover:text-white flex items-center justify-center text-xs sm:text-sm border-indigo-500/30">
         <i id="sound-icon" class="fa-solid fa-volume-high"></i>
       </button>
 
       <!-- Restart Button -->
-      <button id="btn-restart" class="comic-btn bg-rose-600 hover:bg-rose-500 w-8 h-8 sm:w-9 sm:h-9 rounded-2xl text-white flex items-center justify-center text-xs sm:text-sm border border-rose-400/50 shadow-rose-950/50">
+      <button id="btn-restart" class="comic-btn bg-rose-600 hover:bg-rose-500 w-7 h-7 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl text-white flex items-center justify-center text-xs sm:text-sm border border-rose-400/50 shadow-rose-950/50">
         <i class="fa-solid fa-arrow-rotate-right"></i>
       </button>
     </div>
   </header>
 
   <!-- =========================================================================
-       3. INSTRUCTIONS / STATUS BANNER (Right below HUD, zero wasted space)
+       3. INSTRUCTIONS / STATUS BANNER (Right below HUD, +50% larger font on mobile)
        ========================================================================= -->
-  <div id="instructions-bar" class="w-full shrink-0 z-10 px-3 py-1.5 bg-gradient-to-r from-slate-950 via-indigo-950/70 to-slate-950 border-b border-indigo-900/30 flex items-center justify-center">
-    <div class="flex items-center space-x-2 text-cyan-200 text-xs sm:text-sm font-semibold tracking-wide text-center">
-      <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-xs sm:text-sm animate-pulse"></i>
+  <div id="instructions-bar" class="w-full shrink-0 z-10 px-2.5 py-1.5 sm:px-3 sm:py-1.5 bg-gradient-to-r from-slate-950 via-indigo-950/70 to-slate-950 border-b border-indigo-900/30 flex items-center justify-center">
+    <div class="flex items-center space-x-1.5 text-cyan-200 text-sm sm:text-sm font-bold tracking-wide text-center leading-tight">
+      <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-sm sm:text-sm animate-pulse shrink-0"></i>
       <span id="instruction-banner-text">🪐 ¡Arrastra y suelta cada planeta en su órbita correcta desde el Sol! (1 = Más cercano)</span>
     </div>
   </div>
@@ -277,80 +343,125 @@
   <!-- =========================================================================
        5. EDUCATIONAL PLANETARY TRANSMISSION MODAL (Shown as starship reaches planets)
        ========================================================================= -->
-  <div id="fact-modal" class="hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="glass-card-holo rounded-3xl p-5 sm:p-7 max-w-md w-full text-center shadow-2xl relative overflow-hidden transform transition-all duration-300">
+  <div id="fact-modal" class="hidden fixed inset-0 z-40 bg-black/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-7 max-w-md w-full text-center shadow-2xl relative transform transition-all duration-300 flex flex-col items-center">
       <!-- Glow ambient -->
-      <div class="absolute -top-16 -right-16 w-36 h-36 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -top-16 -right-16 w-40 h-40 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute top-24 left-1/2 -translate-x-1/2 w-56 h-56 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-      <!-- Transmission avatar -->
-      <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-tr from-cyan-500 to-sky-400 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30 border border-white/30">
-        <i id="fact-planet-icon" class="fa-solid fa-satellite-dish text-slate-950 text-2xl"></i>
-      </div>
-
-      <div class="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/40 text-[11px] font-bold text-cyan-300 uppercase tracking-widest mb-1 font-sci-fi">
+      <!-- Transmission Header Badge -->
+      <div class="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-cyan-950/85 border border-cyan-400/40 text-xs sm:text-[11px] font-bold text-cyan-300 uppercase tracking-widest mb-1.5 font-sci-fi relative z-10">
         <i class="fa-solid fa-tower-broadcast text-rose-400 animate-pulse"></i>
         <span id="fact-modal-badge">TRANSMISIÓN DE NAVEGACIÓN</span>
       </div>
 
-      <h3 id="fact-planet-name" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-sky-200 to-white mb-2 font-sci-fi">
+      <!-- Planet Title -->
+      <h3 id="fact-planet-name" class="text-3xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-sky-200 to-white mb-3 font-sci-fi relative z-10">
         MERCURIO
       </h3>
 
-      <div class="bg-slate-900/80 p-4 rounded-2xl border border-sky-800/40 text-slate-200 text-sm leading-relaxed mb-5 text-left flex items-start space-x-3">
-        <i class="fa-solid fa-circle-info text-cyan-400 text-lg mt-0.5 shrink-0"></i>
+      <!-- Vertically Extended Character Hologram Portrait (From /personajes/1..6.png) -->
+      <div class="relative w-full h-52 sm:h-60 mb-3 rounded-2xl bg-gradient-to-b from-sky-950/40 via-cyan-900/25 to-slate-950/90 border border-cyan-400/35 flex items-end justify-center overflow-hidden shadow-inner">
+        <div class="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent"></div>
+        <img id="fact-character-img" src="personajes/1.png" alt="Informante Espacial" class="h-[94%] w-auto object-contain object-bottom drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] select-none transition-transform duration-300" />
+      </div>
+
+      <!-- Character Speech / Data Box -->
+      <div class="w-full bg-slate-900/90 p-4 rounded-2xl border border-sky-700/50 text-slate-100 text-base sm:text-base leading-relaxed mb-5 text-left flex items-start space-x-3 shadow-lg relative z-10">
+        <i class="fa-solid fa-comment-dots text-cyan-400 text-xl sm:text-lg mt-0.5 shrink-0"></i>
         <p id="fact-modal-body" class="font-medium">Dato del planeta aquí...</p>
       </div>
 
-      <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2">
+      <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-lg sm:text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 relative z-10">
         <span>¡ENTENDIDO, CONTINUAR RUTA!</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
   </div>
 
+  <!-- =========================================================================
+       5B. COMMANDER ZORGON EPIC ENTRANCE MODAL (Hostile Transmission)
+       ========================================================================= -->
+  <div id="zorgon-intro-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo overflow-hidden rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.4)] relative border-2 border-rose-500/80 flex flex-col items-center">
+      <!-- Ambient crimson/purple glow -->
+      <div class="absolute top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-rose-600/25 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Hostile Transmission Header Badge -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-rose-950/90 border border-rose-400/60 text-xs sm:text-[11px] font-black text-rose-300 uppercase tracking-widest mb-1.5 font-sci-fi relative z-10 animate-pulse">
+        <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+        <span id="zorgon-intro-badge">TRANSMISIÓN HOSTIL INTERCEPTADA</span>
+      </div>
+
+      <!-- Boss Title -->
+      <h3 id="zorgon-intro-title" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-fuchsia-300 to-amber-300 mb-2.5 font-sci-fi relative z-10">
+        COMANDANTE ZORGON
+      </h3>
+
+      <!-- Zorgon Portrait Container (zorgon.png) -->
+      <div class="relative w-full h-56 sm:h-64 mb-3 rounded-2xl bg-gradient-to-b from-purple-950/60 via-rose-950/40 to-slate-950/95 border border-rose-500/50 flex items-end justify-center overflow-hidden shadow-inner">
+        <div class="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-rose-500 to-transparent"></div>
+        <img id="zorgon-character-img" src="zorgon.png" alt="Comandante Zorgon" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_20px_rgba(244,63,94,0.65)] select-none" />
+      </div>
+
+      <!-- Zorgon Threat Speech Box -->
+      <div class="w-full bg-slate-950/90 p-3.5 sm:p-4 rounded-2xl border border-rose-500/50 text-rose-100 text-base sm:text-base leading-relaxed mb-4 text-left flex items-start space-x-3 shadow-lg relative z-10">
+        <i class="fa-solid fa-skull-crossbones text-rose-400 text-xl sm:text-lg mt-1 shrink-0"></i>
+        <p id="zorgon-intro-speech" class="font-bold italic">
+          "¡Defensores del Sistema Solar, prueben su valía con su conocimiento o sientan el terror de mi furia!"
+        </p>
+      </div>
+
+      <button id="btn-zorgon-fight" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black font-sci-fi text-base sm:text-lg uppercase tracking-wider border border-rose-300 shadow-lg shadow-rose-600/40 flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
+        <i class="fa-solid fa-bolt"></i>
+        <span id="btn-zorgon-fight-text">¡ACEPTAR EL DESAFÍO!</span>
+      </button>
+    </div>
+  </div>
+
 
   <!-- =========================================================================
-       6. ALIEN BOSS SHOWDOWN CARD (Positioned neatly BELOW top HUD - Points never blocked)
+       6. ALIEN BOSS SHOWDOWN CARD (Positioned neatly BELOW top HUD - Ships always below modal)
        ========================================================================= -->
-  <div id="boss-battle-overlay" class="hidden fixed inset-x-0 bottom-0 pointer-events-none z-30 flex flex-col justify-start items-center p-3 sm:p-4" style="top: 56px;">
+  <div id="boss-battle-overlay" class="hidden fixed inset-x-0 bottom-0 pointer-events-none z-30 flex flex-col justify-start items-center px-2.5 py-1.5 sm:px-4 sm:py-2" style="top: 44px;">
     
     <!-- Boss HP Card -->
-    <div class="pointer-events-auto glass-card-holo rounded-2xl p-3 sm:p-4 max-w-xl w-full mb-3 flex items-center justify-between shadow-2xl border-rose-500/40">
-      <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-700 to-rose-600 flex items-center justify-center border border-rose-400 text-xl shadow">
-          🛸
+    <div class="pointer-events-auto glass-card-holo rounded-2xl p-2.5 sm:px-4 sm:py-2.5 max-w-xl w-full mb-1.5 sm:mb-2 flex items-center justify-between shadow-2xl border-rose-500/40">
+      <div class="flex items-center space-x-2.5 sm:space-x-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-purple-900 to-rose-700 flex items-center justify-center border border-rose-400 shadow shrink-0 overflow-hidden">
+          <img src="zorgon.png" alt="Zorgon" class="w-full h-full object-cover object-top" />
         </div>
         <div>
-          <span id="boss-badge-text" class="text-[10px] text-rose-400 font-black tracking-widest uppercase block font-sci-fi">JEFE ALIENÍGENA</span>
-          <h4 id="boss-title-text" class="text-sm sm:text-base font-black text-white leading-tight font-sci-fi">COMANDANTE ZORGON</h4>
+          <span id="boss-badge-text" class="text-xs sm:text-[10px] text-rose-400 font-black tracking-widest uppercase block font-sci-fi">JEFE ALIENÍGENA</span>
+          <h4 id="boss-title-text" class="text-base sm:text-base font-black text-white leading-tight font-sci-fi">COMANDANTE ZORGON</h4>
         </div>
       </div>
 
       <!-- Boss HP Bar -->
-      <div class="w-40 sm:w-56">
-        <div class="flex justify-between text-[11px] font-bold text-slate-300 mb-1">
+      <div class="w-36 sm:w-56">
+        <div class="flex justify-between text-xs sm:text-[11px] font-bold text-slate-300 mb-1">
           <span id="boss-hp-label">ESCUDO NODRIZA</span>
           <span id="boss-hp-text" class="text-rose-400 font-black">4 / 4 HP</span>
         </div>
-        <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700">
+        <div class="w-full h-2.5 sm:h-3 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700">
           <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
         </div>
       </div>
     </div>
 
     <!-- Trivia Multiple Choice Question Card -->
-    <div id="trivia-card" class="pointer-events-auto glass-card-holo rounded-3xl p-5 sm:p-6 max-w-xl w-full shadow-2xl border-cyan-400/50">
-      <div class="flex justify-between items-center mb-2">
-        <span id="trivia-round-indicator" class="text-xs font-black text-cyan-300 uppercase tracking-widest font-sci-fi">IMPACTO 1 DE 4</span>
-        <span id="trivia-reward-badge" class="text-xs font-bold text-amber-300 bg-amber-950/70 px-2 py-0.5 rounded-lg border border-amber-400/40">+200 PTS POR ACIERTO</span>
+    <div id="trivia-card" class="pointer-events-auto glass-card-holo rounded-3xl p-3.5 sm:px-5 sm:py-4 max-w-xl w-full shadow-2xl border-cyan-400/50">
+      <div class="flex justify-between items-center mb-1.5">
+        <span id="trivia-round-indicator" class="text-xs sm:text-xs font-black text-cyan-300 uppercase tracking-widest font-sci-fi">IMPACTO 1 DE 4</span>
+        <span id="trivia-reward-badge" class="text-xs sm:text-xs font-bold text-amber-300 bg-amber-950/70 px-2 py-0.5 rounded-lg border border-amber-400/40">+200 PTS POR ACIERTO</span>
       </div>
 
-      <h3 id="trivia-question-text" class="text-base sm:text-lg font-bold text-white mb-4 text-left leading-snug">
+      <h3 id="trivia-question-text" class="text-lg sm:text-base font-bold text-white mb-2 sm:mb-2.5 text-left leading-snug">
         ¿Cuál es la característica principal aprendida en tu travesía?
       </h3>
 
       <!-- Shuffled Answer Buttons Container -->
-      <div id="trivia-options-container" class="flex flex-col space-y-2.5">
+      <div id="trivia-options-container" class="flex flex-col space-y-2">
         <!-- Injected via JavaScript dynamically -->
       </div>
     </div>
@@ -360,8 +471,8 @@
   <!-- =========================================================================
        7. DEFEAT / GAME OVER MODAL (If shields/points drop to 0 in boss fight)
        ========================================================================= -->
-  <div id="game-over-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-card bg-slate-900/95 border-2 border-rose-500/70 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl">
+  <div id="game-over-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card modal-scroll-card bg-slate-900/95 border-2 border-rose-500/70 rounded-3xl p-5 sm:p-8 max-w-md w-full text-center shadow-2xl">
       <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-rose-600 to-red-500 rounded-3xl flex items-center justify-center text-4xl shadow-lg shadow-rose-600/40">
         💥
       </div>
@@ -369,10 +480,16 @@
       <p id="defeat-desc" class="text-slate-300 text-sm mb-6">
         El Comandante Zorgon destruyó tus reservas de energía. ¡Repasa los datos espaciales y vuelve a intentarlo!
       </p>
-      <button onclick="restartGameSession()" class="comic-btn w-full py-4 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-black text-lg uppercase tracking-wider flex items-center justify-center space-x-2">
-        <i class="fa-solid fa-rotate-left"></i>
-        <span id="defeat-btn-retry">REINTENTAR MISIÓN</span>
-      </button>
+      <div class="flex flex-col space-y-2.5">
+        <button onclick="restartGameSession()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-black text-base sm:text-lg uppercase tracking-wider flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span id="defeat-btn-retry">REINTENTAR MISIÓN</span>
+        </button>
+        <button onclick="returnToStartScreen()" class="comic-btn w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-sm sm:text-base uppercase tracking-wider border border-slate-600 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-house"></i>
+          <span id="defeat-btn-home">VOLVER AL INICIO</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -380,45 +497,100 @@
   <!-- =========================================================================
        8. VICTORY CELEBRATION MODAL
        ========================================================================= -->
-  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div id="victory-card" class="glass-card bg-slate-900/95 border-2 border-amber-400/60 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden transform scale-95 transition-all duration-300">
+  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div id="victory-card" class="glass-card overflow-hidden bg-slate-900/95 border-2 border-amber-400/60 rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-2xl relative transform scale-95 transition-all duration-300">
       <!-- Ambient glow -->
       <div class="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/25 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Icon Medal -->
-      <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-3xl flex items-center justify-center shadow-lg shadow-amber-500/30 transform -rotate-3">
-        <i class="fa-solid fa-award text-slate-950 text-5xl"></i>
+      <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-2.5 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-3xl flex items-center justify-center shadow-lg shadow-amber-500/30 transform -rotate-3">
+        <i class="fa-solid fa-award text-slate-950 text-3xl sm:text-4xl"></i>
       </div>
 
-      <h2 id="modal-title" class="text-3xl sm:text-4xl font-black font-sci-fi text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-200 mb-1">
+      <h2 id="modal-title" class="text-2xl sm:text-3xl font-black font-sci-fi text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-yellow-200 mb-1">
         ¡VICTORIA CTSEO!
       </h2>
-      <p id="modal-subtitle" class="text-slate-300 text-sm mb-6">¡El Comandante Zorgon huyó y el Sistema Solar fue salvado!</p>
+      <p id="modal-subtitle" class="text-slate-300 text-xs sm:text-sm mb-3.5">¡El Comandante Zorgon huyó y el Sistema Solar fue salvado!</p>
 
       <!-- Stats Grid -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
-          <span id="modal-label-score" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Puntuación Final</span>
-          <span id="modal-score" class="text-2xl font-black text-amber-300">0</span>
+      <div class="grid grid-cols-2 gap-2.5 mb-3.5">
+        <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-score" class="text-[10px] sm:text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Puntuación Final</span>
+          <span id="modal-score" class="text-xl sm:text-2xl font-black text-amber-300">0</span>
         </div>
-        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
-          <span id="modal-label-streak" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Mejor Racha</span>
-          <span id="modal-streak" class="text-2xl font-black text-rose-400">0</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-streak" class="text-[10px] sm:text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Mejor Racha</span>
+          <span id="modal-streak" class="text-xl sm:text-2xl font-black text-rose-400">0</span>
         </div>
-        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
-          <span id="modal-label-errors" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Errores</span>
-          <span id="modal-errors" class="text-2xl font-black text-slate-300">0</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-errors" class="text-[10px] sm:text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Errores</span>
+          <span id="modal-errors" class="text-xl sm:text-2xl font-black text-slate-300">0</span>
         </div>
-        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
-          <span id="modal-label-acc" class="text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Precisión</span>
-          <span id="modal-accuracy" class="text-2xl font-black text-emerald-400">100%</span>
+        <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/80">
+          <span id="modal-label-acc" class="text-[10px] sm:text-[11px] text-slate-400 uppercase font-bold block mb-0.5">Precisión</span>
+          <span id="modal-accuracy" class="text-xl sm:text-2xl font-black text-emerald-400">100%</span>
         </div>
       </div>
 
-      <!-- Play Again Button -->
-      <button id="btn-play-again" onclick="restartGameSession()" class="comic-btn w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-lg tracking-wider uppercase border border-emerald-300 shadow-emerald-950/60 flex items-center justify-center">
-        <i class="fa-solid fa-play mr-2"></i> <span id="btn-play-again-text">Jugar de Nuevo</span>
+      <!-- Scoreboard Name Entry Section -->
+      <div class="mb-3">
+        <button id="btn-show-score-input" onclick="toggleVictoryScoreInput()" class="comic-btn w-full py-2.5 rounded-2xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 text-amber-300 font-black text-xs sm:text-sm tracking-wider uppercase border border-amber-400/60 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-trophy text-amber-400"></i>
+          <span id="btn-add-score-text">Registrar en el Scoreboard</span>
+        </button>
+
+        <div id="victory-score-form" class="hidden mt-2 bg-slate-900/90 p-2.5 rounded-2xl border border-amber-400/50">
+          <div class="flex items-center space-x-2">
+            <input id="victory-player-name" type="text" maxlength="16" placeholder="Escribe tu nombre..." style="user-select: text; -webkit-user-select: text; touch-action: manipulation;" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-400 focus:outline-none text-white font-bold text-sm" />
+            <button id="btn-save-score" onclick="submitVictoryScore()" class="comic-btn shrink-0 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider border border-amber-200">
+              <span id="btn-save-score-text">Guardar</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="victory-score-saved-msg" class="hidden mt-2 py-2 px-3 rounded-2xl bg-emerald-950/80 border border-emerald-400/50 text-emerald-300 font-bold text-xs sm:text-sm flex items-center justify-between">
+          <span><i class="fa-solid fa-circle-check mr-1.5 text-emerald-400"></i><span id="score-saved-label">¡Guardado en el Top 10!</span></span>
+          <button onclick="openScoreboardModal()" class="underline text-amber-300 hover:text-amber-200 font-black uppercase text-xs ml-2">
+            <i class="fa-solid fa-trophy mr-1"></i>Top 10
+          </button>
+        </div>
+      </div>
+
+      <!-- Play Again & Return to Start Screen Buttons -->
+      <div class="flex flex-col space-y-2">
+        <button id="btn-play-again" onclick="restartGameSession()" class="comic-btn w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-sm sm:text-base tracking-wider uppercase border border-emerald-300 shadow-emerald-950/60 flex items-center justify-center">
+          <i class="fa-solid fa-play mr-2"></i> <span id="btn-play-again-text">Jugar de Nuevo</span>
+        </button>
+        <button id="btn-victory-home" onclick="returnToStartScreen()" class="comic-btn w-full py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-xs sm:text-sm tracking-wider uppercase border border-slate-600 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-house"></i>
+          <span id="victory-btn-home">Volver al Inicio</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       8B. TOP 10 SCOREBOARD MODAL (Accessible from Start Screen & Victory Modal)
+       ========================================================================= -->
+  <div id="scoreboard-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-7 max-w-lg w-full text-left shadow-2xl relative border-2 border-amber-400/60">
+      <div class="flex items-center justify-between mb-4">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-950/90 border border-amber-400/50 text-sm sm:text-xs font-black text-amber-300 uppercase tracking-widest font-sci-fi">
+          <i class="fa-solid fa-trophy text-amber-400"></i>
+          <span id="scoreboard-modal-title">TOP 10 PILOTOS CTSEO</span>
+        </div>
+        <button onclick="closeScoreboardModal()" class="w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Top 10 List Container -->
+      <div id="scoreboard-list-container" class="space-y-2 mb-5"></div>
+
+      <button onclick="closeScoreboardModal()" class="comic-btn w-full py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black font-sci-fi text-base sm:text-sm tracking-wider uppercase border border-amber-200 flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-check"></i>
+        <span id="btn-scoreboard-close-text">¡ENTENDIDO!</span>
       </button>
     </div>
   </div>
@@ -466,7 +638,24 @@
         roundIndicator: "IMPACTO {current} DE {total}",
         defeatTitle: "¡ESCUDOS AGOTADOS!",
         defeatDesc: "El Comandante Zorgon destruyó tus reservas de energía. ¡Repasa los datos espaciales y vuelve a intentarlo!",
-        retryBtn: "REINTENTAR MISIÓN"
+        retryBtn: "REINTENTAR MISIÓN",
+        homeBtn: "VOLVER AL INICIO",
+        howToPlayBtn: "¿CÓMO JUGAR?",
+        howToPlayClose: "¡ENTENDIDO!",
+        howStep1: "<strong class='text-amber-300'>Ordena los Planetas:</strong> Arrastra cada planeta a su órbita correcta desde el Sol (#1 más cercano al #8 más lejano).",
+        howStep2: "<strong class='text-cyan-300'>Recibe las Transmisiones:</strong> Nuestra nave avanzará en línea desde el Sol y un tripulante te revelará un dato clave de cada planeta.",
+        howStep3: "<strong class='text-rose-300'>Batalla de Ingenio:</strong> ¡Responde correctamente 4 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!",
+        scoreboardBtn: "TOP 10",
+        scoreboardTitle: "TOP 10 PILOTOS CTSEO",
+        scoreboardEmpty: "Aún no hay récords registrados. ¡Completa la misión para ser el primero en el Top 10!",
+        addScoreBtn: "Registrar en el Scoreboard",
+        namePlaceholder: "Escribe tu nombre...",
+        saveScoreBtn: "Guardar",
+        scoreSavedMsg: "¡Guardado en el Scoreboard!",
+        defaultPilotName: "Piloto CTSEO",
+        zorgonIntroBadge: "TRANSMISIÓN HOSTIL INTERCEPTADA",
+        zorgonIntroSpeech: "\"¡Defensores del Sistema Solar, prueben su valía con su conocimiento o sientan el terror de mi furia!\"",
+        zorgonIntroBtn: "¡ACEPTAR EL DESAFÍO!"
       },
       en: {
         startBadge: "Interactive Orbital Simulator",
@@ -502,7 +691,24 @@
         roundIndicator: "HIT {current} OF {total}",
         defeatTitle: "SHIELDS DEPLETED!",
         defeatDesc: "Commander Zorgon overwhelmed your ship's energy shield! Review the planetary data and try again!",
-        retryBtn: "RETRY MISSION"
+        retryBtn: "RETRY MISSION",
+        homeBtn: "BACK TO START",
+        howToPlayBtn: "HOW TO PLAY?",
+        howToPlayClose: "GOT IT!",
+        howStep1: "<strong class='text-amber-300'>Order the Planets:</strong> Drag each planet to its true orbit from the Sun (#1 closest to #8 farthest).",
+        howStep2: "<strong class='text-cyan-300'>Receive Transmissions:</strong> Your ship advances in line from the Sun and a crew member reveals a key fact for each planet.",
+        howStep3: "<strong class='text-rose-300'>Battle of Wits:</strong> Answer 4 questions correctly using the facts you learned to defeat Commander Zorgon!",
+        scoreboardBtn: "TOP 10",
+        scoreboardTitle: "TOP 10 CTSEO PILOTS",
+        scoreboardEmpty: "No records yet. Complete the mission to claim the #1 spot!",
+        addScoreBtn: "Add to Scoreboard",
+        namePlaceholder: "Enter your name...",
+        saveScoreBtn: "Save",
+        scoreSavedMsg: "Saved to Scoreboard!",
+        defaultPilotName: "CTSEO Pilot",
+        zorgonIntroBadge: "HOSTILE TRANSMISSION INTERCEPTED",
+        zorgonIntroSpeech: "\"Defenders of the Solar System, prove your worth with your knowledge or feel the terror of my wrath!\"",
+        zorgonIntroBtn: "ACCEPT THE CHALLENGE!"
       },
       pt: {
         startBadge: "Simulador Orbital Interativo",
@@ -538,7 +744,24 @@
         roundIndicator: "IMPACTO {current} DE {total}",
         defeatTitle: "ESCUDOS ESGOTADOS!",
         defeatDesc: "O Comandante Zorgon destruiu seus escudos de energia. Revise os dados e tente novamente!",
-        retryBtn: "TENTAR NOVAMENTE"
+        retryBtn: "TENTAR NOVAMENTE",
+        homeBtn: "VOLTAR AO INÍCIO",
+        howToPlayBtn: "COMO JOGAR?",
+        howToPlayClose: "ENTENDIDO!",
+        howStep1: "<strong class='text-amber-300'>Ordene os Planetas:</strong> Arraste cada planeta para sua órbita correta a partir do Sol (#1 mais próximo ao #8 mais distante).",
+        howStep2: "<strong class='text-cyan-300'>Receba Transmissões:</strong> Sua nave avança em linha a partir do Sol e um tripulante revela um dado essencial de cada planeta.",
+        howStep3: "<strong class='text-rose-300'>Batalha de Engenho:</strong> Responda 4 perguntas corretamente sobre os dados aprendidos para derrotar o Comandante Zorgon!",
+        scoreboardBtn: "TOP 10",
+        scoreboardTitle: "TOP 10 PILOTOS CTSEO",
+        scoreboardEmpty: "Ainda não há recordes registrados. Complete a missão para entrar no Top 10!",
+        addScoreBtn: "Registrar no Placar",
+        namePlaceholder: "Digite seu nome...",
+        saveScoreBtn: "Salvar",
+        scoreSavedMsg: "Salvo no Placar!",
+        defaultPilotName: "Piloto CTSEO",
+        zorgonIntroBadge: "TRANSMISSÃO HOSTIL INTERCEPTADA",
+        zorgonIntroSpeech: "\"Defensores do Sistema Solar, provem seu valor com seu conhecimento ou sintam o terror da minha fúria!\"",
+        zorgonIntroBtn: "ACEITAR O DESAFIO!"
       }
     };
 
@@ -1653,6 +1876,10 @@
     window.addEventListener('pointerdown', unlockAudio, { once: true });
     window.addEventListener('keydown', unlockAudio, { once: true });
 
+    function checkIsMobileLayout() {
+      return window.innerWidth < 768 || window.innerHeight > window.innerWidth;
+    }
+
     /* ==========================================================================
        PHASER 3 GAME ENGINE SCENE
        ========================================================================== */
@@ -1662,6 +1889,20 @@
       }
 
       init() {
+        this.isMobile = checkIsMobileLayout();
+        this.gameW = this.isMobile ? 720 : 1280;
+        this.gameH = this.isMobile ? 1280 : 720;
+
+        if (this.scale && (this.scale.width !== this.gameW || this.scale.height !== this.gameH)) {
+          this.scale.setGameSize(this.gameW, this.gameH);
+        }
+        if (this.cameras && this.cameras.main) {
+          this.cameras.main.setViewport(0, 0, this.gameW, this.gameH);
+          this.cameras.main.setSize(this.gameW, this.gameH);
+          this.cameras.main.setZoom(1.0);
+          this.cameras.main.centerOn(this.gameW / 2, this.gameH / 2);
+        }
+
         this.score = 0;
         this.streak = 0;
         this.bestStreak = 0;
@@ -1678,12 +1919,30 @@
         this.bossHP = 4;
         this.currentTriviaIndex = 0;
         this.activeTriviaList = [];
+        this.recentTransmissionChars = [];
+
+        // Reset Boss Arena references so switching between Mobile and Web never uses stale coordinates
+        this.bossUfo = null;
+        this.bossArenaWorldY = null;
+        this.bossCamPanX = null;
+        this.bossCamPanY = null;
+        this.bossCamZoom = null;
+        this.shipHpContainer = null;
+        this.ufoHpContainer = null;
+        this.shipHpFill = null;
+        this.ufoHpFill = null;
 
         this.orbitTargets = [];
         this.planets = [];
       }
 
       create() {
+        // Ensure main camera viewport & center always match current gameW x gameH after scene restarts
+        this.cameras.main.setViewport(0, 0, this.gameW, this.gameH);
+        this.cameras.main.setSize(this.gameW, this.gameH);
+        this.cameras.main.setZoom(1.0);
+        this.cameras.main.centerOn(this.gameW / 2, this.gameH / 2);
+
         // 1. Pick a random scientific fact for each of the 8 planets for this session
         PLANET_SPECS.forEach(p => {
           const pool = PLANET_FACTS_DATABASE[p.id];
@@ -1702,14 +1961,16 @@
         this.startCometScheduler();
         this.startEasterEggScheduler();
 
-        // 5. Sun and Concentric Glowing Orbit Rings (Centered at Sun X: 80, Y: 310)
-        this.sunCenter = { x: 80, y: 310 };
+        // 5. Sun and Concentric Glowing Orbit Rings
+        // Desktop: Sun on left (80, 310), orbits go right (0 rad)
+        // Mobile (90° CW): Sun at top (445, 80), orbits go downward (PI/2 rad), planets tray on left
+        this.sunCenter = this.isMobile ? { x: 445, y: 80 } : { x: 80, y: 310 };
         this.buildSolarSystem();
 
         // 6. Droppable Frosted-Glass Target Docks
         this.buildDropTargets();
 
-        // 7. Draggable Planets Shelf Tray at Bottom
+        // 7. Draggable Planets Shelf Tray (Bottom on Desktop, Left Column on Mobile)
         this.buildBottomTray();
 
         // 8. CTSEO Starship Sprite (Starts parked at the Sun)
@@ -2382,18 +2643,18 @@
       buildCosmicBackground() {
         const bg = this.add.graphics();
         bg.fillGradientStyle(0x020512, 0x050b24, 0x070e2f, 0x0d0928, 1);
-        bg.fillRect(0, 0, 1280, 720);
+        bg.fillRect(-360, -360, this.gameW + 720, this.gameH + 720);
 
         // Ambient glowing nebulae
         bg.fillStyle(0x0284c7, 0.12);
-        bg.fillCircle(480, 260, 280);
+        bg.fillCircle(this.isMobile ? 420 : 480, this.isMobile ? 460 : 260, 280);
         bg.fillStyle(0x7c3aed, 0.09);
-        bg.fillCircle(920, 320, 320);
+        bg.fillCircle(this.isMobile ? 380 : 920, this.isMobile ? 880 : 320, 320);
 
-        // Twinkling stars
-        for (let i = 0; i < 95; i++) {
-          const x = Phaser.Math.Between(0, 1280);
-          const y = Phaser.Math.Between(0, 720);
+        // Twinkling stars (extended bounds so camera pan/zoom in boss battle always has stars)
+        for (let i = 0; i < 120; i++) {
+          const x = Phaser.Math.Between(-150, this.gameW + 150);
+          const y = Phaser.Math.Between(-150, this.gameH + 260);
           const r = Phaser.Math.FloatBetween(1, 2.8);
           const star = this.add.circle(x, y, r, 0xffffff, Phaser.Math.FloatBetween(0.3, 0.95));
 
@@ -2425,15 +2686,21 @@
         ];
 
         ambientObjects.forEach(cfg => {
-          const obj = this.add.image(cfg.x, cfg.y, cfg.tex)
+          // Rotate coordinates 90° CW in Mobile Mode
+          const ox = this.isMobile ? (720 - cfg.y) : cfg.x;
+          const oy = this.isMobile ? cfg.x : cfg.y;
+          const odx = this.isMobile ? -cfg.dy : cfg.dx;
+          const ody = this.isMobile ? cfg.dx : cfg.dy;
+
+          const obj = this.add.image(ox, oy, cfg.tex)
             .setScale(cfg.scale)
             .setAlpha(cfg.alpha)
             .setDepth(1);
 
           this.tweens.add({
             targets: obj,
-            x: cfg.x + cfg.dx,
-            y: cfg.y + cfg.dy,
+            x: ox + odx,
+            y: oy + ody,
             duration: cfg.dur,
             yoyo: true,
             repeat: -1,
@@ -2453,10 +2720,10 @@
         const fireComet = () => {
           if (!this.scene.isActive()) return;
 
-          const startX = Phaser.Math.Between(200, 1100);
+          const startX = Phaser.Math.Between(180, this.gameW - 80);
           const startY = -40;
-          const endX = startX - Phaser.Math.Between(350, 600);
-          const endY = 760;
+          const endX = startX - Phaser.Math.Between(260, 500);
+          const endY = this.gameH + 40;
 
           const tail = this.add.graphics().setDepth(1);
           const head = this.add.image(startX, startY, 'tex_comet_head').setScale(1.1).setDepth(1);
@@ -2495,7 +2762,7 @@
       startEasterEggScheduler() {
         const spawnTeslaRoadster = () => {
           if (!this.scene.isActive()) return;
-          const tesla = this.add.image(-70, Phaser.Math.Between(150, 440), 'tex_tesla')
+          const tesla = this.add.image(-70, Phaser.Math.Between(150, this.gameH - 220), 'tex_tesla')
             .setScale(0.82)
             .setAlpha(0.88)
             .setAngle(14)
@@ -2503,7 +2770,7 @@
 
           this.tweens.add({
             targets: tesla,
-            x: 1350,
+            x: this.gameW + 70,
             y: tesla.y + 40,
             angle: 26,
             duration: 26000,
@@ -2518,10 +2785,10 @@
         const spawnDriftingAstronaut = () => {
           if (!this.scene.isActive()) return;
           const fromRight = Math.random() < 0.5;
-          const startX = fromRight ? 1340 : -60;
-          const endX = fromRight ? -60 : 1340;
-          const startY = Phaser.Math.Between(110, 480);
-          const endY = Phaser.Math.Between(110, 480);
+          const startX = fromRight ? this.gameW + 60 : -60;
+          const endX = fromRight ? -60 : this.gameW + 60;
+          const startY = Phaser.Math.Between(110, this.gameH - 200);
+          const endY = Phaser.Math.Between(110, this.gameH - 200);
 
           const astro = this.add.image(startX, startY, 'tex_astronaut')
             .setScale(0.88)
@@ -2577,21 +2844,28 @@
           repeat: -1
         });
 
-        this.sunLabel = this.add.text(this.sunCenter.x, this.sunCenter.y + 92, I18N[currentLanguage].sunName, {
+        const sunLabelX = this.isMobile ? this.sunCenter.x + 118 : this.sunCenter.x;
+        const sunLabelY = this.isMobile ? this.sunCenter.y - 6 : this.sunCenter.y + 92;
+        this.sunLabel = this.add.text(sunLabelX, sunLabelY, I18N[currentLanguage].sunName, {
           fontFamily: 'Fredoka, sans-serif',
-          fontSize: '14px',
+          fontSize: this.isMobile ? '34px' : '14px',
           fontStyle: 'bold',
-          color: '#fef08a'
+          color: '#fef08a',
+          stroke: '#030712',
+          strokeThickness: this.isMobile ? 6 : 2
         }).setOrigin(0.5);
       }
 
       /* ------------------------------------------------------------------------
-         ORBIT DROP TARGETS (FROSTED GLASS DOCKS)
+         ORBIT DROP TARGETS (FROSTED GLASS DOCKS - Rotated 90° CW on Mobile)
          ------------------------------------------------------------------------ */
       buildDropTargets() {
+        const baseAngle = this.isMobile ? Math.PI / 2 : 0;
+
         PLANET_SPECS.forEach(p => {
-          const tx = this.sunCenter.x + Math.cos(p.targetAngle) * p.orbitRadius;
-          const ty = this.sunCenter.y + Math.sin(p.targetAngle) * p.orbitRadius;
+          const angle = baseAngle + p.targetAngle;
+          const tx = this.sunCenter.x + Math.cos(angle) * p.orbitRadius;
+          const ty = this.sunCenter.y + Math.sin(angle) * p.orbitRadius;
 
           const targetHalo = this.add.graphics();
           const targetHitRadius = Math.max(32, p.radius + 15);
@@ -2601,11 +2875,17 @@
           targetHalo.fillStyle(0x0a102b, 0.7);
           targetHalo.fillCircle(0, 0, targetHitRadius);
 
+          const numFontSize = this.isMobile
+            ? Math.round(Math.max(34, p.radius * 1.45))
+            : Math.round(Math.max(13, p.radius * 0.7));
+
           const orderNum = this.add.text(0, 0, `#${p.order}`, {
             fontFamily: 'Orbitron, Fredoka, sans-serif',
-            fontSize: `${Math.max(13, p.radius * 0.7)}px`,
+            fontSize: `${numFontSize}px`,
             fontStyle: 'bold',
-            color: '#38bdf8'
+            color: '#38bdf8',
+            stroke: '#030712',
+            strokeThickness: this.isMobile ? 5 : 0
           }).setOrigin(0.5);
 
           const slotContainer = this.add.container(tx, ty, [targetHalo, orderNum]);
@@ -2635,59 +2915,107 @@
       }
 
       /* ------------------------------------------------------------------------
-         BOTTOM TRAY & SHUFFLED PLANETS
+         PLANETS TRAY (Bottom Horizontal on Desktop / Left Vertical on Mobile)
          ------------------------------------------------------------------------ */
       buildBottomTray() {
-        const trayY = 645;
-
         const trayG = this.add.graphics();
+        this.trayGraphics = trayG;
         trayG.fillStyle(0x060b24, 0.92);
         trayG.lineStyle(2, 0x1e293b, 0.9);
-        trayG.fillRoundedRect(40, trayY - 50, 1200, 100, 24);
-        trayG.strokeRoundedRect(40, trayY - 50, 1200, 100, 24);
 
         const shuffled = Phaser.Utils.Array.Shuffle([...PLANET_SPECS]);
-        const slotWidth = 1140 / 8;
-        const startX = 70 + slotWidth * 0.5;
 
-        shuffled.forEach((p, idx) => {
-          const px = startX + idx * slotWidth;
-          const py = trayY + 3;
+        if (this.isMobile) {
+          // Left Vertical Column Tray (x: 8..162, y: 24..1256) with +50% larger readable labels
+          const trayX = 85;
+          trayG.fillRoundedRect(8, 24, 154, 1232, 24);
+          trayG.strokeRoundedRect(8, 24, 154, 1232, 24);
 
-          const planetImg = this.add.image(px, py, `tex_${p.id}`)
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true });
+          const slotHeight = 1176 / 8;
+          const startY = 50 + slotHeight * 0.5;
 
-          this.input.setDraggable(planetImg);
+          shuffled.forEach((p, idx) => {
+            const px = trayX;
+            const py = startY + idx * slotHeight - 8;
 
-          const planetName = p.names[currentLanguage] || p.names.es;
-          const label = this.add.text(px, py + p.radius + 14, planetName, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '12px',
-            fontStyle: 'bold',
-            color: '#f8fafc',
-            stroke: '#030712',
-            strokeThickness: 3
-          }).setOrigin(0.5);
-          label.setVisible(this.showLabels);
+            const planetImg = this.add.image(px, py, `tex_${p.id}`)
+              .setOrigin(0.5)
+              .setInteractive({ useHandCursor: true });
 
-          planetImg.spec = p;
-          planetImg.homeX = px;
-          planetImg.homeY = py;
-          planetImg.label = label;
-          planetImg.isPlaced = false;
+            this.input.setDraggable(planetImg);
 
-          this.planets.push(planetImg);
-        });
+            const planetName = p.names[currentLanguage] || p.names.es;
+            const label = this.add.text(px, py + p.radius + 22, planetName, {
+              fontFamily: 'Fredoka, sans-serif',
+              fontSize: '28px',
+              fontStyle: 'bold',
+              color: '#f8fafc',
+              stroke: '#030712',
+              strokeThickness: 6
+            }).setOrigin(0.5);
+            label.setVisible(this.showLabels);
+
+            planetImg.spec = p;
+            planetImg.homeX = px;
+            planetImg.homeY = py;
+            planetImg.label = label;
+            planetImg.isPlaced = false;
+
+            this.planets.push(planetImg);
+          });
+        } else {
+          // Desktop Bottom Horizontal Tray
+          const trayY = 645;
+          trayG.fillRoundedRect(40, trayY - 50, 1200, 100, 24);
+          trayG.strokeRoundedRect(40, trayY - 50, 1200, 100, 24);
+
+          const slotWidth = 1140 / 8;
+          const startX = 70 + slotWidth * 0.5;
+
+          shuffled.forEach((p, idx) => {
+            const px = startX + idx * slotWidth;
+            const py = trayY + 3;
+
+            const planetImg = this.add.image(px, py, `tex_${p.id}`)
+              .setOrigin(0.5)
+              .setInteractive({ useHandCursor: true });
+
+            this.input.setDraggable(planetImg);
+
+            const planetName = p.names[currentLanguage] || p.names.es;
+            const label = this.add.text(px, py + p.radius + 14, planetName, {
+              fontFamily: 'Fredoka, sans-serif',
+              fontSize: '12px',
+              fontStyle: 'bold',
+              color: '#f8fafc',
+              stroke: '#030712',
+              strokeThickness: 3
+            }).setOrigin(0.5);
+            label.setVisible(this.showLabels);
+
+            planetImg.spec = p;
+            planetImg.homeX = px;
+            planetImg.homeY = py;
+            planetImg.label = label;
+            planetImg.isPlaced = false;
+
+            this.planets.push(planetImg);
+          });
+        }
       }
 
       /* ------------------------------------------------------------------------
          CTSEO EXPEDITION STARSHIP & THRUSTER PLUME
          ------------------------------------------------------------------------ */
       buildStarship() {
-        // Starts docked right at the Sun
-        this.starship = this.add.image(this.sunCenter.x + 60, this.sunCenter.y, 'tex_hero_ship')
+        // Starts docked at the Sun (facing right on Desktop, facing downward 90° CW on Mobile)
+        const startX = this.isMobile ? this.sunCenter.x : this.sunCenter.x + 60;
+        const startY = this.isMobile ? this.sunCenter.y + 62 : this.sunCenter.y;
+        const startRot = this.isMobile ? Math.PI / 2 : 0;
+
+        this.starship = this.add.image(startX, startY, 'tex_hero_ship')
           .setScale(0.75)
+          .setRotation(startRot)
           .setDepth(15);
 
         // Attached thruster flame behind the ship stern (origin at right edge so it extends backward)
@@ -2698,10 +3026,20 @@
           .setDepth(14);
 
         this.thrusterStep = 0;
+        this.syncThrusterPosition(false);
+        this.startStarshipIdleHover();
+      }
+
+      startStarshipIdleHover() {
+        if (!this.starship) return;
+        this.tweens.killTweensOf(this.starship);
+        const baseX = this.starship.x;
+        const baseY = this.starship.y;
 
         this.tweens.add({
           targets: this.starship,
-          y: '+=6',
+          x: this.isMobile ? baseX + 6 : baseX,
+          y: this.isMobile ? baseY : baseY + 6,
           duration: 1200,
           yoyo: true,
           repeat: -1,
@@ -2791,7 +3129,7 @@
 
           if (gameObject.label) {
             gameObject.label.x = dragX;
-            gameObject.label.y = dragY + gameObject.spec.radius + 14;
+            gameObject.label.y = dragY + gameObject.spec.radius + (this.isMobile ? 22 : 14);
           }
         });
 
@@ -2871,7 +3209,7 @@
 
         if (planet.label) {
           planet.label.x = target.x;
-          planet.label.y = target.y + planet.spec.radius + 12;
+          planet.label.y = target.y + planet.spec.radius + (this.isMobile ? 22 : 12);
         }
 
         target.numberText.setVisible(false);
@@ -2903,22 +3241,30 @@
         if (nextTarget && nextTarget.isOccupied) {
           this.isShipMoving = true;
 
-          const angle = Phaser.Math.Angle.Between(this.starship.x, this.starship.y, nextTarget.x, nextTarget.y);
+          // Stop previous idle tween so the ship stays anchored at the newly reached planet!
+          this.tweens.killTweensOf(this.starship);
+
+          const destX = this.isMobile ? nextTarget.x + 42 : nextTarget.x + 38;
+          const destY = this.isMobile ? nextTarget.y + 8 : nextTarget.y - 12;
+
+          const angle = Phaser.Math.Angle.Between(this.starship.x, this.starship.y, destX, destY);
           this.starship.setRotation(angle);
           sound.playThruster(0.9);
 
           this.tweens.add({
             targets: this.starship,
-            x: nextTarget.x + 38,
-            y: nextTarget.y - 12,
+            x: destX,
+            y: destY,
             duration: 900,
             ease: 'Cubic.easeInOut',
             onUpdate: () => this.syncThrusterPosition(true),
             onComplete: () => {
               this.isShipMoving = false;
+              this.starship.setPosition(destX, destY);
               this.syncThrusterPosition(false);
-              this.showFactTransmission(nextTarget.planetId);
+              this.startStarshipIdleHover();
               this.shipNextTargetOrder++;
+              this.showFactTransmission(nextTarget.planetId);
             }
           });
         }
@@ -2930,6 +3276,20 @@
         const spec = PLANET_SPECS.find(p => p.id === planetId);
         const factEntry = this.sessionFacts[planetId];
         if (!factEntry) return;
+
+        // Pick a random character from /personajes/1..6.png, never repeating the last 2 transmissions
+        const allCharIds = [1, 2, 3, 4, 5, 6];
+        const availableCharIds = allCharIds.filter(id => !this.recentTransmissionChars.includes(id));
+        const chosenCharId = Phaser.Utils.Array.GetRandom(availableCharIds);
+        this.recentTransmissionChars.push(chosenCharId);
+        if (this.recentTransmissionChars.length > 2) {
+          this.recentTransmissionChars.shift();
+        }
+
+        const charImg = document.getElementById('fact-character-img');
+        if (charImg) {
+          charImg.src = `personajes/${chosenCharId}.png`;
+        }
 
         const modal = document.getElementById('fact-modal');
         const pName = document.getElementById('fact-planet-name');
@@ -2944,26 +3304,222 @@
         contBtn.onclick = () => {
           modal.classList.add('hidden');
           this.activeFactPlanetId = null;
-          // If all 8 planets cleared and ship finished voyage, Commander Zorgon attacks!
+          // If all 8 planets cleared and ship finished voyage, Commander Zorgon makes his epic entrance!
           if (this.placedCount === 8 && this.shipNextTargetOrder > 8) {
-            this.time.delayedCall(400, () => this.startBossBattle());
+            this.time.delayedCall(350, () => this.showZorgonIntroModal());
           } else {
             this.checkAdvanceSpaceship();
           }
         };
       }
 
+      showZorgonIntroModal() {
+        sound.setBGMMode('boss');
+        sound.playAlienBlaster();
+        this.cameras.main.shake(320, 0.01);
+        this.cameras.main.flash(240, 244, 63, 94);
+
+        this.updateModalTexts();
+        const zModal = document.getElementById('zorgon-intro-modal');
+        if (zModal) zModal.classList.remove('hidden');
+
+        const fightBtn = document.getElementById('btn-zorgon-fight');
+        if (fightBtn) {
+          fightBtn.onclick = () => {
+            sound.playPickup();
+            if (zModal) zModal.classList.add('hidden');
+            this.startBossBattle();
+          };
+        }
+      }
+
+      update(time) {
+        if (this.isBossActive) {
+          if (this.shipHpContainer && this.starship) {
+            this.shipHpContainer.setPosition(this.starship.x, this.starship.y - 54);
+          }
+          if (this.ufoHpContainer && this.bossUfo) {
+            this.ufoHpContainer.setPosition(this.bossUfo.x, this.bossUfo.y - 62);
+          }
+
+          // Continuous smoke & fire when either ship is at or below 25% HP
+          if (!this.lastDamageFxTime || time - this.lastDamageFxTime > 55) {
+            this.lastDamageFxTime = time;
+
+            const bossRatio = (this.bossHP || 0) / (this.bossMaxHP || 4);
+            if (this.bossUfo && this.bossHP > 0 && bossRatio <= 0.25) {
+              this.spawnDamageFireAndSmoke(this.bossUfo.x, this.bossUfo.y, 30, this.bossUfo.depth);
+            }
+
+            const playerRatio = Phaser.Math.Clamp(this.score / (this.playerMaxBattleScore || 450), 0, 1);
+            if (this.starship && !this.isGameWon && playerRatio <= 0.25) {
+              this.spawnDamageFireAndSmoke(this.starship.x, this.starship.y, 22, this.starship.depth);
+            }
+          }
+        }
+      }
+
+      spawnDamageFireAndSmoke(cx, cy, spread, baseDepth = 20) {
+        // 1. Billowing Dark Smoke Puff rising from the damaged hull
+        const sx = cx + Phaser.Math.Between(-spread, spread);
+        const sy = cy + Phaser.Math.Between(-spread * 0.5, spread * 0.4);
+        const smokeColor = Phaser.Utils.Array.GetRandom([0x1e293b, 0x334155, 0x475569, 0x64748b]);
+        const smoke = this.add.circle(sx, sy, Phaser.Math.FloatBetween(5, 10), smokeColor, 0.72)
+          .setDepth(baseDepth - 1);
+
+        this.tweens.add({
+          targets: smoke,
+          x: sx + Phaser.Math.Between(-18, 18),
+          y: sy - Phaser.Math.Between(28, 52),
+          scale: Phaser.Math.FloatBetween(1.8, 2.7),
+          alpha: 0,
+          duration: Phaser.Math.Between(480, 760),
+          ease: 'Quad.easeOut',
+          onComplete: () => smoke.destroy()
+        });
+
+        // 2. Flickering Fire Tongue (Red -> Orange -> Yellow core)
+        const fx = cx + Phaser.Math.Between(-spread * 0.75, spread * 0.75);
+        const fy = cy + Phaser.Math.Between(-spread * 0.35, spread * 0.35);
+        const fireColor = Phaser.Utils.Array.GetRandom([0xef4444, 0xf97316, 0xf59e0b, 0xfef08a]);
+        const flame = this.add.circle(fx, fy, Phaser.Math.FloatBetween(4, 8.5), fireColor, 0.92)
+          .setDepth(baseDepth + 1);
+
+        this.tweens.add({
+          targets: flame,
+          x: fx + Phaser.Math.Between(-8, 8),
+          y: fy - Phaser.Math.Between(14, 30),
+          scale: 0.15,
+          alpha: 0,
+          duration: Phaser.Math.Between(210, 360),
+          ease: 'Cubic.easeOut',
+          onComplete: () => flame.destroy()
+        });
+
+        // 3. Occasional Hot Spark Ejection
+        if (Math.random() < 0.45) {
+          const spark = this.add.circle(fx, fy, Phaser.Math.FloatBetween(1.8, 3.2), 0xfef08a, 1)
+            .setDepth(baseDepth + 2);
+          this.tweens.add({
+            targets: spark,
+            x: fx + Phaser.Math.Between(-26, 26),
+            y: fy + Phaser.Math.Between(-26, 12),
+            alpha: 0,
+            scale: 0.2,
+            duration: Phaser.Math.Between(180, 320),
+            ease: 'Quad.easeOut',
+            onComplete: () => spark.destroy()
+          });
+        }
+      }
+
+      createBossFloatingHPBars() {
+        // Clean up any previous bars
+        if (this.shipHpContainer) this.shipHpContainer.destroy();
+        if (this.ufoHpContainer) this.ufoHpContainer.destroy();
+
+        this.playerMaxBattleScore = Math.max(450, this.score);
+
+        // 1. Player Starship Floating HP Bar (Above Hero Ship)
+        const sW = 104;
+        const sH = 14;
+        const shipBg = this.add.graphics();
+        shipBg.fillStyle(0x050816, 0.9);
+        shipBg.fillRoundedRect(-sW / 2 - 2, -sH / 2 - 2, sW + 4, sH + 4, 9);
+        shipBg.lineStyle(2, 0x38bdf8, 0.85);
+        shipBg.strokeRoundedRect(-sW / 2 - 2, -sH / 2 - 2, sW + 4, sH + 4, 9);
+
+        this.shipHpFill = this.add.graphics();
+        this.drawCapsuleBar(this.shipHpFill, sW, sH, 1.0, 0xef4444, 0xfca5a5);
+
+        this.shipHpContainer = this.add.container(this.starship.x, this.starship.y - 54, [shipBg, this.shipHpFill])
+          .setDepth(28)
+          .setAlpha(0);
+
+        // 2. Boss Dreadnought Floating HP Bar (Above Alien UFO)
+        const uW = 128;
+        const uH = 15;
+        const ufoBg = this.add.graphics();
+        ufoBg.fillStyle(0x050816, 0.9);
+        ufoBg.fillRoundedRect(-uW / 2 - 2, -uH / 2 - 2, uW + 4, uH + 4, 9);
+        ufoBg.lineStyle(2, 0xf43f5e, 0.9);
+        ufoBg.strokeRoundedRect(-uW / 2 - 2, -uH / 2 - 2, uW + 4, uH + 4, 9);
+
+        this.ufoHpFill = this.add.graphics();
+        this.drawCapsuleBar(this.ufoHpFill, uW, uH, 1.0, 0xef4444, 0xfca5a5);
+
+        this.ufoHpContainer = this.add.container(this.bossUfo.x, this.bossUfo.y - 62, [ufoBg, this.ufoHpFill])
+          .setDepth(28)
+          .setAlpha(0);
+
+        this.tweens.add({
+          targets: [this.shipHpContainer, this.ufoHpContainer],
+          alpha: 1,
+          delay: 500,
+          duration: 450,
+          ease: 'Quad.easeOut'
+        });
+      }
+
+      drawCapsuleBar(g, maxW, h, ratio, mainColor, shineColor) {
+        if (!g) return;
+        g.clear();
+        const clamped = Phaser.Math.Clamp(ratio, 0, 1);
+        if (clamped <= 0.01) return;
+        const fillW = Math.max(h, maxW * clamped);
+        const r = h / 2;
+        g.fillStyle(mainColor, 1);
+        g.fillRoundedRect(-maxW / 2, -h / 2, fillW, h, r);
+        // Subtle top glossy highlight
+        g.fillStyle(shineColor, 0.45);
+        g.fillRoundedRect(-maxW / 2 + 2, -h / 2 + 2, Math.max(4, fillW - 4), h * 0.38, r * 0.5);
+      }
+
       /* ------------------------------------------------------------------------
          BOSS BATTLE: COMMANDER ZORGON TRIVIA SHOWDOWN
          ------------------------------------------------------------------------ */
+      getBossArenaNormY() {
+        // Measure the real DOM bottom of #trivia-card and return the normalized canvas Y (0..1) of the open space BELOW it
+        const canvasEl = this.sys && this.sys.game ? this.sys.game.canvas : null;
+        const triviaEl = document.getElementById('trivia-card');
+        if (canvasEl && triviaEl) {
+          const canvasRect = canvasEl.getBoundingClientRect();
+          const triviaRect = triviaEl.getBoundingClientRect();
+          if (canvasRect.height > 0 && triviaRect.height > 0) {
+            const minClearScreenY = triviaRect.bottom + (this.isMobile ? 42 : 48);
+            const maxClearScreenY = Math.max(minClearScreenY, canvasRect.bottom - (this.isMobile ? 34 : 42));
+            const arenaScreenY = (minClearScreenY + maxClearScreenY) * 0.5;
+            return Phaser.Math.Clamp((arenaScreenY - canvasRect.top) / canvasRect.height, 0.66, 0.93);
+          }
+        }
+        return this.isMobile ? 0.82 : 0.78;
+      }
+
+      getBossArenaWorldY(camPanY, camZoom) {
+        const arenaNormY = this.getBossArenaNormY();
+        return Math.round(camPanY + ((arenaNormY - 0.5) * this.gameH) / camZoom);
+      }
+
       startBossBattle() {
         this.isBossActive = true;
         this.bossMaxHP = 4;
         this.bossHP = 4;
         this.currentTriviaIndex = 0;
+        this.bossUfo = null;
+
+        // Ensure camera viewport matches current layout before computing boss arena coordinates
+        this.cameras.main.setViewport(0, 0, this.gameW, this.gameH);
+        this.cameras.main.setSize(this.gameW, this.gameH);
 
         // Switch to intense Space Boss Fight BGM!
         sound.setBGMMode('boss');
+
+        // Hide the drag-and-drop instructions banner & fade out the empty tray so maximum vertical space is available
+        const instrBar = document.getElementById('instructions-bar');
+        if (instrBar) instrBar.classList.add('hidden');
+        if (this.trayGraphics) {
+          this.tweens.add({ targets: this.trayGraphics, alpha: 0, duration: 500 });
+        }
 
         // Collect all 8 questions from the session facts shown this run so the player must land 4 hits to win
         const shownPlanetKeys = Object.keys(this.sessionFacts);
@@ -2972,24 +3528,56 @@
 
         this.updateBossHPUI();
 
-        // Stop previous idle ship tweens and move user starship into battle stance
-        this.tweens.killTweensOf(this.starship);
-        const shipBattleX = 720;
-        const shipBattleY = 540;
-        const ufoBattleX = 960;
-        const ufoBattleY = 510;
+        // Reveal boss battle UI first so we can measure the exact open space BELOW #trivia-card on any device
+        const overlayEl = document.getElementById('boss-battle-overlay');
+        const hudEl = document.getElementById('main-hud');
+        if (overlayEl && hudEl) {
+          overlayEl.style.top = `${Math.max(40, Math.round(hudEl.getBoundingClientRect().bottom + 4))}px`;
+        }
+        overlayEl.classList.remove('hidden');
+        this.renderBossQuestion();
 
-        // Spawn Boss Dreadnought Sprite on canvas
-        this.bossUfo = this.add.image(1350, 420, 'tex_alien_ufo')
-          .setScale(1.18)
+        // Camera target parameters
+        const camPanX = this.isMobile ? 360 : 820;
+        const camPanY = this.isMobile ? 780 : 430;
+        const camZoom = this.isMobile ? 1.12 : 1.15;
+        this.bossCamPanX = camPanX;
+        this.bossCamPanY = camPanY;
+        this.bossCamZoom = camZoom;
+
+        // Compute the exact World Y in the visible space BELOW the trivia modal (never behind it!)
+        const arenaWorldY = this.getBossArenaWorldY(camPanY, camZoom);
+        this.bossArenaWorldY = arenaWorldY;
+
+        // Stop previous idle ship tweens and move user starship into battle stance below the modal
+        this.tweens.killTweensOf(this.starship);
+        const shipBattleX = this.isMobile ? 185 : 670;
+        const shipBattleY = arenaWorldY + (this.isMobile ? 10 : 8);
+        const ufoBattleX = this.isMobile ? 535 : 970;
+        const ufoBattleY = arenaWorldY - (this.isMobile ? 10 : 8);
+
+        // Spawn Boss Dreadnought Sprite on canvas entering from the right into the lower arena
+        this.bossUfo = this.add.image(this.gameW + 90, ufoBattleY - 40, 'tex_alien_ufo')
+          .setScale(this.isMobile ? 1.08 : 1.15)
           .setDepth(20);
+
+        // Create floating HP bars right above both ships
+        this.createBossFloatingHPBars();
 
         sound.playWarp();
         this.cameras.main.shake(300, 0.008);
 
-        // Gently zoom in and pan camera toward the battle arena while keeping the top trivia card clear
-        this.cameras.main.pan(820, 430, 1100, 'Cubic.easeInOut');
-        this.cameras.main.zoomTo(1.22, 1100, 'Cubic.easeInOut');
+        // Gently zoom in and pan camera toward the battle arena (force = true so no prior pan blocks it)
+        this.cameras.main.pan(camPanX, camPanY, 1000, 'Cubic.easeInOut', true);
+        this.cameras.main.zoomTo(camZoom, 1000, 'Cubic.easeInOut', true);
+
+        // Re-align camera pan after DOM reflow (from hiding #instructions-bar) so ships stay centered in lower open space
+        this.time.delayedCall(120, () => {
+          if (!this.isBossActive || !this.bossUfo) return;
+          const normY = this.getBossArenaNormY();
+          const refinedPanY = Math.round(this.bossArenaWorldY - ((normY - 0.5) * this.gameH) / this.bossCamZoom);
+          this.cameras.main.pan(this.bossCamPanX, refinedPanY, 880, 'Cubic.easeInOut', true);
+        });
 
         // Move CTSEO starship into combat position facing the arriving Alien UFO
         const battleAngle = Phaser.Math.Angle.Between(shipBattleX, shipBattleY, ufoBattleX, ufoBattleY);
@@ -2998,7 +3586,7 @@
           targets: this.starship,
           x: shipBattleX,
           y: shipBattleY,
-          scale: 1.05,
+          scale: this.isMobile ? 0.98 : 1.05,
           rotation: battleAngle,
           duration: 1000,
           ease: 'Cubic.easeInOut',
@@ -3008,7 +3596,7 @@
             // Subtle combat hover while locked onto the UFO
             this.tweens.add({
               targets: this.starship,
-              y: '+=10',
+              y: '+=8',
               duration: 1200,
               yoyo: true,
               repeat: -1,
@@ -3040,16 +3628,12 @@
             // Hover animation
             this.tweens.add({
               targets: this.bossUfo,
-              y: '+=16',
+              y: '+=12',
               duration: 1500,
               yoyo: true,
               repeat: -1,
               ease: 'Sine.easeInOut'
             });
-
-            // Reveal boss battle UI cleanly below header
-            document.getElementById('boss-battle-overlay').classList.remove('hidden');
-            this.renderBossQuestion();
           }
         });
       }
@@ -3093,10 +3677,10 @@
         const letters = ['A', 'B', 'C'];
         options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = 'comic-btn w-full p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-left flex items-center space-x-3 border border-slate-700 hover:border-cyan-400 text-slate-200 transition-all';
+          btn.className = 'comic-btn w-full p-3 sm:p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-left flex items-center space-x-3 border border-slate-700 hover:border-cyan-400 text-slate-200 transition-all';
           btn.innerHTML = `
-            <span class="w-7 h-7 rounded-xl bg-cyan-950 border border-cyan-400/50 flex items-center justify-center font-sci-fi font-bold text-cyan-300 text-xs shrink-0">${letters[idx]}</span>
-            <span class="text-xs sm:text-sm font-semibold">${opt.text}</span>
+            <span class="w-8 h-8 sm:w-7 sm:h-7 rounded-xl bg-cyan-950 border border-cyan-400/50 flex items-center justify-center font-sci-fi font-bold text-cyan-300 text-sm sm:text-xs shrink-0">${letters[idx]}</span>
+            <span class="text-base sm:text-sm font-semibold leading-snug">${opt.text}</span>
           `;
 
           btn.onclick = () => {
@@ -3107,6 +3691,13 @@
 
           container.appendChild(btn);
         });
+
+        // If ships are already on screen, gently adjust camera pan if a longer question changed the modal height
+        if (this.bossUfo && this.bossArenaWorldY && this.bossCamZoom) {
+          const arenaNormY = this.getBossArenaNormY();
+          const adjustedPanY = Math.round(this.bossArenaWorldY - ((arenaNormY - 0.5) * this.gameH) / this.bossCamZoom);
+          this.cameras.main.pan(this.bossCamPanX, adjustedPanY, 260, 'Sine.easeOut', true);
+        }
       }
 
       handleBossAnswer(isCorrect, buttonEl) {
@@ -3145,6 +3736,7 @@
           }
 
           this.fireAlienPlasma();
+          this.updateBossHPUI();
           this.syncHUD();
 
           if (this.score <= 0) {
@@ -3410,8 +4002,21 @@
       updateBossHPUI() {
         const hpText = document.getElementById('boss-hp-text');
         const hpBar = document.getElementById('boss-hp-bar');
-        hpText.innerText = `${Math.max(0, this.bossHP)} / 4 HP`;
-        hpBar.style.width = `${Math.max(0, (this.bossHP / 4) * 100)}%`;
+        if (hpText) hpText.innerText = `${Math.max(0, this.bossHP)} / 4 HP`;
+        if (hpBar) hpBar.style.width = `${Math.max(0, (this.bossHP / 4) * 100)}%`;
+
+        // Update floating HP bars above both ships on the canvas
+        if (this.ufoHpFill) {
+          const bossRatio = Phaser.Math.Clamp(this.bossHP / (this.bossMaxHP || 4), 0, 1);
+          this.drawCapsuleBar(this.ufoHpFill, 128, 15, bossRatio, 0xef4444, 0xfca5a5);
+        }
+        if (this.shipHpFill) {
+          if (this.score > (this.playerMaxBattleScore || 450)) {
+            this.playerMaxBattleScore = this.score;
+          }
+          const playerRatio = Phaser.Math.Clamp(this.score / (this.playerMaxBattleScore || 450), 0, 1);
+          this.drawCapsuleBar(this.shipHpFill, 104, 14, playerRatio, 0xef4444, 0xfca5a5);
+        }
       }
 
       /* ------------------------------------------------------------------------
@@ -3461,7 +4066,7 @@
           this.tweens.add({
             targets: planet.label,
             x: planet.homeX,
-            y: planet.homeY + planet.spec.radius + 14,
+            y: planet.homeY + planet.spec.radius + (this.isMobile ? 22 : 14),
             duration: 320,
             ease: 'Cubic.easeOut'
           });
@@ -3493,12 +4098,12 @@
       spawnFloatingScore(x, y, msg, colorStr) {
         const txt = this.add.text(x, y, msg, {
           fontFamily: 'Fredoka, sans-serif',
-          fontSize: '19px',
+          fontSize: this.isMobile ? '42px' : '19px',
           fontStyle: 'bold',
           color: colorStr,
           align: 'center',
           stroke: '#050713',
-          strokeThickness: 5
+          strokeThickness: this.isMobile ? 8 : 5
         }).setOrigin(0.5).setScale(0.85).setDepth(30);
 
         // Pop-in & float upward over 2.3 seconds
@@ -3528,8 +4133,14 @@
         if (this.isGameWon) return;
         this.isGameWon = true;
 
-        // 1. Hide trivia overlay so the player watches the enemy dreadnought explode & flee!
+        // 1. Hide trivia overlay & floating HP bars so the player watches the enemy dreadnought explode & flee!
         document.getElementById('boss-battle-overlay').classList.add('hidden');
+        if (this.shipHpContainer) {
+          this.tweens.add({ targets: this.shipHpContainer, alpha: 0, duration: 300 });
+        }
+        if (this.ufoHpContainer) {
+          this.tweens.add({ targets: this.ufoHpContainer, alpha: 0, duration: 300 });
+        }
 
         if (this.bossUfo) {
           const baseX = this.bossUfo.x;
@@ -3610,14 +4221,14 @@
         this.time.delayedCall(2500, () => {
           sound.setBGMMode('game');
           sound.playFanfare();
-          this.cameras.main.pan(640, 360, 1000, 'Cubic.easeInOut');
-          this.cameras.main.zoomTo(1.0, 1000, 'Cubic.easeInOut');
+          this.cameras.main.pan(this.gameW / 2, this.gameH / 2, 1000, 'Cubic.easeInOut', true);
+          this.cameras.main.zoomTo(1.0, 1000, 'Cubic.easeInOut', true);
           this.cameras.main.flash(500, 255, 255, 255);
 
           for (let i = 0; i < 6; i++) {
             this.time.delayedCall(i * 280, () => {
-              const rx = Phaser.Math.Between(200, 1080);
-              const ry = Phaser.Math.Between(100, 450);
+              const rx = Phaser.Math.Between(160, this.gameW - 160);
+              const ry = Phaser.Math.Between(100, this.gameH - 250);
               this.spawnConfetti(rx, ry);
             });
           }
@@ -3635,7 +4246,9 @@
           const totalAttempts = this.placedCount + this.errors;
           const accuracy = totalAttempts > 0 ? Math.round((this.placedCount / totalAttempts) * 100) : 100;
           modalAcc.innerText = `${accuracy}%`;
+          this.lastAccuracy = accuracy;
 
+          resetVictoryScoreForm();
           this.updateModalTexts();
 
           modal.classList.remove('hidden');
@@ -3649,8 +4262,8 @@
       triggerDefeat() {
         sound.setBGMMode('game');
         document.getElementById('boss-battle-overlay').classList.add('hidden');
-        this.cameras.main.pan(640, 360, 800, 'Cubic.easeInOut');
-        this.cameras.main.zoomTo(1.0, 800, 'Cubic.easeInOut');
+        this.cameras.main.pan(this.gameW / 2, this.gameH / 2, 800, 'Cubic.easeInOut', true);
+        this.cameras.main.zoomTo(1.0, 800, 'Cubic.easeInOut', true);
         document.getElementById('game-over-modal').classList.remove('hidden');
       }
 
@@ -3713,7 +4326,7 @@
           if (factEntry && pBody) pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
         }
 
-        // Boss battle overlay
+        // Boss battle overlay & Zorgon Intro Modal
         const bossBadgeEl = document.getElementById('boss-badge-text');
         const bossTitleEl = document.getElementById('boss-title-text');
         const bossShieldEl = document.getElementById('boss-hp-label');
@@ -3723,17 +4336,40 @@
         if (bossShieldEl) bossShieldEl.innerText = loc.bossShield;
         if (triviaRewardEl) triviaRewardEl.innerText = loc.triviaReward;
 
+        const zIntroBadge = document.getElementById('zorgon-intro-badge');
+        const zIntroTitle = document.getElementById('zorgon-intro-title');
+        const zIntroSpeech = document.getElementById('zorgon-intro-speech');
+        const zIntroBtn = document.getElementById('btn-zorgon-fight-text');
+        if (zIntroBadge) zIntroBadge.innerText = loc.zorgonIntroBadge;
+        if (zIntroTitle) zIntroTitle.innerText = loc.bossTitle;
+        if (zIntroSpeech) zIntroSpeech.innerText = loc.zorgonIntroSpeech;
+        if (zIntroBtn) zIntroBtn.innerText = loc.zorgonIntroBtn;
+
         if (this.isBossActive && !this.isGameWon && this.bossHP > 0) {
           this.renderBossQuestion();
         }
 
-        // Defeat modal
+        // Defeat & Victory Home buttons
         const defTitle = document.getElementById('defeat-title');
         const defDesc = document.getElementById('defeat-desc');
         const defBtn = document.getElementById('defeat-btn-retry');
+        const defHomeBtn = document.getElementById('defeat-btn-home');
+        const vicHomeBtn = document.getElementById('victory-btn-home');
         if (defTitle) defTitle.innerText = loc.defeatTitle;
         if (defDesc) defDesc.innerText = loc.defeatDesc;
         if (defBtn) defBtn.innerText = loc.retryBtn;
+        if (defHomeBtn) defHomeBtn.innerText = loc.homeBtn;
+        if (vicHomeBtn) vicHomeBtn.innerText = loc.homeBtn;
+
+        // Scoreboard & Victory Score Entry labels
+        const addScoreBtnText = document.getElementById('btn-add-score-text');
+        const nameInput = document.getElementById('victory-player-name');
+        const saveScoreBtnText = document.getElementById('btn-save-score-text');
+        const scoreSavedLabel = document.getElementById('score-saved-label');
+        if (addScoreBtnText) addScoreBtnText.innerText = loc.addScoreBtn;
+        if (nameInput) nameInput.placeholder = loc.namePlaceholder;
+        if (saveScoreBtnText) saveScoreBtnText.innerText = loc.saveScoreBtn;
+        if (scoreSavedLabel) scoreSavedLabel.innerText = loc.scoreSavedMsg;
       }
 
       syncHUD() {
@@ -3751,7 +4387,7 @@
             streakIcon.classList.remove('text-slate-500');
             streakIcon.classList.add('text-amber-400', 'streak-fire-active');
             multBadge.classList.remove('hidden');
-            multBadge.innerText = `+${this.streak * 50} ${loc.bonus}`;
+            multBadge.innerText = this.isMobile ? `+${this.streak * 50}` : `+${this.streak * 50} ${loc.bonus}`;
           } else {
             streakIcon.classList.remove('text-amber-400', 'streak-fire-active');
             streakIcon.classList.add('text-slate-500');
@@ -3774,13 +4410,19 @@
     }
 
     /* ==========================================================================
-       PHASER CONFIGURATION & INITIALIZATION
+       PHASER CONFIGURATION & INITIALIZATION (Responsive Desktop & Mobile Portrait)
        ========================================================================== */
+    const initialIsMobile = checkIsMobileLayout();
     const config = {
       type: Phaser.AUTO,
       parent: 'game-container',
-      width: 1280,
-      height: 720,
+      width: initialIsMobile ? 720 : 1280,
+      height: initialIsMobile ? 1280 : 720,
+      input: {
+        touch: {
+          capture: false
+        }
+      },
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
@@ -3791,6 +4433,17 @@
 
     let game = new Phaser.Game(config);
 
+    // Automatically switch between Desktop Landscape and Mobile Vertical (90° CW) on viewport orientation change
+    window.addEventListener('resize', () => {
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      if (scene && scene.scene.isActive()) {
+        const nowMobile = checkIsMobileLayout();
+        if (nowMobile !== scene.isMobile) {
+          restartGameSession();
+        }
+      }
+    });
+
     /* ==========================================================================
        GLOBAL LANGUAGE & DOM HANDLERS
        ========================================================================== */
@@ -3798,29 +4451,40 @@
       currentLanguage = lang;
       const loc = I18N[lang] || I18N.es;
 
-      // Update Start Screen Elements
-      document.getElementById('start-badge-text').innerText = loc.startBadge;
+      // Update Start Screen Elements & How To Play Modal
+      const startBadgeEl = document.getElementById('start-badge-text');
+      if (startBadgeEl) startBadgeEl.innerText = loc.startBadge;
       document.getElementById('start-subtitle-text').innerText = loc.startSubtitle;
       document.getElementById('start-desc-text').innerText = loc.startDesc;
       document.getElementById('btn-start-text').innerText = loc.playNow;
       document.getElementById('start-sound-text').innerText = sound.enabled ? loc.soundActive : loc.soundMuted;
 
-      // Update Language Button Highlights (HUD & Start screen)
-      ['es', 'en', 'pt'].forEach(code => {
-        const hudBtn = document.getElementById(`lang-btn-${code}`);
-        if (hudBtn) {
-          hudBtn.className = code === lang
-            ? 'comic-btn px-2.5 py-1 rounded-xl font-black text-xs bg-amber-400 text-slate-950 transition-all'
-            : 'comic-btn px-2.5 py-1 rounded-xl font-black text-xs text-slate-300 hover:text-white transition-all';
-        }
+      const howBtnText = document.getElementById('btn-how-to-play-text');
+      const howTitle = document.getElementById('how-to-play-title');
+      const howClose = document.getElementById('btn-how-close-text');
+      const howStep1 = document.getElementById('how-step-1');
+      const howStep2 = document.getElementById('how-step-2');
+      const howStep3 = document.getElementById('how-step-3');
+      if (howBtnText) howBtnText.innerText = loc.howToPlayBtn;
+      if (howTitle) howTitle.innerText = loc.howToPlayBtn;
+      if (howClose) howClose.innerText = loc.howToPlayClose;
+      if (howStep1) howStep1.innerHTML = loc.howStep1;
+      if (howStep2) howStep2.innerHTML = loc.howStep2;
+      if (howStep3) howStep3.innerHTML = loc.howStep3;
 
-        const startBtns = document.querySelectorAll(`.start-lang-btn[data-lang="${code}"]`);
-        startBtns.forEach(btn => {
-          btn.className = code === lang
-            ? 'start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-amber-400 text-slate-950'
-            : 'start-lang-btn px-3 py-1 rounded-xl font-black text-xs transition-all text-slate-300 hover:text-white';
-        });
-      });
+      const sbBtnText = document.getElementById('btn-scoreboard-text');
+      const sbTitle = document.getElementById('scoreboard-modal-title');
+      const sbClose = document.getElementById('btn-scoreboard-close-text');
+      if (sbBtnText) sbBtnText.innerText = loc.scoreboardBtn;
+      if (sbTitle) sbTitle.innerText = loc.scoreboardTitle;
+      if (sbClose) sbClose.innerText = loc.howToPlayClose;
+      renderScoreboardList(lastSavedScoreId);
+
+      // Update Language Dropdowns in HUD & Start Screen
+      const hudSelect = document.getElementById('hud-lang-select');
+      if (hudSelect) hudSelect.value = lang;
+      const startSelect = document.getElementById('start-lang-select');
+      if (startSelect) startSelect.value = lang;
 
       const scene = game.scene.getScene('SolarSystemGameScene');
       if (scene) scene.applyLanguage(lang);
@@ -3838,11 +4502,223 @@
       document.getElementById('game-over-modal').classList.add('hidden');
       document.getElementById('boss-battle-overlay').classList.add('hidden');
       document.getElementById('fact-modal').classList.add('hidden');
+      const zIntroModal = document.getElementById('zorgon-intro-modal');
+      if (zIntroModal) zIntroModal.classList.add('hidden');
+      const sbModal = document.getElementById('scoreboard-modal');
+      if (sbModal) sbModal.classList.add('hidden');
+      const instrBar = document.getElementById('instructions-bar');
+      if (instrBar) instrBar.classList.remove('hidden');
 
       const scene = game.scene.getScene('SolarSystemGameScene');
       if (scene) {
         scene.tweens.killAll();
         scene.scene.restart();
+      }
+    }
+
+    function openHowToPlayModal() {
+      sound.playPickup();
+      const modal = document.getElementById('how-to-play-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeHowToPlayModal() {
+      sound.playPickup();
+      const modal = document.getElementById('how-to-play-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       TOP 10 SCOREBOARD (LOCALSTORAGE PERSISTENCE)
+       ========================================================================== */
+    const SCOREBOARD_STORAGE_KEY = 'ctseo_solar_scoreboard_v1';
+    let scoreSavedThisRun = false;
+    let lastSavedScoreId = null;
+
+    function getScoreboard() {
+      try {
+        const raw = localStorage.getItem(SCOREBOARD_STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveScoreToStorage(entry) {
+      const list = getScoreboard();
+      list.push(entry);
+      list.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (b.accuracy || 0) - (a.accuracy || 0);
+      });
+      const top10 = list.slice(0, 10);
+      try {
+        localStorage.setItem(SCOREBOARD_STORAGE_KEY, JSON.stringify(top10));
+      } catch (e) {
+        // Ignore storage quota errors
+      }
+      return top10;
+    }
+
+    function escapeHtmlText(str) {
+      return String(str).replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function renderScoreboardList(highlightId = null) {
+      const container = document.getElementById('scoreboard-list-container');
+      if (!container) return;
+      const loc = I18N[currentLanguage] || I18N.es;
+      const scores = getScoreboard();
+
+      if (scores.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-900/85 border border-slate-700/80 rounded-2xl p-6 text-center text-slate-300 text-sm">
+            <i class="fa-solid fa-satellite text-cyan-400 text-2xl mb-2 block"></i>
+            ${loc.scoreboardEmpty}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = scores.map((item, idx) => {
+        const rank = idx + 1;
+        const isHighlighted = highlightId && item.id === highlightId;
+        const rankBadgeClass = rank === 1
+          ? 'bg-amber-400 text-slate-950 border-amber-200'
+          : rank === 2
+            ? 'bg-slate-300 text-slate-950 border-slate-100'
+            : rank === 3
+              ? 'bg-amber-700 text-amber-100 border-amber-500'
+              : 'bg-slate-800 text-cyan-300 border-slate-600';
+        const rowBorder = isHighlighted
+          ? 'border-2 border-amber-400 bg-amber-950/40 shadow-lg shadow-amber-500/20'
+          : 'border border-slate-700/80 bg-slate-900/85';
+
+        return `
+          <div class="flex items-center justify-between px-3.5 py-2.5 rounded-2xl ${rowBorder}">
+            <div class="flex items-center space-x-3 min-w-0">
+              <span class="w-7 h-7 rounded-xl border font-sci-fi font-black text-xs flex items-center justify-center shrink-0 ${rankBadgeClass}">
+                ${rank}
+              </span>
+              <span class="font-bold text-white text-sm sm:text-base truncate">${escapeHtmlText(item.name)}</span>
+            </div>
+            <div class="flex items-center space-x-3 shrink-0 ml-2">
+              <span class="text-xs text-emerald-400 font-bold hidden sm:inline">${item.accuracy || 100}%</span>
+              <span class="font-sci-fi font-black text-amber-300 text-sm sm:text-base">${item.score} <span class="text-[10px] text-amber-400/80">PTS</span></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openScoreboardModal(highlightId = null) {
+      sound.playPickup();
+      renderScoreboardList(highlightId || lastSavedScoreId);
+      const modal = document.getElementById('scoreboard-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeScoreboardModal() {
+      sound.playPickup();
+      const modal = document.getElementById('scoreboard-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function resetVictoryScoreForm() {
+      scoreSavedThisRun = false;
+      lastSavedScoreId = null;
+      const btnShow = document.getElementById('btn-show-score-input');
+      const form = document.getElementById('victory-score-form');
+      const savedMsg = document.getElementById('victory-score-saved-msg');
+      const input = document.getElementById('victory-player-name');
+      if (btnShow) btnShow.classList.remove('hidden');
+      if (form) form.classList.add('hidden');
+      if (savedMsg) savedMsg.classList.add('hidden');
+      if (input) input.value = '';
+    }
+
+    function toggleVictoryScoreInput() {
+      if (scoreSavedThisRun) return;
+      sound.playPickup();
+      const form = document.getElementById('victory-score-form');
+      const input = document.getElementById('victory-player-name');
+      if (form) {
+        form.classList.toggle('hidden');
+        if (!form.classList.contains('hidden') && input) {
+          setTimeout(() => input.focus(), 50);
+        }
+      }
+    }
+
+    function submitVictoryScore() {
+      if (scoreSavedThisRun) return;
+      const loc = I18N[currentLanguage] || I18N.es;
+      const input = document.getElementById('victory-player-name');
+      const rawName = input ? input.value.trim() : '';
+      const pilotName = rawName.length > 0 ? rawName.slice(0, 16) : loc.defaultPilotName;
+
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      const finalScore = scene ? scene.score : (parseInt(document.getElementById('modal-score').innerText, 10) || 0);
+      const bestStreak = scene ? scene.bestStreak : 0;
+      const accuracy = scene && typeof scene.lastAccuracy === 'number' ? scene.lastAccuracy : 100;
+
+      const entryId = 'ctseo_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      saveScoreToStorage({
+        id: entryId,
+        name: pilotName,
+        score: finalScore,
+        streak: bestStreak,
+        accuracy: accuracy,
+        date: new Date().toISOString()
+      });
+
+      scoreSavedThisRun = true;
+      lastSavedScoreId = entryId;
+      sound.playCorrect();
+
+      const btnShow = document.getElementById('btn-show-score-input');
+      const form = document.getElementById('victory-score-form');
+      const savedMsg = document.getElementById('victory-score-saved-msg');
+      if (btnShow) btnShow.classList.add('hidden');
+      if (form) form.classList.add('hidden');
+      if (savedMsg) savedMsg.classList.remove('hidden');
+
+      openScoreboardModal(entryId);
+    }
+
+    function randomizeSplashScreen() {
+      const useV2 = Math.random() < 0.5;
+      const vertSrc = useV2 ? 'splashscreenVert2.jpg' : 'splashscreenvert.jpg';
+      const webSrc = useV2 ? 'splashscreen2.jpg' : 'splashscreen.jpg';
+
+      const sourceEl = document.getElementById('splash-source-vert');
+      const imgEl = document.getElementById('splash-img-main');
+      if (sourceEl) sourceEl.srcset = vertSrc;
+      if (imgEl) imgEl.src = webSrc;
+    }
+
+    // Pick random splash screen immediately on script evaluation
+    randomizeSplashScreen();
+
+    function returnToStartScreen() {
+      sound.playPickup();
+      randomizeSplashScreen();
+      restartGameSession();
+      sound.setBGMMode('start');
+      const startScreen = document.getElementById('start-screen');
+      if (startScreen) {
+        startScreen.style.display = 'flex';
+        requestAnimationFrame(() => {
+          startScreen.classList.remove('opacity-0', 'pointer-events-none');
+        });
       }
     }
 
@@ -3893,6 +4769,39 @@
 
       // Header Restart
       document.getElementById('btn-restart').addEventListener('click', restartGameSession);
+
+      // Enable smooth touch & pointer drag-scrolling on all modal cards for small screens (e.g. iPhone SE)
+      document.querySelectorAll('.modal-scroll-card').forEach(card => {
+        card.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+        let isDown = false;
+        let startY = 0;
+        let scrollTop = 0;
+        card.addEventListener('mousedown', e => {
+          if (e.target.closest('button, select, a, input')) return;
+          isDown = true;
+          startY = e.pageY - card.offsetTop;
+          scrollTop = card.scrollTop;
+        });
+        window.addEventListener('mouseup', () => { isDown = false; });
+        card.addEventListener('mousemove', e => {
+          if (!isDown) return;
+          e.preventDefault();
+          const y = e.pageY - card.offsetTop;
+          card.scrollTop = scrollTop - (y - startY) * 1.3;
+        });
+      });
+
+      // Allow pressing Enter inside the Victory Name Input to save score
+      const nameInputEl = document.getElementById('victory-player-name');
+      if (nameInputEl) {
+        nameInputEl.addEventListener('keydown', e => {
+          e.stopPropagation();
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            submitVictoryScore();
+          }
+        });
+      }
 
       // Initialize default language
       setGlobalLanguage('es');
