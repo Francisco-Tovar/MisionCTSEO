@@ -720,17 +720,17 @@
         </div>
       </div>
 
-      <!-- Programmer Section (Francisco Tovar) -->
-      <div class="bg-gradient-to-r from-indigo-950/90 via-slate-900/95 to-purple-950/90 border-2 border-amber-400/60 rounded-2xl p-2.5 sm:p-3 mb-3.5 flex items-center justify-center space-x-4 shadow-xl">
-        <div class="w-20 h-24 sm:w-24 sm:h-28 rounded-xl bg-gradient-to-b from-amber-500/20 via-purple-900/30 to-slate-950 border border-amber-400/50 flex items-end justify-center overflow-hidden shrink-0 shadow-inner">
-          <img src="FranciscoTovar.png" alt="Francisco Tovar" class="h-[96%] w-auto object-contain object-bottom drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] select-none" />
+      <!-- Programmer Section (Francisco Tovar - Compact / Half Height) -->
+      <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl py-1.5 px-3 mb-3 flex items-center justify-center space-x-3 shadow-md">
+        <div class="w-10 h-12 sm:w-12 sm:h-14 rounded-lg bg-gradient-to-b from-slate-800/80 to-slate-950 border border-slate-600/60 flex items-end justify-center overflow-hidden shrink-0">
+          <img src="FranciscoTovar.png" alt="Francisco Tovar" class="h-[95%] w-auto object-contain object-bottom select-none" />
         </div>
-        <div class="text-left">
-          <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-[10px] sm:text-xs font-black text-amber-300 uppercase tracking-widest font-sci-fi mb-1">
-            <i class="fa-solid fa-code text-amber-400"></i>
+        <div class="text-left leading-tight">
+          <div class="inline-flex items-center space-x-1 text-[9px] sm:text-[10px] font-bold text-amber-400/90 uppercase tracking-wider font-sci-fi">
+            <i class="fa-solid fa-code text-[9px]"></i>
             <span id="credits-programmer-role">Programador</span>
           </div>
-          <div class="text-base sm:text-xl font-black text-white font-sci-fi tracking-wide">Francisco Tovar</div>
+          <div class="text-xs sm:text-sm font-black text-slate-200 font-sci-fi tracking-wide">Francisco Tovar</div>
         </div>
       </div>
 
@@ -1528,10 +1528,26 @@
         };
 
         tick();
-        const intervalMs = this.bgmMode === 'boss'
-          ? 190
-          : (this.bgmMode === 'zorgon_ominous' ? 360 : (this.bgmMode === 'start' ? 450 : 650));
+        const intervalMs = this.bgmMode === 'game'
+          ? 155
+          : (this.bgmMode === 'boss'
+            ? 190
+            : (this.bgmMode === 'zorgon_ominous' ? 360 : 450));
         this.bgmTimer = setInterval(tick, intervalMs);
+      }
+
+      getNoiseBuffer() {
+        if (!this.ctx) return null;
+        if (!this._noiseBuffer) {
+          const bufferSize = Math.floor(this.ctx.sampleRate * 0.25);
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          this._noiseBuffer = buffer;
+        }
+        return this._noiseBuffer;
       }
 
       // Subtle heroic synthwave/sci-fi arpeggio & pad for the Start Screen
@@ -1592,60 +1608,184 @@
         osc.stop(now + 0.44);
       }
 
-      // Subtle, floating cosmic ambient theme for the main Solar System game
+      // Action-packed Reggaeton (Dembow) + Dubstep Wobble Bass hybrid theme for the main game (~97 BPM, 16th-note grid)
       playGameBGMBeat(step) {
         const now = this.ctx.currentTime;
-        // Dreamy Dorian/Lydian space chords
-        const spaceChords = [
-          [146.83, 220.00, 261.63, 329.63, 440.00], // Dm9
-          [116.54, 174.61, 220.00, 293.66, 349.23], // Bbmaj7
-          [130.81, 196.00, 261.63, 329.63, 392.00], // C6/9
-          [110.00, 164.81, 207.65, 246.94, 329.63]  // Amaj7/E cosmic turnaround
-        ];
-        const bar = Math.floor(step / 8) % spaceChords.length;
-        const chord = spaceChords[bar];
+        const s16 = step % 16;
+        const bar = Math.floor(step / 16) % 4;
 
-        // Deep space ambient drone on bar start
-        if (step % 8 === 0) {
-          [chord[0] * 0.5, chord[1], chord[3]].forEach(freq => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
+        // 1. REGGAETON DEMBOW KICK (Four-on-the-floor punchy sub kick on steps 0, 4, 8, 12)
+        if (s16 % 4 === 0) {
+          const kickOsc = this.ctx.createOscillator();
+          const kickGain = this.ctx.createGain();
+          kickOsc.type = 'sine';
+          kickOsc.frequency.setValueAtTime(155, now);
+          kickOsc.frequency.exponentialRampToValueAtTime(42, now + 0.11);
 
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now);
+          kickGain.gain.setValueAtTime(0.065, now);
+          kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(0.024, now + 1.4);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.1);
-
-            osc.connect(gain);
-            gain.connect(this.bgmMasterGain);
-
-            osc.start(now);
-            osc.stop(now + 5.2);
-          });
+          kickOsc.connect(kickGain);
+          kickGain.connect(this.bgmMasterGain);
+          kickOsc.start(now);
+          kickOsc.stop(now + 0.145);
         }
 
-        // Sparse celestial starlight bell notes
-        const melodySteps = [0, 3, 5, 6];
-        if (melodySteps.includes(step % 8)) {
-          const noteIdx = (step + bar) % chord.length;
-          const freq = chord[noteIdx] * 2;
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
+        // 2. REGGAETON DEMBOW SYNCOPATED SNARE / TIMBALE (Steps 3, 6, 11, 14)
+        if (s16 === 3 || s16 === 6 || s16 === 11 || s16 === 14) {
+          // Punchy tonal snare body
+          const bodyOsc = this.ctx.createOscillator();
+          const bodyGain = this.ctx.createGain();
+          bodyOsc.type = 'triangle';
+          bodyOsc.frequency.setValueAtTime(s16 === 6 || s16 === 14 ? 260 : 220, now);
+          bodyOsc.frequency.exponentialRampToValueAtTime(105, now + 0.065);
 
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now);
+          bodyGain.gain.setValueAtTime(0.036, now);
+          bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
 
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(0.016, now + 0.06);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+          bodyOsc.connect(bodyGain);
+          bodyGain.connect(this.bgmMasterGain);
+          bodyOsc.start(now);
+          bodyOsc.stop(now + 0.08);
 
-          osc.connect(gain);
-          gain.connect(this.bgmMasterGain);
+          // Crisp bandpass noise snap
+          const noiseBuf = this.getNoiseBuffer();
+          if (noiseBuf) {
+            const noiseSrc = this.ctx.createBufferSource();
+            const snareFilter = this.ctx.createBiquadFilter();
+            const noiseGain = this.ctx.createGain();
 
-          osc.start(now);
-          osc.stop(now + 1.2);
+            noiseSrc.buffer = noiseBuf;
+            snareFilter.type = 'bandpass';
+            snareFilter.frequency.setValueAtTime(2200, now);
+            snareFilter.Q.setValueAtTime(1.8, now);
+
+            noiseGain.gain.setValueAtTime(0.032, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.09);
+
+            noiseSrc.connect(snareFilter);
+            snareFilter.connect(noiseGain);
+            noiseGain.connect(this.bgmMasterGain);
+            noiseSrc.start(now);
+            noiseSrc.stop(now + 0.095);
+          }
+        }
+
+        // 3. METALLIC HI-HATS (Offbeats & rapid trap/dubstep rolls at end of bar)
+        if (s16 % 2 === 1 || s16 === 14 || s16 === 15) {
+          const noiseBuf = this.getNoiseBuffer();
+          if (noiseBuf) {
+            const hatSrc = this.ctx.createBufferSource();
+            const hatFilter = this.ctx.createBiquadFilter();
+            const hatGain = this.ctx.createGain();
+
+            hatSrc.buffer = noiseBuf;
+            hatFilter.type = 'highpass';
+            hatFilter.frequency.setValueAtTime(6800, now);
+
+            const hatVol = (s16 === 2 || s16 === 10) ? 0.016 : 0.009;
+            hatGain.gain.setValueAtTime(hatVol, now);
+            hatGain.gain.exponentialRampToValueAtTime(0.0005, now + 0.045);
+
+            hatSrc.connect(hatFilter);
+            hatFilter.connect(hatGain);
+            hatGain.connect(this.bgmMasterGain);
+            hatSrc.start(now);
+            hatSrc.stop(now + 0.05);
+          }
+        }
+
+        // 4. DUBSTEP WOBBLE BASS & GROWL (LFO-Modulated Resonant Lowpass Sawtooth)
+        // Bass roots in D minor: D2 (73.42), F2 (87.31), Bb1 (58.27), A1 (55.00)
+        const bassRoots = [73.42, 87.31, 58.27, 55.00];
+        const root = bassRoots[bar];
+        const wobbleTriggers = {
+          0:  { dur: 0.42, lfoHz: 6.5,  oct: 1,   pitchDrop: false },
+          3:  { dur: 0.28, lfoHz: 11.0, oct: 1,   pitchDrop: false },
+          6:  { dur: 0.28, lfoHz: 8.5,  oct: 2,   pitchDrop: true  },
+          8:  { dur: 0.40, lfoHz: 6.5,  oct: 1,   pitchDrop: false },
+          11: { dur: 0.26, lfoHz: 13.0, oct: 1.5, pitchDrop: false },
+          14: { dur: 0.28, lfoHz: 16.0, oct: 2,   pitchDrop: true  }
+        };
+
+        if (wobbleTriggers[s16]) {
+          const cfg = wobbleTriggers[s16];
+          const baseFreq = root * cfg.oct;
+
+          const wobOsc = this.ctx.createOscillator();
+          const subOsc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const lfo = this.ctx.createOscillator();
+          const lfoDepth = this.ctx.createGain();
+          const wobGain = this.ctx.createGain();
+
+          wobOsc.type = 'sawtooth';
+          subOsc.type = 'square';
+          wobOsc.frequency.setValueAtTime(baseFreq, now);
+          subOsc.frequency.setValueAtTime(root, now);
+
+          if (cfg.pitchDrop) {
+            wobOsc.frequency.exponentialRampToValueAtTime(root * 0.75, now + cfg.dur);
+          }
+
+          filter.type = 'lowpass';
+          filter.Q.setValueAtTime(7.5, now);
+          filter.frequency.setValueAtTime(520, now);
+
+          // LFO modulates filter cutoff for signature Dubstep "WUB-WUB"
+          lfo.type = 'sine';
+          lfo.frequency.setValueAtTime(cfg.lfoHz, now);
+          lfoDepth.gain.setValueAtTime(420, now);
+          lfo.connect(lfoDepth);
+          lfoDepth.connect(filter.frequency);
+
+          wobGain.gain.setValueAtTime(0.001, now);
+          wobGain.gain.linearRampToValueAtTime(0.038, now + 0.015);
+          wobGain.gain.exponentialRampToValueAtTime(0.001, now + cfg.dur);
+
+          wobOsc.connect(filter);
+          subOsc.connect(filter);
+          filter.connect(wobGain);
+          wobGain.connect(this.bgmMasterGain);
+
+          wobOsc.start(now);
+          subOsc.start(now);
+          lfo.start(now);
+          wobOsc.stop(now + cfg.dur + 0.01);
+          subOsc.stop(now + cfg.dur + 0.01);
+          lfo.stop(now + cfg.dur + 0.01);
+        }
+
+        // 5. SYNCOPATED REGGAETON / CYBERPUNK SYNTH LEAD HOOK
+        // Plays a catchy D minor / Phrygian staccato riff locked with the dembow groove
+        const leadPattern = [
+          587.33, null,   587.33, 698.46, null, 587.33, 523.25, null,
+          440.00, null,   466.16, 440.00, null, 349.23, 392.00, 440.00
+        ];
+        const noteFreq = leadPattern[s16];
+        if (noteFreq) {
+          const shift = (bar === 2) ? (466.16 / 587.33) : (bar === 3 ? (554.37 / 587.33) : 1);
+          const leadOsc = this.ctx.createOscillator();
+          const leadFilter = this.ctx.createBiquadFilter();
+          const leadGain = this.ctx.createGain();
+
+          leadOsc.type = (s16 === 3 || s16 === 6 || s16 === 11) ? 'sawtooth' : 'square';
+          leadOsc.frequency.setValueAtTime(noteFreq * shift, now);
+
+          leadFilter.type = 'lowpass';
+          leadFilter.frequency.setValueAtTime(1850, now);
+          leadFilter.frequency.exponentialRampToValueAtTime(480, now + 0.13);
+
+          leadGain.gain.setValueAtTime(0.001, now);
+          leadGain.gain.linearRampToValueAtTime(0.019, now + 0.01);
+          leadGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.135);
+
+          leadOsc.connect(leadFilter);
+          leadFilter.connect(leadGain);
+          leadGain.connect(this.bgmMasterGain);
+
+          leadOsc.start(now);
+          leadOsc.stop(now + 0.14);
         }
       }
 
