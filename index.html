@@ -1878,6 +1878,91 @@
     };
 
     /* ==========================================================================
+       CONVERSATIONAL PRE-FACTS / INTROS (Used ~50% of the time during transmissions)
+       ========================================================================== */
+    const PRE_FACTS = [
+      {
+        es: "¿Sabías que... ",
+        en: "Did you know that... ",
+        pt: "Você sabia que... "
+      },
+      {
+        es: "Es bueno tener en cuenta... ",
+        en: "It's good to keep in mind that... ",
+        pt: "É bom ter em mente que... "
+      },
+      {
+        es: "¿Alguna vez notaste que... ",
+        en: "Have you ever noticed that... ",
+        pt: "Você já reparou que... "
+      },
+      {
+        es: "Es importante recordar que... ",
+        en: "It's important to remember that... ",
+        pt: "É importante lembrar que... "
+      },
+      {
+        es: "Alguna vez escuché que... ",
+        en: "I once heard that... ",
+        pt: "Ouvi dizer que... "
+      },
+      {
+        es: "Un profesor me explicó que... ",
+        en: "A teacher once explained to me that... ",
+        pt: "Um professor me explicou que... "
+      },
+      {
+        es: "A una amiga le encantaba el hecho de que... ",
+        en: "A friend loved the fact that... ",
+        pt: "Uma amiga adorava o fato de que... "
+      },
+      {
+        es: "¡Dato curioso de navegación! ",
+        en: "Fun navigation fact! ",
+        pt: "Curiosidade de navegação! "
+      },
+      {
+        es: "En la academia espacial nos enseñaron que... ",
+        en: "In space academy, they taught us that... ",
+        pt: "Na academia espacial nos ensinaram que... "
+      },
+      {
+        es: "Revisando los sensores de la nave descubrí que... ",
+        en: "Checking the ship's sensors, I discovered that... ",
+        pt: "Conferindo os sensores da nave, descobri que... "
+      },
+      {
+        es: "Siempre me ha parecido fascinante que... ",
+        en: "I've always found it fascinating that... ",
+        pt: "Sempre achei fascinante que... "
+      },
+      {
+        es: "¡No te lo vas a creer, pero... ",
+        en: "You won't believe this, but... ",
+        pt: "Você não vai acreditar, mas... "
+      },
+      {
+        es: "¡Ojo al dato astronómico! ",
+        en: "Astronomical pro-tip! ",
+        pt: "Atenção a este dado astronômico! "
+      },
+      {
+        es: "La computadora central acaba de confirmar que... ",
+        en: "The main computer just confirmed that... ",
+        pt: "O computador central acabou de confirmar que... "
+      }
+    ];
+
+    function formatFactWithPrefix(rawFact, preIndex, lang) {
+      if (preIndex === null || preIndex === undefined || !PRE_FACTS[preIndex]) {
+        return rawFact;
+      }
+      const prefixObj = PRE_FACTS[preIndex];
+      const prefix = prefixObj[lang] || prefixObj.es;
+      return `${prefix}${rawFact}`;
+    }
+
+    /* ==========================================================================
        PLANET ASTRONOMICAL SPECIFICATIONS
        ========================================================================== */
     const PLANET_SPECS = [
@@ -2895,6 +2980,8 @@
         this.shipNextTargetOrder = 1;
         this.isShipMoving = false;
         this.isBossActive = false;
+        this.activeFactPlanetId = null;
+        this.activeFactPreIndex = null;
         if (this.factCountdownTimer) {
           clearInterval(this.factCountdownTimer);
           this.factCountdownTimer = null;
@@ -4301,7 +4388,14 @@
         const pBody = document.getElementById('fact-modal-body');
 
         pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
-        const fullFactText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+        
+        // 50% chance to include a conversational pre-fact intro
+        this.activeFactPreIndex = (Math.random() < 0.5)
+          ? Math.floor(Math.random() * PRE_FACTS.length)
+          : null;
+
+        const rawFact = factEntry.fact[currentLanguage] || factEntry.fact.es;
+        const fullFactText = formatFactWithPrefix(rawFact, this.activeFactPreIndex, currentLanguage);
 
         // Typewriter Effect: Complete smoothly in ~3.8 seconds (just under the 5-second countdown)
         pBody.innerHTML = '<span class="typewriter-cursor"></span>';
@@ -4379,6 +4473,7 @@
           }
           modal.classList.add('hidden');
           this.activeFactPlanetId = null;
+          this.activeFactPreIndex = null;
           // If all 8 planets cleared and ship finished voyage, Commander Zorgon makes his epic entrance!
           if (this.placedCount === 8 && this.shipNextTargetOrder > 8) {
             this.time.delayedCall(350, () => this.showZorgonIntroModal());
@@ -5524,7 +5619,10 @@
           const pName = document.getElementById('fact-planet-name');
           const pBody = document.getElementById('fact-modal-body');
           if (spec && pName) pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
-          if (factEntry && pBody) pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
+          if (factEntry && pBody) {
+            const rawFact = factEntry.fact[currentLanguage] || factEntry.fact.es;
+            pBody.innerText = formatFactWithPrefix(rawFact, this.activeFactPreIndex, currentLanguage);
+          }
         }
 
         // Boss battle overlay & Zorgon Intro Modal
