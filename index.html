@@ -2074,10 +2074,15 @@
           }
         }
         if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume().catch(() => {});
-        }
-        if (this.enabled && !this.bgmTimer && this.bgmMode) {
-          this.startBGMLoop();
+          this.ctx.resume().then(() => {
+            if (this.enabled && !this.bgmTimer && this.bgmMode) {
+              this.startBGMLoop();
+            }
+          }).catch(() => {});
+        } else if (this.ctx && this.ctx.state === 'running') {
+          if (this.enabled && !this.bgmTimer && this.bgmMode) {
+            this.startBGMLoop();
+          }
         }
       }
 
@@ -2089,8 +2094,10 @@
           clearInterval(this.bgmTimer);
           this.bgmTimer = null;
         }
-        if (this.enabled && this.ctx) {
-          this.startBGMLoop();
+        if (this.enabled) {
+          if (this.ctx && this.ctx.state === 'running') {
+            this.startBGMLoop();
+          }
         }
       }
 
@@ -2109,11 +2116,20 @@
       }
 
       startBGMLoop() {
-        if (this.bgmTimer) clearInterval(this.bgmTimer);
+        if (this.bgmTimer) {
+          clearInterval(this.bgmTimer);
+          this.bgmTimer = null;
+        }
         if (!this.enabled || !this.ctx) return;
 
         const tick = () => {
-          if (!this.enabled || !this.ctx || this.ctx.state !== 'running') return;
+          if (!this.enabled || !this.ctx) return;
+          if (this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+            return;
+          }
+          if (this.ctx.state !== 'running') return;
+
           if (this.bgmMode === 'start') {
             this.playStartBGMBeat(this.bgmStep++);
           } else if (this.bgmMode === 'game') {
@@ -2125,13 +2141,13 @@
           }
         };
 
-        tick();
         const intervalMs = this.bgmMode === 'game'
           ? 155
           : (this.bgmMode === 'boss'
             ? 190
             : (this.bgmMode === 'zorgon_ominous' ? 360 : 450));
         this.bgmTimer = setInterval(tick, intervalMs);
+        tick();
       }
 
       getNoiseBuffer() {
@@ -2931,14 +2947,16 @@
     const sound = new RetroAudioEngine();
     const unlockAudio = () => {
       sound.init();
-      // Also unlock Phaser's WebAudio context safely if present
-      if (typeof game !== 'undefined' && game && game.sound && game.sound.context && game.sound.context.state === 'suspended') {
-        game.sound.context.resume().catch(() => {});
+      // Once audio context is running, clean up generic interaction listeners
+      if (sound.ctx && sound.ctx.state === 'running') {
+        ['click', 'touchend', 'pointerup', 'keydown'].forEach(evt => {
+          window.removeEventListener(evt, unlockAudio);
+        });
       }
     };
-    window.addEventListener('pointerdown', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio, { passive: true });
+    ['click', 'touchend', 'pointerup', 'keydown'].forEach(evt => {
+      window.addEventListener(evt, unlockAudio, { passive: true });
+    });
 
     function checkIsMobileLayout() {
       return window.innerWidth < 768 || window.innerHeight > window.innerWidth;
@@ -6086,7 +6104,7 @@
     }
 
     window.onload = function() {
-      // User gesture listeners will unlock audio on first interaction without triggering browser warnings
+      sound.setBGMMode('start');
 
       // Start Game Action Button
       document.getElementById('btn-start-game').addEventListener('click', () => {
