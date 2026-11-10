@@ -360,10 +360,15 @@
         MERCURIO
       </h3>
 
-      <!-- Vertically Extended Character Hologram Portrait (From /personajes/1..6.png) -->
+      <!-- Vertically Extended Character Hologram Portrait (From /personajes/*.png) -->
       <div class="relative w-full h-52 sm:h-60 mb-3 rounded-2xl bg-gradient-to-b from-sky-950/40 via-cyan-900/25 to-slate-950/90 border border-cyan-400/35 flex items-end justify-center overflow-hidden shadow-inner">
         <div class="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent"></div>
-        <img id="fact-character-img" src="personajes/1.png" alt="Informante Espacial" class="h-[94%] w-auto object-contain object-bottom drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] select-none transition-transform duration-300" />
+        <img id="fact-character-img" src="personajes/Abigail.png" alt="Abigail" class="h-[94%] w-auto object-contain object-bottom drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] select-none transition-transform duration-300" />
+        <!-- Character Name Tag (Bottom-Left Corner Inside Image Box) -->
+        <div class="absolute bottom-2.5 left-2.5 z-10 inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-slate-950/85 backdrop-blur-md border border-cyan-400/50 shadow-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="fact-character-name" class="text-xs sm:text-sm font-black text-cyan-200 tracking-wider uppercase font-sci-fi">Abigail</span>
+        </div>
       </div>
 
       <!-- Character Speech / Data Box -->
@@ -3455,18 +3460,23 @@
         const factEntry = this.sessionFacts[planetId];
         if (!factEntry) return;
 
-        // Pick a random character from /personajes/1..6.png, never repeating the last 2 transmissions
-        const allCharIds = [1, 2, 3, 4, 5, 6];
-        const availableCharIds = allCharIds.filter(id => !this.recentTransmissionChars.includes(id));
-        const chosenCharId = Phaser.Utils.Array.GetRandom(availableCharIds);
-        this.recentTransmissionChars.push(chosenCharId);
+        // Pick a random character from /personajes/*.png, never repeating the last 2 transmissions
+        const allCharNames = ['Abigail', 'Gabriel', 'Marco', 'Valeria', 'Vanessa', 'Victoria'];
+        const availableChars = allCharNames.filter(name => !this.recentTransmissionChars.includes(name));
+        const chosenCharName = Phaser.Utils.Array.GetRandom(availableChars);
+        this.recentTransmissionChars.push(chosenCharName);
         if (this.recentTransmissionChars.length > 2) {
           this.recentTransmissionChars.shift();
         }
 
         const charImg = document.getElementById('fact-character-img');
         if (charImg) {
-          charImg.src = `personajes/${chosenCharId}.png`;
+          charImg.src = `personajes/${chosenCharName}.png`;
+          charImg.alt = chosenCharName;
+        }
+        const charNameEl = document.getElementById('fact-character-name');
+        if (charNameEl) {
+          charNameEl.innerText = chosenCharName;
         }
 
         const modal = document.getElementById('fact-modal');
