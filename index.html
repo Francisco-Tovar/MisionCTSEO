@@ -137,6 +137,44 @@
       animation: cockpitSway 2.5s infinite ease-in-out;
     }
 
+    /* Trivia Correct Answer Sparkle Pulse */
+    @keyframes answerSparkle {
+      0% {
+        box-shadow: 0 0 0px rgba(16, 185, 129, 0.4), inset 0 0 0px rgba(52, 211, 153, 0.2);
+        transform: scale(1);
+      }
+      35% {
+        box-shadow: 0 0 35px rgba(16, 185, 129, 0.95), 0 0 15px rgba(254, 240, 138, 0.8), inset 0 0 20px rgba(52, 211, 153, 0.6);
+        transform: scale(1.03);
+      }
+      70% {
+        box-shadow: 0 0 24px rgba(16, 185, 129, 0.75), 0 0 10px rgba(254, 240, 138, 0.6), inset 0 0 14px rgba(52, 211, 153, 0.4);
+        transform: scale(1.015);
+      }
+      100% {
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.9), 0 0 18px rgba(254, 240, 138, 0.7), inset 0 0 18px rgba(52, 211, 153, 0.5);
+        transform: scale(1.02);
+      }
+    }
+    .answer-correct-glow {
+      animation: answerSparkle 0.7s infinite alternate ease-in-out;
+    }
+
+    /* Trivia Wrong Answer Shake Vibration */
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-9px) rotate(-1deg); }
+      30% { transform: translateX(8px) rotate(1deg); }
+      45% { transform: translateX(-7px) rotate(-0.5deg); }
+      60% { transform: translateX(6px) rotate(0.5deg); }
+      75% { transform: translateX(-4px); }
+      90% { transform: translateX(3px); }
+    }
+    .answer-wrong-shake {
+      animation: wrongShake 0.55s ease-in-out;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.85), inset 0 0 15px rgba(244, 63, 94, 0.5);
+    }
+
     #game-container canvas {
       display: block;
       margin: 0 auto;
@@ -826,6 +864,7 @@
         playAgain: "Jugar de Nuevo",
         transmissionBadge: "TRANSMISIÓN DE NAVEGACIÓN",
         transmissionBtn: "¡ENTENDIDO, CONTINUAR RUTA!",
+        transmissionWait: "Leyendo datos ({seconds}s)...",
         bossTitle: "COMANDANTE ZORGON",
         bossBadge: "JEFE ALIENÍGENA",
         bossShield: "ESCUDO NODRIZA",
@@ -886,6 +925,7 @@
         playAgain: "Play Again",
         transmissionBadge: "NAVIGATION TRANSMISSION",
         transmissionBtn: "ROGER THAT, ADVANCE!",
+        transmissionWait: "Reading intel ({seconds}s)...",
         bossTitle: "COMMANDER ZORGON",
         bossBadge: "ALIEN WAR BOSS",
         bossShield: "MOTHERSHIP SHIELD",
@@ -946,6 +986,7 @@
         playAgain: "Jogar Novamente",
         transmissionBadge: "TRANSMISSÃO DE NAVEGAÇÃO",
         transmissionBtn: "ENTENDIDO, AVANÇAR!",
+        transmissionWait: "Lendo dados ({seconds}s)...",
         bossTitle: "COMANDANTE ZORGON",
         bossBadge: "CHEFE ALIENÍGENA",
         bossShield: "ESCUDO NAVE-MÃE",
@@ -2406,6 +2447,10 @@
         this.shipNextTargetOrder = 1;
         this.isShipMoving = false;
         this.isBossActive = false;
+        if (this.factCountdownTimer) {
+          clearInterval(this.factCountdownTimer);
+          this.factCountdownTimer = null;
+        }
         this.bossMaxHP = 6;
         this.bossHP = 6;
         this.currentTriviaIndex = 0;
@@ -3769,6 +3814,12 @@
         const factEntry = this.sessionFacts[planetId];
         if (!factEntry) return;
 
+        // Clear any previous fact countdown timer
+        if (this.factCountdownTimer) {
+          clearInterval(this.factCountdownTimer);
+          this.factCountdownTimer = null;
+        }
+
         // Pick a character from /personajes/*.png, ensuring no repeats within the last 5 transmissions
         // (so across the 8 planets, all 6 team members will appear at least once)
         const allCharNames = ['Abigail', 'Gabriel', 'Marco', 'Valeria', 'Vanessa', 'Victoria'];
@@ -3796,10 +3847,45 @@
         pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
         pBody.innerText = factEntry.fact[currentLanguage] || factEntry.fact.es;
 
+        // Enforce 5-second reading timer before enabling the continue button
+        const contBtn = document.getElementById('btn-fact-continue');
+        let remainingSeconds = 5;
+
+        const updateBtnCountdownState = () => {
+          const loc = I18N[currentLanguage] || I18N.es;
+          if (remainingSeconds > 0) {
+            contBtn.disabled = true;
+            contBtn.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
+            contBtn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
+            const waitText = (loc.transmissionWait || "Leyendo datos ({seconds}s)...").replace('{seconds}', remainingSeconds);
+            contBtn.innerHTML = `<i class="fa-solid fa-hourglass-half animate-spin text-amber-400 mr-2 text-sm"></i><span>${waitText}</span>`;
+          } else {
+            contBtn.disabled = false;
+            contBtn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
+            contBtn.classList.add('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
+            contBtn.innerHTML = `<span>${loc.transmissionBtn || "¡ENTENDIDO, CONTINUAR RUTA!"}</span> <i class="fa-solid fa-arrow-right ml-2"></i>`;
+          }
+        };
+
+        updateBtnCountdownState();
         modal.classList.remove('hidden');
 
-        const contBtn = document.getElementById('btn-fact-continue');
+        this.factCountdownTimer = setInterval(() => {
+          remainingSeconds--;
+          updateBtnCountdownState();
+          if (remainingSeconds <= 0) {
+            clearInterval(this.factCountdownTimer);
+            this.factCountdownTimer = null;
+            sound.playPickup();
+          }
+        }, 1000);
+
         contBtn.onclick = () => {
+          if (contBtn.disabled) return;
+          if (this.factCountdownTimer) {
+            clearInterval(this.factCountdownTimer);
+            this.factCountdownTimer = null;
+          }
           modal.classList.add('hidden');
           this.activeFactPlanetId = null;
           // If all 8 planets cleared and ship finished voyage, Commander Zorgon makes his epic entrance!
@@ -4286,8 +4372,15 @@
 
       handleBossAnswer(isCorrect, buttonEl) {
         if (isCorrect) {
-          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700');
-          buttonEl.classList.add('bg-emerald-950', 'border-emerald-400', 'text-emerald-300');
+          // Highlight verde intenso con chispas, borde brillante y animación de resplandor
+          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700', 'hover:border-cyan-400');
+          buttonEl.classList.add('bg-emerald-900/95', 'border-2', 'border-emerald-300', 'text-emerald-100', 'answer-correct-glow');
+
+          // Añadir badge con estrellas / destellos (sparkles) al botón
+          const sparkleBadge = document.createElement('span');
+          sparkleBadge.className = 'ml-auto text-amber-300 text-sm sm:text-base font-black flex items-center space-x-1 animate-pulse';
+          sparkleBadge.innerHTML = '<i class="fa-solid fa-sparkles text-amber-300"></i><i class="fa-solid fa-star text-yellow-300 text-xs"></i>';
+          buttonEl.appendChild(sparkleBadge);
 
           this.bossHP--;
           this.score += 200;
@@ -4300,13 +4393,19 @@
           this.updateBossHPUI();
           this.syncHUD();
 
-          this.time.delayedCall(900, () => {
+          this.time.delayedCall(1100, () => {
             this.currentTriviaIndex++;
             this.renderBossQuestion();
           });
         } else {
-          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700');
-          buttonEl.classList.add('bg-rose-950', 'border-rose-400', 'text-rose-300');
+          // Vibración enérgica y resaltado en rojo intenso
+          buttonEl.classList.remove('bg-slate-900/90', 'border-slate-700', 'hover:border-cyan-400');
+          buttonEl.classList.add('bg-rose-950/95', 'border-2', 'border-rose-400', 'text-rose-100', 'answer-wrong-shake');
+
+          const errorBadge = document.createElement('span');
+          errorBadge.className = 'ml-auto text-rose-400 text-sm sm:text-base font-black flex items-center space-x-1';
+          errorBadge.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+          buttonEl.appendChild(errorBadge);
 
           this.errors++;
           this.score = Math.max(0, this.score - 225);
@@ -4324,9 +4423,9 @@
           this.syncHUD();
 
           if (this.score <= 0) {
-            this.time.delayedCall(700, () => this.triggerDefeat());
+            this.time.delayedCall(850, () => this.triggerDefeat());
           } else {
-            this.time.delayedCall(900, () => {
+            this.time.delayedCall(1100, () => {
               this.currentTriviaIndex++;
               this.renderBossQuestion();
             });
