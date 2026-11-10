@@ -1878,43 +1878,43 @@
     };
 
     /* ==========================================================================
-       CONVERSATIONAL PRE-FACTS / INTROS (Used ~50% of the time during transmissions)
+       CONVERSATIONAL PRE-FACTS / INTROS (Used ~80% of the time during transmissions, no ellipses)
        ========================================================================== */
     const PRE_FACTS = [
       {
-        es: "¿Sabías que... ",
-        en: "Did you know that... ",
-        pt: "Você sabia que... "
+        es: "¿Sabías esto? ",
+        en: "Did you know this? ",
+        pt: "Você sabia disto? "
       },
       {
-        es: "Es bueno tener en cuenta... ",
-        en: "It's good to keep in mind that... ",
-        pt: "É bom ter em mente que... "
+        es: "Es bueno tener en cuenta esto: ",
+        en: "It's good to keep this in mind: ",
+        pt: "É bom ter isto em mente: "
       },
       {
-        es: "¿Alguna vez notaste que... ",
-        en: "Have you ever noticed that... ",
-        pt: "Você já reparou que... "
+        es: "¿Alguna vez notaste este detalle? ",
+        en: "Have you ever noticed this detail? ",
+        pt: "Você já reparou neste detalhe? "
       },
       {
-        es: "Es importante recordar que... ",
-        en: "It's important to remember that... ",
-        pt: "É importante lembrar que... "
+        es: "Es importante recordar: ",
+        en: "It's important to remember: ",
+        pt: "É importante lembrar: "
       },
       {
-        es: "Alguna vez escuché que... ",
-        en: "I once heard that... ",
-        pt: "Ouvi dizer que... "
+        es: "Alguna vez escuché una gran lección: ",
+        en: "I once heard a great lesson: ",
+        pt: "Certa vez ouvi uma grande lição: "
       },
       {
-        es: "Un profesor me explicó que... ",
-        en: "A teacher once explained to me that... ",
-        pt: "Um professor me explicou que... "
+        es: "Un profesor me explicó esto: ",
+        en: "A teacher once explained this to me: ",
+        pt: "Um professor me explicou isto: "
       },
       {
-        es: "A una amiga le encantaba el hecho de que... ",
-        en: "A friend loved the fact that... ",
-        pt: "Uma amiga adorava o fato de que... "
+        es: "A una compañera le encantaba este dato: ",
+        en: "A crewmate loved this fact: ",
+        pt: "Uma colega adorava este fato: "
       },
       {
         es: "¡Dato curioso de navegación! ",
@@ -1922,24 +1922,24 @@
         pt: "Curiosidade de navegação! "
       },
       {
-        es: "En la academia espacial nos enseñaron que... ",
-        en: "In space academy, they taught us that... ",
-        pt: "Na academia espacial nos ensinaram que... "
+        es: "En la academia espacial nos enseñaron esto: ",
+        en: "In space academy, they taught us this: ",
+        pt: "Na academia espacial nos ensinaram isto: "
       },
       {
-        es: "Revisando los sensores de la nave descubrí que... ",
-        en: "Checking the ship's sensors, I discovered that... ",
-        pt: "Conferindo os sensores da nave, descobri que... "
+        es: "Revisando los sensores de la nave: ",
+        en: "Checking the ship's sensors: ",
+        pt: "Conferindo os sensores da nave: "
       },
       {
-        es: "Siempre me ha parecido fascinante que... ",
-        en: "I've always found it fascinating that... ",
-        pt: "Sempre achei fascinante que... "
+        es: "¡Un detalle astronómico fascinante! ",
+        en: "A fascinating astronomical detail! ",
+        pt: "Um detalhe astronômico fascinante! "
       },
       {
-        es: "¡No te lo vas a creer, pero... ",
-        en: "You won't believe this, but... ",
-        pt: "Você não vai acreditar, mas... "
+        es: "¡Te va a sorprender este dato! ",
+        en: "You will be amazed by this fact! ",
+        pt: "Você vai se surpreender com este fato! "
       },
       {
         es: "¡Ojo al dato astronómico! ",
@@ -1947,9 +1947,9 @@
         pt: "Atenção a este dado astronômico! "
       },
       {
-        es: "La computadora central acaba de confirmar que... ",
-        en: "The main computer just confirmed that... ",
-        pt: "O computador central acabou de confirmar que... "
+        es: "La computadora de a bordo confirma: ",
+        en: "The onboard computer confirms: ",
+        pt: "O computador de bordo confirma: "
       }
     ];
 
@@ -3023,6 +3023,7 @@
         PLANET_SPECS.forEach(p => {
           const pool = PLANET_FACTS_DATABASE[p.id];
           const chosen = Phaser.Utils.Array.GetRandom(pool);
+          chosen.planetId = p.id;
           this.sessionFacts[p.id] = chosen;
         });
 
@@ -4389,8 +4390,8 @@
 
         pName.innerText = (spec.names[currentLanguage] || spec.names.es).toUpperCase();
         
-        // 50% chance to include a conversational pre-fact intro
-        this.activeFactPreIndex = (Math.random() < 0.5)
+        // 80% chance to include a conversational pre-fact intro (no ellipses)
+        this.activeFactPreIndex = (Math.random() < 0.8)
           ? Math.floor(Math.random() * PRE_FACTS.length)
           : null;
 
@@ -4750,10 +4751,11 @@
           this.tweens.add({ targets: this.trayGraphics, alpha: 0, duration: 500 });
         }
 
-        // Collect all 8 questions from the session facts shown this run so the player must land 4 hits to win
-        const shownPlanetKeys = Object.keys(this.sessionFacts);
-        const shuffledKeys = Phaser.Utils.Array.Shuffle([...shownPlanetKeys]);
-        this.activeTriviaList = shuffledKeys.map(k => this.sessionFacts[k]);
+        // Strictly gather the exact 8 questions corresponding to the facts presented during this run's navigation
+        const sessionTriviaEntries = PLANET_SPECS
+          .map(p => this.sessionFacts[p.id])
+          .filter(Boolean);
+        this.activeTriviaList = Phaser.Utils.Array.Shuffle([...sessionTriviaEntries]);
 
         this.updateBossHPUI();
 
