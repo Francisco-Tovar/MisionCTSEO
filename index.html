@@ -3769,12 +3769,13 @@
         const factEntry = this.sessionFacts[planetId];
         if (!factEntry) return;
 
-        // Pick a random character from /personajes/*.png, never repeating the last 2 transmissions
+        // Pick a character from /personajes/*.png, ensuring no repeats within the last 5 transmissions
+        // (so across the 8 planets, all 6 team members will appear at least once)
         const allCharNames = ['Abigail', 'Gabriel', 'Marco', 'Valeria', 'Vanessa', 'Victoria'];
         const availableChars = allCharNames.filter(name => !this.recentTransmissionChars.includes(name));
-        const chosenCharName = Phaser.Utils.Array.GetRandom(availableChars);
+        const chosenCharName = Phaser.Utils.Array.GetRandom(availableChars.length > 0 ? availableChars : allCharNames);
         this.recentTransmissionChars.push(chosenCharName);
-        if (this.recentTransmissionChars.length > 2) {
+        if (this.recentTransmissionChars.length > 5) {
           this.recentTransmissionChars.shift();
         }
 
