@@ -424,8 +424,8 @@
         <p id="fact-modal-body" class="font-medium">Dato del planeta aquí...</p>
       </div>
 
-      <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-lg sm:text-base uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 relative z-10">
-        <span>¡TERMINAR TRANSMISIÓN!</span>
+      <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-lg sm:text-base tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 relative z-10">
+        <span class="uppercase">¡TERMINAR TRANSMISIÓN!</span>
         <i class="fa-solid fa-satellite-dish"></i>
       </button>
     </div>
@@ -3856,14 +3856,14 @@
           if (remainingSeconds > 0) {
             contBtn.disabled = true;
             contBtn.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
-            contBtn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
+            contBtn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85', 'normal-case');
             const waitText = (loc.transmissionWait || "Conectando ({seconds}sec)...").replace('{seconds}', remainingSeconds);
-            contBtn.innerHTML = `<i class="fa-solid fa-satellite-dish animate-pulse text-amber-400 mr-2 text-sm"></i><span>${waitText}</span>`;
+            contBtn.innerHTML = `<i class="fa-solid fa-satellite-dish animate-pulse text-amber-400 mr-2 text-sm"></i><span class="normal-case">${waitText}</span>`;
           } else {
             contBtn.disabled = false;
-            contBtn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85');
+            contBtn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700', 'cursor-not-allowed', 'opacity-85', 'normal-case');
             contBtn.classList.add('bg-gradient-to-r', 'from-cyan-500', 'to-blue-500', 'hover:from-cyan-400', 'hover:to-blue-400', 'cursor-pointer', 'shadow-lg');
-            contBtn.innerHTML = `<span>${loc.transmissionBtn || "¡TERMINAR TRANSMISIÓN!"}</span> <i class="fa-solid fa-satellite-dish ml-2"></i>`;
+            contBtn.innerHTML = `<span class="uppercase">${loc.transmissionBtn || "¡TERMINAR TRANSMISIÓN!"}</span> <i class="fa-solid fa-satellite-dish ml-2"></i>`;
           }
         };
 
