@@ -246,7 +246,7 @@
           <div class="flex items-start space-x-3 bg-slate-900/80 p-3 rounded-2xl border border-slate-700/70">
             <span class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-400/50 text-rose-300 font-sci-fi font-black text-sm flex items-center justify-center shrink-0">3</span>
             <p id="how-step-3" class="text-base sm:text-sm text-slate-200 font-medium leading-snug">
-              <strong class="text-rose-300">Batalla de Ingenio:</strong> ¡Responde correctamente 4 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!
+              <strong class="text-rose-300">Batalla de Ingenio:</strong> ¡Responde correctamente 6 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!
             </p>
           </div>
         </div>
@@ -492,7 +492,7 @@
       <div class="w-36 sm:w-56">
         <div class="flex justify-between text-xs sm:text-[11px] font-bold text-slate-300 mb-1">
           <span id="boss-hp-label">ESCUDO NODRIZA</span>
-          <span id="boss-hp-text" class="text-rose-400 font-black">4 / 4 HP</span>
+          <span id="boss-hp-text" class="text-rose-400 font-black">6 / 6 HP</span>
         </div>
         <div class="w-full h-2.5 sm:h-3 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700">
           <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 rounded-full transition-all duration-300" style="width: 100%;"></div>
@@ -672,57 +672,63 @@
       <!-- 6 Team Members Grid -->
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-3.5">
         <!-- Vanessa Cordero -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Vanessa.png" alt="Vanessa Cordero" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Vanessa Cordero', 'personajes/Vanessa.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Vanessa.png" alt="Vanessa Cordero" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Vanessa Cordero</span>
-        </div>
+        </button>
 
         <!-- Abigail Vogan -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Abigail.png" alt="Abigail Vogan" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Abigail Vogan', 'personajes/Abigail.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Abigail.png" alt="Abigail Vogan" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Abigail Vogan</span>
-        </div>
+        </button>
 
         <!-- Marco Lopez -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Marco.png" alt="Marco Lopez" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Marco Lopez', 'personajes/Marco.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Marco.png" alt="Marco Lopez" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Marco Lopez</span>
-        </div>
+        </button>
 
         <!-- Valeria Céspedes -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Valeria.png" alt="Valeria Céspedes" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Valeria Céspedes', 'personajes/Valeria.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Valeria.png" alt="Valeria Céspedes" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Valeria Céspedes</span>
-        </div>
+        </button>
 
         <!-- Gabriel Araya -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Gabriel.png" alt="Gabriel Araya" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Gabriel Araya', 'personajes/Gabriel.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Gabriel.png" alt="Gabriel Araya" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Gabriel Araya</span>
-        </div>
+        </button>
 
         <!-- Victoria Tovar -->
-        <div class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 transition-colors">
-          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5">
-            <img src="personajes/Victoria.png" alt="Victoria Tovar" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none" />
+        <button type="button" onclick="openPortraitPreview('Victoria Tovar', 'personajes/Victoria.png', 'Equipo de Diseño, Planeamiento y Desarrollo')" class="bg-slate-900/85 border border-cyan-500/35 rounded-2xl p-2 flex flex-col items-center shadow-lg hover:border-cyan-400 hover:scale-[1.03] transition-all cursor-pointer group text-left">
+          <div class="w-full h-24 sm:h-28 rounded-xl bg-gradient-to-b from-sky-950/60 via-cyan-900/25 to-slate-950 flex items-end justify-center overflow-hidden border border-cyan-500/25 mb-1.5 relative">
+            <img src="personajes/Victoria.png" alt="Victoria Tovar" class="h-[95%] w-auto object-contain object-bottom drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] select-none group-hover:scale-105 transition-transform" />
+            <span class="absolute top-1.5 right-1.5 bg-slate-950/80 text-cyan-300 rounded-lg p-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
           </div>
           <span class="text-xs sm:text-sm font-black text-white leading-tight">Victoria Tovar</span>
-        </div>
+        </button>
       </div>
 
       <!-- Programmer Section (Francisco Tovar - Compact / Half Height) -->
-      <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl py-1.5 px-3 mb-3 flex items-center justify-center space-x-3 shadow-md">
-        <div class="w-10 h-12 sm:w-12 sm:h-14 rounded-lg bg-gradient-to-b from-slate-800/80 to-slate-950 border border-slate-600/60 flex items-end justify-center overflow-hidden shrink-0">
+      <button type="button" onclick="openPortraitPreview('Francisco Tovar', 'FranciscoTovar.png', 'Programador')" class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl py-1.5 px-3 mb-3 flex items-center justify-center space-x-3 shadow-md hover:border-amber-400 hover:scale-[1.01] transition-all cursor-pointer group text-left">
+        <div class="w-10 h-12 sm:w-12 sm:h-14 rounded-lg bg-gradient-to-b from-slate-800/80 to-slate-950 border border-slate-600/60 flex items-end justify-center overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
           <img src="FranciscoTovar.png" alt="Francisco Tovar" class="h-[95%] w-auto object-contain object-bottom select-none" />
         </div>
         <div class="text-left leading-tight">
@@ -730,13 +736,53 @@
             <i class="fa-solid fa-code text-[9px]"></i>
             <span id="credits-programmer-role">Programador</span>
           </div>
-          <div class="text-xs sm:text-sm font-black text-slate-200 font-sci-fi tracking-wide">Francisco Tovar</div>
+          <div class="text-xs sm:text-sm font-black text-slate-200 font-sci-fi tracking-wide flex items-center space-x-1.5">
+            <span>Francisco Tovar</span>
+            <i class="fa-solid fa-magnifying-glass-plus text-[10px] text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity"></i>
+          </div>
         </div>
-      </div>
+      </button>
 
       <button onclick="closeCreditsModal()" class="comic-btn w-full py-3 rounded-2xl bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-500 hover:from-purple-400 hover:to-cyan-400 text-white font-black font-sci-fi text-base sm:text-sm tracking-wider uppercase border border-purple-300 flex items-center justify-center space-x-2 cursor-pointer">
         <i class="fa-solid fa-check"></i>
         <span id="btn-credits-close-text">¡ENTENDIDO!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       8D. PORTRAIT PREVIEW SUB-MODAL (Detailed View of Character / Team Member)
+       ========================================================================= -->
+  <div id="portrait-modal" class="hidden fixed inset-0 z-[70] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo rounded-3xl p-4 sm:p-6 max-w-sm w-full text-center shadow-2xl relative border-2 border-cyan-400/60 flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+      <!-- Glow ambient -->
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Close button -->
+      <button onclick="closePortraitPreview()" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors text-base cursor-pointer z-20">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Role Badge -->
+      <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-400/40 text-[10px] sm:text-xs font-black text-cyan-300 uppercase tracking-widest font-sci-fi mb-2.5">
+        <i class="fa-solid fa-id-badge text-amber-400"></i>
+        <span id="portrait-role-text">Equipo de Desarrollo</span>
+      </div>
+
+      <!-- Character Name Title -->
+      <h3 id="portrait-name-text" class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-sky-200 to-white mb-3 font-sci-fi">
+        Nombre
+      </h3>
+
+      <!-- High-Res Large Hologram Portrait Box -->
+      <div class="relative w-full h-64 sm:h-72 mb-4 rounded-2xl bg-gradient-to-b from-sky-950/60 via-cyan-900/30 to-slate-950/95 border-2 border-cyan-400/45 flex items-end justify-center overflow-hidden shadow-inner">
+        <div class="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent"></div>
+        <img id="portrait-large-img" src="personajes/Vanessa.png" alt="Retrato" class="h-[96%] w-auto object-contain object-bottom drop-shadow-[0_0_20px_rgba(56,189,248,0.5)] select-none" />
+      </div>
+
+      <button onclick="closePortraitPreview()" class="comic-btn w-full py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black font-sci-fi text-sm uppercase tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Volver a Créditos</span>
       </button>
     </div>
   </div>
@@ -790,7 +836,7 @@
         howToPlayClose: "¡ENTENDIDO!",
         howStep1: "<strong class='text-amber-300'>Ordena los Planetas:</strong> Arrastra cada planeta a su órbita correcta desde el Sol (#1 más cercano al #8 más lejano).",
         howStep2: "<strong class='text-cyan-300'>Recibe las Transmisiones:</strong> Nuestra nave avanzará en línea desde el Sol y un tripulante te revelará un dato clave de cada planeta.",
-        howStep3: "<strong class='text-rose-300'>Batalla de Ingenio:</strong> ¡Responde correctamente 4 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!",
+        howStep3: "<strong class='text-rose-300'>Batalla de Ingenio:</strong> ¡Responde correctamente 6 preguntas sobre los datos aprendidos para derrotar al Comandante Zorgon!",
         scoreboardBtn: "TOP 10",
         scoreboardTitle: "TOP 10 PILOTOS CTSEO",
         scoreboardEmpty: "Aún no hay récords registrados. ¡Completa la misión para ser el primero en el Top 10!",
@@ -850,7 +896,7 @@
         howToPlayClose: "GOT IT!",
         howStep1: "<strong class='text-amber-300'>Order the Planets:</strong> Drag each planet to its true orbit from the Sun (#1 closest to #8 farthest).",
         howStep2: "<strong class='text-cyan-300'>Receive Transmissions:</strong> Your ship advances in line from the Sun and a crew member reveals a key fact for each planet.",
-        howStep3: "<strong class='text-rose-300'>Battle of Wits:</strong> Answer 4 questions correctly using the facts you learned to defeat Commander Zorgon!",
+        howStep3: "<strong class='text-rose-300'>Battle of Wits:</strong> Answer 6 questions correctly using the facts you learned to defeat Commander Zorgon!",
         scoreboardBtn: "TOP 10",
         scoreboardTitle: "TOP 10 CTSEO PILOTS",
         scoreboardEmpty: "No records yet. Complete the mission to claim the #1 spot!",
@@ -910,7 +956,7 @@
         howToPlayClose: "ENTENDIDO!",
         howStep1: "<strong class='text-amber-300'>Ordene os Planetas:</strong> Arraste cada planeta para sua órbita correta a partir do Sol (#1 mais próximo ao #8 mais distante).",
         howStep2: "<strong class='text-cyan-300'>Receba Transmissões:</strong> Sua nave avança em linha a partir do Sol e um tripulante revela um dado essencial de cada planeta.",
-        howStep3: "<strong class='text-rose-300'>Batalha de Engenho:</strong> Responda 4 perguntas corretamente sobre os dados aprendidos para derrotar o Comandante Zorgon!",
+        howStep3: "<strong class='text-rose-300'>Batalha de Engenho:</strong> Responda 6 perguntas corretamente sobre os dados aprendidos para derrotar o Comandante Zorgon!",
         scoreboardBtn: "TOP 10",
         scoreboardTitle: "TOP 10 PILOTOS CTSEO",
         scoreboardEmpty: "Ainda não há recordes registrados. Complete a missão para entrar no Top 10!",
@@ -2352,7 +2398,8 @@
         this.shipNextTargetOrder = 1;
         this.isShipMoving = false;
         this.isBossActive = false;
-        this.bossHP = 4;
+        this.bossMaxHP = 6;
+        this.bossHP = 6;
         this.currentTriviaIndex = 0;
         this.activeTriviaList = [];
         this.recentTransmissionChars = [];
@@ -3943,8 +3990,8 @@
 
       startBossBattle() {
         this.isBossActive = true;
-        this.bossMaxHP = 4;
-        this.bossHP = 4;
+        this.bossMaxHP = 6;
+        this.bossHP = 6;
         this.currentTriviaIndex = 0;
         this.bossUfo = null;
 
@@ -4166,7 +4213,7 @@
           buttonEl.classList.add('bg-rose-950', 'border-rose-400', 'text-rose-300');
 
           this.errors++;
-          this.score = Math.max(0, this.score - 150);
+          this.score = Math.max(0, this.score - 225);
           this.streak = 0;
           sound.playWrong();
 
@@ -4361,7 +4408,7 @@
             });
 
             this.spawnExplosionBurst(sx, sy, 0.75);
-            this.spawnFloatingScore(sx, sy - 45, '-150 PTS ⚡', '#fb7185');
+            this.spawnFloatingScore(sx, sy - 45, '-225 PTS ⚡', '#fb7185');
 
             this.tweens.add({
               targets: this.starship,
@@ -4443,12 +4490,13 @@
       updateBossHPUI() {
         const hpText = document.getElementById('boss-hp-text');
         const hpBar = document.getElementById('boss-hp-bar');
-        if (hpText) hpText.innerText = `${Math.max(0, this.bossHP)} / 4 HP`;
-        if (hpBar) hpBar.style.width = `${Math.max(0, (this.bossHP / 4) * 100)}%`;
+        const maxHp = this.bossMaxHP || 6;
+        if (hpText) hpText.innerText = `${Math.max(0, this.bossHP)} / ${maxHp} HP`;
+        if (hpBar) hpBar.style.width = `${Math.max(0, (this.bossHP / maxHp) * 100)}%`;
 
         // Update floating HP bars above both ships on the canvas
         if (this.ufoHpFill) {
-          const bossRatio = Phaser.Math.Clamp(this.bossHP / (this.bossMaxHP || 4), 0, 1);
+          const bossRatio = Phaser.Math.Clamp(this.bossHP / maxHp, 0, 1);
           this.drawCapsuleBar(this.ufoHpFill, 128, 15, bossRatio, 0xef4444, 0xfca5a5);
         }
         if (this.shipHpFill) {
@@ -4989,6 +5037,8 @@
       if (sbModal) sbModal.classList.add('hidden');
       const credModal = document.getElementById('credits-modal');
       if (credModal) credModal.classList.add('hidden');
+      const portModal = document.getElementById('portrait-modal');
+      if (portModal) portModal.classList.add('hidden');
       const instrBar = document.getElementById('instructions-bar');
       if (instrBar) instrBar.classList.remove('hidden');
 
@@ -5020,6 +5070,27 @@
     function closeCreditsModal() {
       sound.playPickup();
       const modal = document.getElementById('credits-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openPortraitPreview(name, imgSrc, role) {
+      sound.playPickup();
+      const modal = document.getElementById('portrait-modal');
+      const nameEl = document.getElementById('portrait-name-text');
+      const imgEl = document.getElementById('portrait-large-img');
+      const roleEl = document.getElementById('portrait-role-text');
+      if (nameEl) nameEl.innerText = name;
+      if (imgEl) {
+        imgEl.src = imgSrc;
+        imgEl.alt = name;
+      }
+      if (roleEl) roleEl.innerText = role;
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closePortraitPreview() {
+      sound.playPickup();
+      const modal = document.getElementById('portrait-modal');
       if (modal) modal.classList.add('hidden');
     }
 
