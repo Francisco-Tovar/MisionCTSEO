@@ -190,6 +190,32 @@
       animation: typeCursorBlink 0.75s infinite;
     }
 
+    /* Dice Cube Animation & Holo Styling */
+    .dice-cube {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      font-size: 32px;
+      font-weight: 900;
+      font-family: 'Orbitron', 'Fredoka', sans-serif;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 18px rgba(56, 189, 248, 0.4);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes diceShakeRolling {
+      0% { transform: rotate(0deg) scale(1.05); }
+      20% { transform: rotate(-18deg) scale(0.95); }
+      40% { transform: rotate(18deg) scale(1.1); }
+      60% { transform: rotate(-12deg) scale(0.98); }
+      80% { transform: rotate(12deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    .dice-rolling {
+      animation: diceShakeRolling 0.25s infinite linear;
+    }
+
     #game-container canvas {
       display: block;
       margin: 0 auto;
@@ -442,6 +468,118 @@
       <button id="btn-fact-continue" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black text-lg sm:text-base tracking-wider border border-cyan-300 flex items-center justify-center space-x-2 relative z-10">
         <span class="uppercase">¡TERMINAR TRANSMISIÓN!</span>
         <i class="fa-solid fa-satellite-dish"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5A2. MINI-BATALLA ESPACIAL (DUELO DE DADOS CONTRA NAVE EXPLORADORA ALIEN)
+       ========================================================================= -->
+  <div id="mini-battle-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.35)] relative border-2 border-rose-500/70 flex flex-col items-center">
+      <!-- Ambient Purple/Rose Glow -->
+      <div class="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-fuchsia-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header Badge -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-xs font-black text-rose-300 uppercase tracking-widest mb-2 font-sci-fi relative z-10 animate-pulse">
+        <i class="fa-solid fa-satellite-dish text-amber-400"></i>
+        <span id="mini-battle-badge">NAVE EXPLORADORA ALIEN</span>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h3 id="mini-battle-title" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-300 mb-1.5 font-sci-fi relative z-10">
+        ¡EMBOSCADA ESPACIAL!
+      </h3>
+      <p id="mini-battle-desc" class="text-xs sm:text-sm text-slate-300 font-medium mb-4 relative z-10 leading-snug">
+        Una nave exploradora alienígena te intercepta en pleno vuelo. ¡Duelo de dados (1 al 6) por tus escudos!
+      </p>
+
+      <!-- Dice Arena Box -->
+      <div class="w-full bg-slate-950/90 rounded-2xl p-4 border border-rose-500/40 mb-4 shadow-xl relative z-10">
+        <div class="flex items-center justify-around">
+          <!-- Player Side -->
+          <div class="flex flex-col items-center space-y-2">
+            <span id="mini-battle-player-lbl" class="text-[11px] font-black text-cyan-300 uppercase tracking-widest font-sci-fi">TU NAVE</span>
+            <div id="player-dice-box" class="dice-cube bg-gradient-to-br from-cyan-900 to-slate-900 border-2 border-cyan-400 text-cyan-200">
+              <span id="player-dice-val">🎲</span>
+            </div>
+            <span class="text-[10px] font-bold text-slate-400">+100 ESCUDO</span>
+          </div>
+
+          <!-- VS Badge -->
+          <div class="flex flex-col items-center justify-center px-2">
+            <span class="w-8 h-8 rounded-full bg-rose-950 border border-rose-400/60 text-amber-300 font-black font-sci-fi text-xs flex items-center justify-center shadow-lg">VS</span>
+            <i class="fa-solid fa-bolt text-amber-400 text-xs mt-1 animate-bounce"></i>
+          </div>
+
+          <!-- Alien Scout Side -->
+          <div class="flex flex-col items-center space-y-2">
+            <span id="mini-battle-alien-lbl" class="text-[11px] font-black text-rose-300 uppercase tracking-widest font-sci-fi">EXPLORADOR</span>
+            <div id="alien-dice-box" class="dice-cube bg-gradient-to-br from-rose-950 to-slate-900 border-2 border-rose-500 text-rose-200">
+              <span id="alien-dice-val">🎲</span>
+            </div>
+            <span class="text-[10px] font-bold text-slate-400">-50 ESCUDO</span>
+          </div>
+        </div>
+
+        <!-- Result Feedback Banner (Hidden until roll finished) -->
+        <div id="mini-battle-result" class="hidden mt-4 p-3 rounded-xl border text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all">
+          <i id="mini-battle-result-icon" class="fa-solid fa-shield text-base mt-0.5 shrink-0"></i>
+          <p id="mini-battle-result-text" class="leading-relaxed"></p>
+        </div>
+      </div>
+
+      <!-- Roll Button -->
+      <button id="btn-mini-battle-roll" onclick="executeDiceDuel()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-black font-sci-fi text-base sm:text-lg uppercase tracking-wider border-2 border-amber-200 shadow-xl shadow-orange-500/30 flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
+        <i class="fa-solid fa-dice text-xl"></i>
+        <span id="btn-mini-battle-roll-text">¡LANZAR DADOS! 🎲</span>
+      </button>
+
+      <!-- Continue Navigation Button (Appears after battle resolution) -->
+      <button id="btn-mini-battle-continue" onclick="closeMiniBattleAndProceed()" class="hidden comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black font-sci-fi text-base uppercase tracking-wider border border-cyan-300 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer mt-2">
+        <span id="btn-mini-battle-continue-text">CONTINUAR MISIÓN 🚀</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5A3. PENALTY CELESTIAL BODIES FACTOID MODAL (Interception after Alien Win)
+       ========================================================================= -->
+  <div id="celestial-penalty-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.4)] relative border-2 border-rose-500/80 flex flex-col items-center">
+      <!-- Ambient Glow -->
+      <div class="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-rose-600/25 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Warning Badge -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-xs font-black text-rose-300 uppercase tracking-widest mb-2 font-sci-fi relative z-10 animate-pulse">
+        <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+        <span id="celestial-penalty-badge">🚨 PENALIZACIÓN DE COMBATE</span>
+      </div>
+
+      <!-- Title -->
+      <h3 id="celestial-penalty-title" class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-amber-300 to-sky-300 mb-2 font-sci-fi relative z-10">
+        ¡DATO DE CUERPOS CELESTES!
+      </h3>
+
+      <!-- Factoid Body Card -->
+      <div class="w-full bg-slate-900/90 p-4 rounded-2xl border border-sky-700/50 text-slate-100 text-base leading-relaxed mb-3 text-left flex items-start space-x-3 shadow-lg relative z-10">
+        <i class="fa-solid fa-satellite-dish text-cyan-400 text-xl mt-0.5 shrink-0"></i>
+        <p id="celestial-penalty-fact-text" class="font-medium">Dato de cuerpos celestes...</p>
+      </div>
+
+      <!-- Warning Callout Box -->
+      <div class="w-full bg-rose-950/80 p-3 rounded-xl border border-rose-500/60 text-rose-200 text-xs font-bold text-left mb-4 flex items-start space-x-2 relative z-10">
+        <i class="fa-solid fa-skull-crossbones text-rose-400 text-sm mt-0.5 shrink-0"></i>
+        <p id="celestial-penalty-warning" class="leading-snug">
+          ⚠️ Como castigo por perder el duelo de dados, deberás responder una pregunta sobre este dato en la batalla final contra Zorgon.
+        </p>
+      </div>
+
+      <!-- Continue Button -->
+      <button id="btn-celestial-penalty-continue" onclick="dismissCelestialPenaltyAndFly()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 hover:to-cyan-300 text-slate-950 font-black font-sci-fi text-base uppercase tracking-wider border border-emerald-200 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
+        <span id="btn-celestial-penalty-btn-text">¡ENTENDIDO, SEGUIR NAVEGANDO!</span>
+        <i class="fa-solid fa-rocket"></i>
       </button>
     </div>
   </div>
@@ -911,7 +1049,24 @@
         creditsBtn: "CRÉDITOS",
         creditsTitle: "CRÉDITOS DE LA MISIÓN",
         creditsTeamHeading: "Equipo de Diseño, Planeamiento y Desarrollo",
-        creditsProgrammerRole: "Programador"
+        creditsProgrammerRole: "Programador",
+        miniBattleTitle: "¡EMBOSCADA ESPACIAL!",
+        miniBattleBadge: "NAVE EXPLORADORA ALIEN",
+        miniBattleDesc: "Una nave exploradora alienígena te intercepta en pleno vuelo. ¡Duelo de dados (1 al 6) por tus escudos!",
+        miniBattleRollBtn: "¡LANZAR DADOS! 🎲",
+        miniBattleRolling: "TIRANDO DADOS...",
+        miniBattleTie: "¡EMPATE! Lanzando de nuevo...",
+        miniBattleWinTitle: "¡VICTORIA! ESCUDOS +100 PTS 🛡️",
+        miniBattleWinDesc: "¡Tus disparos ahuyentaron a la nave exploradora, que huye asustada hacia el hiperespacio!",
+        miniBattleLoseTitle: "¡IMPACTO! ESCUDOS -50 PTS 💥",
+        miniBattleLoseDesc: "¡El rayo de plasma alienígena dañó tus escudos y te transmitió un dato de Cuerpos Celestes! Pregunta de penalización para la batalla final.",
+        miniBattlePlayerLabel: "TU NAVE",
+        miniBattleAlienLabel: "EXPLORADOR ALIEN",
+        miniBattleContinueBtn: "CONTINUAR MISIÓN 🚀",
+        celestialPenaltyBadge: "🚨 PENALIZACIÓN DE COMBATE",
+        celestialPenaltyTitle: "¡DATO ALIENÍGENA DE CUERPOS CELESTES!",
+        celestialPenaltyWarning: "⚠️ Como castigo por perder el duelo de dados, deberás responder una pregunta sobre este dato en la batalla final contra Zorgon.",
+        celestialPenaltyBtn: "¡ENTENDIDO, SEGUIR NAVEGANDO!" 
       },
       en: {
         startBadge: "Interactive Orbital Simulator",
@@ -972,7 +1127,24 @@
         creditsBtn: "CREDITS",
         creditsTitle: "MISSION CREDITS",
         creditsTeamHeading: "Design, Planning & Development Team",
-        creditsProgrammerRole: "Programmer"
+        creditsProgrammerRole: "Programmer",
+        miniBattleTitle: "SPACE AMBUSH!",
+        miniBattleBadge: "ALIEN SCOUT ENCOUNTER",
+        miniBattleDesc: "A hostile alien scout starship intercepts you mid-flight. 6-sided dice duel for shield energy!",
+        miniBattleRollBtn: "ROLL DICE! 🎲",
+        miniBattleRolling: "ROLLING DICE...",
+        miniBattleTie: "TIE ROLL! Rolling again...",
+        miniBattleWinTitle: "VICTORY! SHIELDS +100 PTS 🛡️",
+        miniBattleWinDesc: "Your pulse cannons repelled the alien scout, which flees terrified into hyperspace!",
+        miniBattleLoseTitle: "HIT TAKEN! SHIELDS -50 PTS 💥",
+        miniBattleLoseDesc: "Alien plasma blaster damaged your shields and beamed a Celestial Bodies factoid! Penalty question added to boss fight.",
+        miniBattlePlayerLabel: "PLAYER SHIP",
+        miniBattleAlienLabel: "ALIEN SCOUT",
+        miniBattleContinueBtn: "CONTINUE MISSION 🚀",
+        celestialPenaltyBadge: "🚨 COMBAT PENALTY",
+        celestialPenaltyTitle: "INTERCEPTED CELESTIAL BODIES DATA!",
+        celestialPenaltyWarning: "⚠️ As penalty for losing the dice duel, you must answer an extra question on this factoid against Commander Zorgon.",
+        celestialPenaltyBtn: "UNDERSTOOD, RESUME FLIGHT!" 
       },
       pt: {
         startBadge: "Simulador Orbital Interativo",
@@ -1034,10 +1206,263 @@
         creditsTitle: "CRÉDITOS DA MISSÃO",
         creditsTeamHeading: "Equipe de Design, Planejamento e Desenvolvimento",
         creditsProgrammerRole: "Programador"
+      ,
+        miniBattleTitle: "EMBOSCADA ESPACIAL!",
+        miniBattleBadge: "NAVE EXPLORADORA ALIEN",
+        miniBattleDesc: "Uma nave exploradora alienígena intercepta você em pleno voo. Duelo de dados (1 a 6) pelos escudos!",
+        miniBattleRollBtn: "ROLAR DADOS! 🎲",
+        miniBattleRolling: "ROLANDO DADOS...",
+        miniBattleTie: "EMPATE! Rolando novamente...",
+        miniBattleWinTitle: "VITÓRIA! ESCUDOS +100 PTS 🛡️",
+        miniBattleWinDesc: "Seus disparos repeliram o explorador alienígena, que foge apavorado pelo hiperespaço!",
+        miniBattleLoseTitle: "IMPACTO! ESCUDOS -50 PTS 💥",
+        miniBattleLoseDesc: "O tiro alienígena danificou seus escudos e transmitiu um facto de Corpos Celestes! Pergunta de penalização na batalha final.",
+        miniBattlePlayerLabel: "SUA NAVE",
+        miniBattleAlienLabel: "EXPLORADOR ALIEN",
+        miniBattleContinueBtn: "CONTINUAR MISSÃO 🚀",
+        celestialPenaltyBadge: "🚨 PENALIZAÇÃO DE COMBATE",
+        celestialPenaltyTitle: "DADO ALIENÍGENA DE CORPOS CELESTES!",
+        celestialPenaltyWarning: "⚠️ Como castigo por perder o duelo de dados, você responderá a uma pergunta extra sobre este facto contra Zorgon.",
+        celestialPenaltyBtn: "ENTENDIDO, CONTINUAR!"
       }
     };
 
     let currentLanguage = 'es';
+
+    /* ==========================================================================
+       CELESTIAL BODIES FACT & TRIVIA DATABASE (Mini-Battle Penalty Pool)
+       ========================================================================== */
+    const CELESTIAL_FACTS_DATABASE = [
+      {
+        id: "cf_lorimer_2009",
+        planetId: "celestial_lorimer",
+        names: { es: "Ráfagas de Radio", en: "Fast Radio Bursts", pt: "Rajadas de Rádio" },
+        fact: {
+          es: "Las ráfagas de radio fueron descubiertas por Duncan Lorimer en 2009.",
+          en: "Fast radio bursts were discovered by Duncan Lorimer in 2009.",
+          pt: "As rajadas de rádio foram descobertas por Duncan Lorimer em 2009."
+        },
+        question: {
+          es: "¿Quién descubrió las ráfagas de radio en 2009?",
+          en: "Who discovered fast radio bursts in 2009?",
+          pt: "Quem descobriu as rajadas de rádio em 2009?"
+        },
+        correct: {
+          es: "Duncan Lorimer",
+          en: "Duncan Lorimer",
+          pt: "Duncan Lorimer"
+        },
+        distractors: [
+          {
+            es: "Franklin Chang (famoso astronauta costarricense)",
+            en: "Franklin Chang (famous Costa Rican astronaut)",
+            pt: "Franklin Chang (famoso astronauta costarriquenho)"
+          },
+          {
+            es: "Edwin Hubble",
+            en: "Edwin Hubble",
+            pt: "Edwin Hubble"
+          },
+          {
+            es: "Carl Sagan",
+            en: "Carl Sagan",
+            pt: "Carl Sagan"
+          }
+        ]
+      },
+      {
+        id: "cf_invisible_matter",
+        planetId: "celestial_matter",
+        names: { es: "Materia Intergaláctica", en: "Intergalactic Matter", pt: "Matéria Intergaláctica" },
+        fact: {
+          es: "Las ráfagas de radio permiten a los astrónomos rastrear y medir la materia invisible presente entre las galaxias.",
+          en: "Fast radio bursts allow astronomers to track and measure invisible matter present between galaxies.",
+          pt: "As rajadas de rádio permitem aos astrônomos rastrear e medir a matéria invisível presente entre as galáxias."
+        },
+        question: {
+          es: "¿Qué utilidad científica clave tienen las ráfagas de radio para los astrónomos?",
+          en: "What key scientific utility do fast radio bursts offer astronomers?",
+          pt: "Qual utilidade científica as rajadas de rádio oferecem aos astrônomos?"
+        },
+        correct: {
+          es: "Medir la materia invisible entre galaxias",
+          en: "Measure invisible matter between galaxies",
+          pt: "Medir a matéria invisível entre galáxias"
+        },
+        distractors: [
+          {
+            es: "Detectar agua potable en la Luna",
+            en: "Detect drinking water on the Moon",
+            pt: "Detectar água potável na Lua"
+          },
+          {
+            es: "Calcular la masa exacta de la Tierra",
+            en: "Calculate Earth's exact mass",
+            pt: "Calcular a massa exata da Terra"
+          }
+        ]
+      },
+      {
+        id: "cf_neutron_stars",
+        planetId: "celestial_neutron",
+        names: { es: "Estrellas de Neutrones", en: "Neutron Stars", pt: "Estrelas de Nêutrons" },
+        fact: {
+          es: "Las estrellas de neutrones son esferas ultra-densas que quedan como remanente cuando una estrella gigante colapsa y muere.",
+          en: "Neutron stars are ultra-dense spheres left behind when a giant star collapses and dies.",
+          pt: "As estrelas de nêutrons são esferas ultradensas que restam quando uma estrela gigante colapsa e morre."
+        },
+        question: {
+          es: "¿Qué cuerpo ultra-denso queda tras el colapso del núcleo de una estrella gigante?",
+          en: "What ultra-dense remnant remains after a giant star core collapses?",
+          pt: "Qual corpo ultradenso resta após o colapso do núcleo de uma estrela gigante?"
+        },
+        correct: {
+          es: "Una estrella de neutrones",
+          en: "A neutron star",
+          pt: "Uma estrela de nêutrons"
+        },
+        distractors: [
+          {
+            es: "Un cometa congelado",
+            en: "A frozen comet",
+            pt: "Um cometa congelado"
+          },
+          {
+            es: "Un planeta rocoso",
+            en: "A rocky planet",
+            pt: "Um planeta rochoso"
+          }
+        ]
+      },
+      {
+        id: "cf_pulsars",
+        planetId: "celestial_pulsars",
+        names: { es: "Púlsares Cósmicos", en: "Cosmic Pulsars", pt: "Púlsares Cósmicos" },
+        fact: {
+          es: "Los púlsares son estrellas de neutrones que rotan velozmente emitiendo haces periódicos de radiación como un faro cósmico.",
+          en: "Pulsars are rapidly spinning neutron stars that emit periodic beams of radiation like a cosmic lighthouse.",
+          pt: "Os púlsares são estrelas de nêutrons que giram velozmente emitindo feixes periódicos de radiação como um farol."
+        },
+        question: {
+          es: "¿Qué característica define a los púlsares en el espacio exterior?",
+          en: "What distinguishing trait defines pulsars in outer space?",
+          pt: "Qual característica define os púlsares no espaço exterior?"
+        },
+        correct: {
+          es: "Giran velozmente y pulsan como faros",
+          en: "Spin rapidly and beam like lighthouses",
+          pt: "Giram velozmente e pulsam como faróis"
+        },
+        distractors: [
+          {
+            es: "Son cometas que emiten agua caliente",
+            en: "Comets emitting warm water",
+            pt: "Cometas que emitem água quente"
+          },
+          {
+            es: "Permanecen fijos sin emitir brillo",
+            en: "Remain motionless without emitting light",
+            pt: "Permanecem fixos sem emitir brilho"
+          }
+        ]
+      },
+      {
+        id: "cf_magnetars",
+        planetId: "celestial_magnetars",
+        names: { es: "Magnetares", en: "Magnetars", pt: "Magnetares" },
+        fact: {
+          es: "Los magnetares son estrellas de neutrones con los campos magnéticos más potentes detectados en todo el universo.",
+          en: "Magnetars are neutron stars possessing the most powerful magnetic fields detected in the universe.",
+          pt: "Os magnetares são estrelas de nêutrons com os campos magnéticos mais poderosos do universo."
+        },
+        question: {
+          es: "¿Qué cuerpo celeste posee los campos magnéticos más extremos del cosmos?",
+          en: "Which celestial body has the most extreme magnetic fields in the cosmos?",
+          pt: "Qual corpo celeste possui os campos magnéticos mais extremos do cosmos?"
+        },
+        correct: {
+          es: "Los magnetares",
+          en: "Magnetars",
+          pt: "Os magnetares"
+        },
+        distractors: [
+          {
+            es: "Asteroides metálicos",
+            en: "Metallic asteroids",
+            pt: "Asteroides metálicos"
+          },
+          {
+            es: "Lunas heladas",
+            en: "Icy moons",
+            pt: "Luas de gelo"
+          }
+        ]
+      },
+      {
+        id: "cf_dark_matter",
+        planetId: "celestial_darkmatter",
+        names: { es: "Materia y Energía Oscura", en: "Dark Matter and Dark Energy", pt: "Matéria e Energia Escura" },
+        fact: {
+          es: "Aproximadamente el 95% de todo el contenido del universo está compuesto por materia oscura y energía oscura.",
+          en: "About 95% of all content in the universe consists of dark matter and dark energy.",
+          pt: "Aproximadamente 95% de todo o conteúdo do universo é composto por matéria escura e energia escura."
+        },
+        question: {
+          es: "¿Qué componente invisible forma aproximadamente el 95% del universo?",
+          en: "What invisible component forms about 95% of the universe?",
+          pt: "Qual componente invisível forma cerca de 95% do universo?"
+        },
+        correct: {
+          es: "Materia oscura y energía oscura",
+          en: "Dark matter and dark energy",
+          pt: "Matéria escura e energia escura"
+        },
+        distractors: [
+          {
+            es: "Vapor de agua y luz solar",
+            en: "Water vapor and sunlight",
+            pt: "Vapor de água e luz solar"
+          },
+          {
+            es: "Polvo de cometas y meteoritos",
+            en: "Comet dust and meteoroids",
+            pt: "Poeira de cometas e meteoros"
+          }
+        ]
+      },
+      {
+        id: "cf_supernova",
+        planetId: "celestial_supernova",
+        names: { es: "Supernovas", en: "Supernovae", pt: "Supernovas" },
+        fact: {
+          es: "Las estrellas de gran masa mueren en colosales explosiones de supernova que forjan y esparcen elementos químicos por el cosmos.",
+          en: "Massive stars die in colossal supernova explosions that forge and disperse chemical elements across the cosmos.",
+          pt: "Estrelas de grande massa morrem em colossais explosões de supernova que forjam e espalham elementos pelo cosmos."
+        },
+        question: {
+          es: "¿Qué violenta explosión estelar dispersa los elementos químicos para nuevos mundos?",
+          en: "What violent stellar explosion disperses chemical elements for new worlds?",
+          pt: "Qual violenta explosão estelar dispersa os elementos químicos para novos mundos?"
+        },
+        correct: {
+          es: "Una supernova",
+          en: "A supernova",
+          pt: "Uma supernova"
+        },
+        distractors: [
+          {
+            es: "Un eclipse solar",
+            en: "A solar eclipse",
+            pt: "Um eclipse solar"
+          },
+          {
+            es: "Una aurora boreal",
+            en: "An aurora borealis",
+            pt: "Uma aurora boreal"
+          }
+        ]
+      }
+    ];
 
     /* ==========================================================================
        RICH FACT & TRIVIA DATABASE (3-4 facts per planet with linked questions)
@@ -2920,6 +3345,26 @@
         sub.stop(now + dur);
       }
 
+      playDiceRoll() {
+        if (!this.enabled || !this.ctx) return;
+        this.init();
+        if (this.ctx.state !== 'running') return;
+        const now = this.ctx.currentTime;
+        // Synthesize quick tumbling clicks/rattles of rolling dice
+        for (let i = 0; i < 5; i++) {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(260 + Math.random() * 260, now + i * 0.05);
+          gain.gain.setValueAtTime(0.09, now + i * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.035);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.05);
+          osc.stop(now + i * 0.05 + 0.04);
+        }
+      }
+
       playFanfare() {
         if (!this.enabled) return;
         this.init();
@@ -3013,6 +3458,15 @@
         this.currentTriviaIndex = 0;
         this.activeTriviaList = [];
         this.recentTransmissionChars = [];
+        this.penaltyCelestialFacts = [];
+        this.celestialFactsPool = Phaser.Utils.Array.Shuffle([...CELESTIAL_FACTS_DATABASE]);
+        this.alienScout = null;
+        this.miniBattlePendingTarget = null;
+        this.miniBattleDestX = 0;
+        this.miniBattleDestY = 0;
+        this.miniBattleMidX = 0;
+        this.miniBattleMidY = 0;
+        this.activePenaltyFact = null;
 
         // Reset Boss Arena references so switching between Mobile and Web never uses stale coordinates
         this.bossUfo = null;
@@ -3434,6 +3888,67 @@
           c.fill();
 
           flameTex.refresh();
+        }
+
+        // --- 3c. Minor Alien Scout Fighter Sprite (Interplanetary Ambush Mini-Battle) ---
+        if (!this.textures.exists('tex_alien_scout')) {
+          const scoutTex = this.textures.createCanvas('tex_alien_scout', 72, 48);
+          const c = scoutTex.context;
+
+          // Glowing Magenta Ion Thruster Trail (pointing right from stern)
+          const thrusterGlow = c.createRadialGradient(58, 24, 2, 58, 24, 18);
+          thrusterGlow.addColorStop(0, 'rgba(236, 72, 153, 0.95)');
+          thrusterGlow.addColorStop(0.5, 'rgba(168, 85, 247, 0.5)');
+          thrusterGlow.addColorStop(1, 'rgba(168, 85, 247, 0)');
+          c.fillStyle = thrusterGlow;
+          c.beginPath();
+          c.ellipse(56, 24, 14, 6, 0, 0, Math.PI * 2);
+          c.fill();
+
+          // Sleek Alien Swept Delta Wings (Dark Crimson & Obsidian Armor)
+          const wingGrad = c.createLinearGradient(4, 8, 64, 40);
+          wingGrad.addColorStop(0, '#881337');
+          wingGrad.addColorStop(0.5, '#4c0519');
+          wingGrad.addColorStop(1, '#1e1b4b');
+          c.fillStyle = wingGrad;
+          c.beginPath();
+          c.moveTo(4, 24);   // Needle prow pointing left towards player
+          c.lineTo(24, 9);
+          c.lineTo(58, 4);   // Upper wingtip
+          c.lineTo(48, 18);
+          c.lineTo(58, 24);  // Rear engine spine
+          c.lineTo(48, 30);
+          c.lineTo(58, 44);  // Lower wingtip
+          c.lineTo(24, 39);
+          c.closePath();
+          c.fill();
+          c.lineWidth = 1.5;
+          c.strokeStyle = '#f43f5e';
+          c.stroke();
+
+          // Bioluminescent Neon Plasma Wings & Center Core
+          c.strokeStyle = '#fb7185';
+          c.lineWidth = 1.5;
+          c.beginPath();
+          c.moveTo(22, 12);
+          c.lineTo(46, 7);
+          c.moveTo(22, 36);
+          c.lineTo(46, 41);
+          c.stroke();
+
+          // Glowing Alien Sensor Visor (Lime/Cyan cockpit dome)
+          const visorGrad = c.createLinearGradient(12, 19, 28, 29);
+          visorGrad.addColorStop(0, '#a3e635');
+          visorGrad.addColorStop(1, '#06b6d4');
+          c.fillStyle = visorGrad;
+          c.beginPath();
+          c.ellipse(20, 24, 9, 5, 0, 0, Math.PI * 2);
+          c.fill();
+          c.lineWidth = 1;
+          c.strokeStyle = '#ffffff';
+          c.stroke();
+
+          scoutTex.refresh();
         }
 
         // --- 4. Commander Zorgon Alien Dreadnought Warship (Epic Boss Sprite) ---
@@ -4346,23 +4861,240 @@
           this.starship.setRotation(angle);
           sound.playThruster(0.9);
 
-          this.tweens.add({
-            targets: this.starship,
-            x: destX,
-            y: destY,
-            duration: 900,
-            ease: 'Cubic.easeInOut',
-            onUpdate: () => this.syncThrusterPosition(true),
-            onComplete: () => {
-              this.isShipMoving = false;
-              this.starship.setPosition(destX, destY);
-              this.syncThrusterPosition(false);
-              this.startStarshipIdleHover();
-              this.shipNextTargetOrder++;
-              this.showFactTransmission(nextTarget.planetId);
-            }
-          });
+          // If navigating from one planet to another (order >= 2), trigger interplanetary scout mini-battle midway!
+          if (this.shipNextTargetOrder >= 2) {
+            const midX = (this.starship.x + destX) / 2;
+            const midY = (this.starship.y + destY) / 2;
+            this.miniBattleMidX = midX;
+            this.miniBattleMidY = midY;
+
+            this.tweens.add({
+              targets: this.starship,
+              x: midX,
+              y: midY,
+              duration: 520,
+              ease: 'Cubic.easeOut',
+              onUpdate: () => this.syncThrusterPosition(true),
+              onComplete: () => {
+                this.syncThrusterPosition(false);
+                this.starship.setPosition(midX, midY);
+                this.startScoutMiniBattle(nextTarget, destX, destY);
+              }
+            });
+          } else {
+            // First voyage from Sun to Mercury (direct navigation)
+            this.tweens.add({
+              targets: this.starship,
+              x: destX,
+              y: destY,
+              duration: 900,
+              ease: 'Cubic.easeInOut',
+              onUpdate: () => this.syncThrusterPosition(true),
+              onComplete: () => {
+                this.isShipMoving = false;
+                this.starship.setPosition(destX, destY);
+                this.syncThrusterPosition(false);
+                this.startStarshipIdleHover();
+                this.shipNextTargetOrder++;
+                this.showFactTransmission(nextTarget.planetId);
+              }
+            });
+          }
         }
+      }
+
+      /* ------------------------------------------------------------------------
+         INTERPLANETARY SCOUT MINI-BATTLE & DICE DUEL SYSTEM
+         ------------------------------------------------------------------------ */
+      startScoutMiniBattle(nextTarget, destX, destY) {
+        this.miniBattlePendingTarget = nextTarget;
+        this.miniBattleDestX = destX;
+        this.miniBattleDestY = destY;
+
+        // Spawn Minor Alien Scout Starfighter facing player starship
+        const shipAngle = this.starship.rotation;
+        const scoutDist = this.isMobile ? 95 : 135;
+        const scoutTargetX = this.starship.x + Math.cos(shipAngle) * scoutDist;
+        const scoutTargetY = this.starship.y + Math.sin(shipAngle) * scoutDist;
+
+        // Start offscreen/nearby and zoom into position
+        const spawnX = scoutTargetX + Math.sin(shipAngle) * 180;
+        const spawnY = scoutTargetY - Math.cos(shipAngle) * 180;
+
+        if (this.alienScout) {
+          this.alienScout.destroy();
+          this.alienScout = null;
+        }
+
+        this.alienScout = this.add.image(spawnX, spawnY, 'tex_alien_scout')
+          .setScale(0.85)
+          .setRotation(shipAngle + Math.PI)
+          .setDepth(15);
+
+        sound.playOminousStinger();
+
+        this.tweens.add({
+          targets: this.alienScout,
+          x: scoutTargetX,
+          y: scoutTargetY,
+          duration: 480,
+          ease: 'Back.easeOut',
+          onComplete: () => {
+            // Hover tween for alien scout
+            this.tweens.add({
+              targets: this.alienScout,
+              y: scoutTargetY + 5,
+              duration: 700,
+              yoyo: true,
+              repeat: -1,
+              ease: 'Sine.easeInOut'
+            });
+
+            // Open Dice Duel Modal
+            openMiniBattleModal();
+          }
+        });
+      }
+
+      resolveDiceRoll(playerVal, alienVal) {
+        const loc = I18N[currentLanguage] || I18N.es;
+        const resultCard = document.getElementById('mini-battle-result');
+        const resultText = document.getElementById('mini-battle-result-text');
+        const resultIcon = document.getElementById('mini-battle-result-icon');
+        const btnContinue = document.getElementById('btn-mini-battle-continue');
+        const btnContinueText = document.getElementById('btn-mini-battle-continue-text');
+        const btnRoll = document.getElementById('btn-mini-battle-roll');
+
+        if (btnRoll) btnRoll.classList.add('hidden');
+        if (resultCard) resultCard.classList.remove('hidden');
+
+        if (playerVal > alienVal) {
+          // PLAYER WINS: +100 Shield points & alien flees terrified!
+          this.score += 100;
+          this.syncHUD();
+          this.spawnFloatingScore(this.starship.x, this.starship.y - 40, '+100 ESCUDO! 🛡️', '#34d399');
+          sound.playCorrect(2);
+
+          if (resultCard) {
+            resultCard.className = 'mt-4 p-3 rounded-xl border border-emerald-400/60 bg-emerald-950/80 text-emerald-200 text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all';
+          }
+          if (resultIcon) resultIcon.className = 'fa-solid fa-shield-halved text-emerald-400 text-base mt-0.5 shrink-0';
+          if (resultText) resultText.innerText = loc.miniBattleWinDesc;
+          if (btnContinueText) btnContinueText.innerText = loc.miniBattleContinueBtn;
+          if (btnContinue) btnContinue.classList.remove('hidden');
+
+          // Alien Scout flees terrified into hyperspace!
+          if (this.alienScout) {
+            sound.playWarp();
+            const fleeAngle = this.starship.rotation;
+            this.tweens.killTweensOf(this.alienScout);
+            this.tweens.add({
+              targets: this.alienScout,
+              angle: this.alienScout.angle + 180,
+              scaleX: 0.2,
+              scaleY: 0.2,
+              x: this.alienScout.x + Math.cos(fleeAngle) * 550,
+              y: this.alienScout.y + Math.sin(fleeAngle) * 550,
+              duration: 750,
+              ease: 'Cubic.easeIn',
+              onComplete: () => {
+                if (this.alienScout) {
+                  this.alienScout.destroy();
+                  this.alienScout = null;
+                }
+              }
+            });
+          }
+        } else {
+          // ALIEN WINS: -50 Shield points & transmits Celestial Bodies Penalty Factoid!
+          this.score = Math.max(10, this.score - 50);
+          this.syncHUD();
+          this.spawnFloatingScore(this.starship.x, this.starship.y - 40, '-50 ESCUDO! 💥', '#f43f5e');
+          sound.playAlienBlaster();
+          sound.playExplosion(0.65);
+          this.cameras.main.shake(180, 0.009);
+
+          // Select next celestial fact from database (prioritize Lorimer 2009 / Franklin Chang first!)
+          if (!this.penaltyCelestialFacts) this.penaltyCelestialFacts = [];
+          
+          let nextFact = this.celestialFactsPool.find(f => f.id === 'cf_lorimer_2009' && !this.penaltyCelestialFacts.some(p => p.id === 'cf_lorimer_2009'));
+          if (!nextFact) {
+            nextFact = this.celestialFactsPool.find(f => !this.penaltyCelestialFacts.some(p => p.id === f.id));
+          }
+          if (!nextFact) {
+            nextFact = CELESTIAL_FACTS_DATABASE[0];
+          }
+
+          this.penaltyCelestialFacts.push(nextFact);
+          this.activePenaltyFact = nextFact;
+
+          if (resultCard) {
+            resultCard.className = 'mt-4 p-3 rounded-xl border border-rose-500/70 bg-rose-950/85 text-rose-200 text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all';
+          }
+          if (resultIcon) resultIcon.className = 'fa-solid fa-triangle-exclamation text-rose-400 text-base mt-0.5 shrink-0';
+          if (resultText) resultText.innerText = loc.miniBattleLoseDesc;
+          if (btnContinueText) btnContinueText.innerText = (currentLanguage === 'en' ? 'VIEW INTERCEPTED DATA ⚠️' : (currentLanguage === 'pt' ? 'VER FACTO INTERCEPTADO ⚠️' : 'VER DATO INTERCEPTADO ⚠️'));
+          if (btnContinue) btnContinue.classList.remove('hidden');
+
+          // Alien fires plasma beam at player starship
+          if (this.alienScout) {
+            const plasmaG = this.add.graphics({ depth: 16 });
+            plasmaG.lineStyle(4, 0xf43f5e, 1);
+            plasmaG.lineBetween(this.alienScout.x, this.alienScout.y, this.starship.x, this.starship.y);
+            this.time.delayedCall(160, () => plasmaG.destroy());
+
+            // Alien retreats after firing
+            this.time.delayedCall(300, () => {
+              if (this.alienScout) {
+                this.tweens.killTweensOf(this.alienScout);
+                this.tweens.add({
+                  targets: this.alienScout,
+                  alpha: 0,
+                  y: this.alienScout.y - 120,
+                  duration: 600,
+                  onComplete: () => {
+                    if (this.alienScout) {
+                      this.alienScout.destroy();
+                      this.alienScout = null;
+                    }
+                  }
+                });
+              }
+            });
+          }
+        }
+      }
+
+      finishMiniBattleAndResume() {
+        if (this.alienScout) {
+          this.alienScout.destroy();
+          this.alienScout = null;
+        }
+
+        const nextTarget = this.miniBattlePendingTarget;
+        const destX = this.miniBattleDestX;
+        const destY = this.miniBattleDestY;
+
+        if (!nextTarget) return;
+
+        // Resume second half of flight towards destination planet
+        sound.playThruster(0.65);
+        this.tweens.add({
+          targets: this.starship,
+          x: destX,
+          y: destY,
+          duration: 480,
+          ease: 'Cubic.easeIn',
+          onUpdate: () => this.syncThrusterPosition(true),
+          onComplete: () => {
+            this.isShipMoving = false;
+            this.starship.setPosition(destX, destY);
+            this.syncThrusterPosition(false);
+            this.startStarshipIdleHover();
+            this.shipNextTargetOrder++;
+            this.showFactTransmission(nextTarget.planetId);
+          }
+        });
       }
 
       showFactTransmission(planetId) {
@@ -4769,10 +5501,17 @@
           this.tweens.add({ targets: this.trayGraphics, alpha: 0, duration: 500 });
         }
 
-        // Strictly gather the exact 8 questions corresponding to the facts presented during this run's navigation
+        // Gather questions: 8 planetary facts + any Celestial Bodies penalty factoids from lost dice duels!
         const sessionTriviaEntries = PLANET_SPECS
           .map(p => this.sessionFacts[p.id])
           .filter(Boolean);
+
+        if (this.penaltyCelestialFacts && this.penaltyCelestialFacts.length > 0) {
+          sessionTriviaEntries.push(...this.penaltyCelestialFacts);
+        }
+
+        this.bossMaxHP = 6 + (this.penaltyCelestialFacts ? this.penaltyCelestialFacts.length : 0);
+        this.bossHP = this.bossMaxHP;
         this.activeTriviaList = Phaser.Utils.Array.Shuffle([...sessionTriviaEntries]);
 
         this.updateBossHPUI();
@@ -5425,6 +6164,10 @@
 
         // 1. Hide trivia overlay & floating HP bars so the player watches the enemy dreadnought explode & flee!
         document.getElementById('boss-battle-overlay').classList.add('hidden');
+      const mBattleModal = document.getElementById('mini-battle-modal');
+      if (mBattleModal) mBattleModal.classList.add('hidden');
+      const mPenaltyModal = document.getElementById('celestial-penalty-modal');
+      if (mPenaltyModal) mPenaltyModal.classList.add('hidden');
         if (this.starshipShieldArc) {
           this.starshipShieldArc.destroy();
           this.starshipShieldArc = null;
@@ -5778,6 +6521,147 @@
     /* ==========================================================================
        GLOBAL LANGUAGE & DOM HANDLERS
        ========================================================================== */
+    /* ==========================================================================
+       MINI-BATTLE & CELESTIAL PENALTY DOM LOGIC
+       ========================================================================== */
+    let diceRollTimer = null;
+    let isDiceRolling = false;
+    let lastPlayerRoll = 0;
+    let lastAlienRoll = 0;
+
+    function openMiniBattleModal() {
+      const modal = document.getElementById('mini-battle-modal');
+      const pBox = document.getElementById('player-dice-box');
+      const aBox = document.getElementById('alien-dice-box');
+      const pVal = document.getElementById('player-dice-val');
+      const aVal = document.getElementById('alien-dice-val');
+      const res = document.getElementById('mini-battle-result');
+      const btnRoll = document.getElementById('btn-mini-battle-roll');
+      const btnCont = document.getElementById('btn-mini-battle-continue');
+
+      if (pBox) pBox.classList.remove('dice-rolling');
+      if (aBox) aBox.classList.remove('dice-rolling');
+      if (pVal) pVal.innerText = '🎲';
+      if (aVal) aVal.innerText = '🎲';
+      if (res) res.classList.add('hidden');
+      if (btnRoll) {
+        btnRoll.classList.remove('hidden');
+        btnRoll.disabled = false;
+      }
+      if (btnCont) btnCont.classList.add('hidden');
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function executeDiceDuel() {
+      if (isDiceRolling) return;
+      isDiceRolling = true;
+      sound.playPickup();
+
+      const btnRoll = document.getElementById('btn-mini-battle-roll');
+      const btnText = document.getElementById('btn-mini-battle-roll-text');
+      const pBox = document.getElementById('player-dice-box');
+      const aBox = document.getElementById('alien-dice-box');
+      const pVal = document.getElementById('player-dice-val');
+      const aVal = document.getElementById('alien-dice-val');
+      const loc = I18N[currentLanguage] || I18N.es;
+
+      if (btnRoll) btnRoll.disabled = true;
+      if (btnText) btnText.innerText = loc.miniBattleRolling;
+      if (pBox) pBox.classList.add('dice-rolling');
+      if (aBox) aBox.classList.add('dice-rolling');
+
+      sound.playDiceRoll();
+
+      // Dice face icons / numbers
+      const dicePips = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+      let elapsed = 0;
+      if (diceRollTimer) clearInterval(diceRollTimer);
+
+      diceRollTimer = setInterval(() => {
+        elapsed += 75;
+        const rP = Math.floor(Math.random() * 6);
+        const rA = Math.floor(Math.random() * 6);
+        if (pVal) pVal.innerText = `${rP + 1}`;
+        if (aVal) aVal.innerText = `${rA + 1}`;
+
+        if (elapsed >= 1100) {
+          clearInterval(diceRollTimer);
+          diceRollTimer = null;
+          isDiceRolling = false;
+
+          if (pBox) pBox.classList.remove('dice-rolling');
+          if (aBox) aBox.classList.remove('dice-rolling');
+
+          // Determine final roll values
+          let finalP = Math.floor(Math.random() * 6) + 1;
+          let finalA = Math.floor(Math.random() * 6) + 1;
+
+          // If tie, force re-roll or resolve cleanly
+          if (finalP === finalA) {
+            finalP = Math.min(6, finalP + (Math.random() < 0.5 ? 1 : -1) || 1);
+          }
+
+          lastPlayerRoll = finalP;
+          lastAlienRoll = finalA;
+
+          if (pVal) pVal.innerText = `${finalP}`;
+          if (aVal) aVal.innerText = `${finalA}`;
+
+          const scene = game.scene.getScene('SolarSystemGameScene');
+          if (scene) {
+            scene.resolveDiceRoll(finalP, finalA);
+          }
+        }
+      }, 75);
+    }
+
+    function closeMiniBattleAndProceed() {
+      sound.playPickup();
+      const modal = document.getElementById('mini-battle-modal');
+      if (modal) modal.classList.add('hidden');
+
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      if (!scene) return;
+
+      if (lastPlayerRoll > lastAlienRoll) {
+        // Player won, resume flight directly
+        scene.finishMiniBattleAndResume();
+      } else {
+        // Alien won, show the intercepted Celestial Bodies factoid first!
+        showCelestialPenaltyModal(scene.activePenaltyFact);
+      }
+    }
+
+    function showCelestialPenaltyModal(factEntry) {
+      if (!factEntry) {
+        const scene = game.scene.getScene('SolarSystemGameScene');
+        if (scene) scene.finishMiniBattleAndResume();
+        return;
+      }
+
+      sound.playOminousStinger();
+      const penaltyModal = document.getElementById('celestial-penalty-modal');
+      const factBody = document.getElementById('celestial-penalty-fact-text');
+      const rawFact = factEntry.fact[currentLanguage] || factEntry.fact.es;
+
+      if (factBody) {
+        factBody.innerText = rawFact;
+      }
+      if (penaltyModal) penaltyModal.classList.remove('hidden');
+    }
+
+    function dismissCelestialPenaltyAndFly() {
+      sound.playPickup();
+      const penaltyModal = document.getElementById('celestial-penalty-modal');
+      if (penaltyModal) penaltyModal.classList.add('hidden');
+
+      const scene = game.scene.getScene('SolarSystemGameScene');
+      if (scene) {
+        scene.finishMiniBattleAndResume();
+      }
+    }
+
     function setGlobalLanguage(lang) {
       currentLanguage = lang;
       const loc = I18N[lang] || I18N.es;
@@ -5823,6 +6707,31 @@
       if (credClose) credClose.innerText = loc.howToPlayClose;
 
       // Update Language Dropdowns in HUD & Start Screen
+      // Update Mini-Battle and Celestial Penalty text
+      const mbBadge = document.getElementById('mini-battle-badge');
+      if (mbBadge) mbBadge.innerText = loc.miniBattleBadge;
+      const mbTitle = document.getElementById('mini-battle-title');
+      if (mbTitle) mbTitle.innerText = loc.miniBattleTitle;
+      const mbDesc = document.getElementById('mini-battle-desc');
+      if (mbDesc) mbDesc.innerText = loc.miniBattleDesc;
+      const mbRoll = document.getElementById('btn-mini-battle-roll-text');
+      if (mbRoll) mbRoll.innerText = loc.miniBattleRollBtn;
+      const mbPlayer = document.getElementById('mini-battle-player-lbl');
+      if (mbPlayer) mbPlayer.innerText = loc.miniBattlePlayerLabel;
+      const mbAlien = document.getElementById('mini-battle-alien-lbl');
+      if (mbAlien) mbAlien.innerText = loc.miniBattleAlienLabel;
+      const mbCont = document.getElementById('btn-mini-battle-continue-text');
+      if (mbCont) mbCont.innerText = loc.miniBattleContinueBtn;
+
+      const cpBadge = document.getElementById('celestial-penalty-badge');
+      if (cpBadge) cpBadge.innerText = loc.celestialPenaltyBadge;
+      const cpTitle = document.getElementById('celestial-penalty-title');
+      if (cpTitle) cpTitle.innerText = loc.celestialPenaltyTitle;
+      const cpWarn = document.getElementById('celestial-penalty-warning');
+      if (cpWarn) cpWarn.innerText = loc.celestialPenaltyWarning;
+      const cpBtn = document.getElementById('btn-celestial-penalty-btn-text');
+      if (cpBtn) cpBtn.innerText = loc.celestialPenaltyBtn;
+
       const hudSelect = document.getElementById('hud-lang-select');
       if (hudSelect) hudSelect.value = lang;
       const startSelect = document.getElementById('start-lang-select');

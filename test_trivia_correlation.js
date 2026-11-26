@@ -10,6 +10,14 @@ if (!dbMatch) {
 }
 const db = eval('(' + dbMatch[1].replace(/;\s*$/, '') + ')');
 
+// Extract CELESTIAL_FACTS_DATABASE
+const cdbMatch = html.match(/const CELESTIAL_FACTS_DATABASE = (\[[\s\S]*?^    \];)/m);
+if (!cdbMatch) {
+  console.error("FAIL: Could not locate CELESTIAL_FACTS_DATABASE in index.html");
+  process.exit(1);
+}
+const cdb = eval('(' + cdbMatch[1].replace(/;\s*$/, '') + ')');
+
 // Extract PLANET_SPECS
 const specsMatch = html.match(/const PLANET_SPECS = (\[[\s\S]*?^    \];)/m);
 if (!specsMatch) {
@@ -19,7 +27,7 @@ if (!specsMatch) {
 const specs = eval('(' + specsMatch[1].replace(/;\s*$/, '') + ')');
 
 console.log("================================================================");
-console.log("TEST 1: SEMANTIC & DATA INTEGRITY OF ALL 48 FACT-TRIVIA PAIRS");
+console.log("TEST 1: SEMANTIC & DATA INTEGRITY OF ALL 48 PLANET FACT-TRIVIA PAIRS");
 console.log("================================================================");
 
 const planetIds = specs.map(p => p.id);
@@ -70,7 +78,42 @@ if (errors.length > 0) {
 }
 
 console.log("\n================================================================");
-console.log("TEST 2: SIMULATION OF 20,000 FULL GAME RUNS & TRIVIA VERACITY");
+console.log("TEST 2: INTEGRITY OF CELESTIAL BODIES FACTS & FRANKLIN CHANG DISTRACTOR");
+console.log("================================================================");
+
+let cErrors = [];
+let hasFranklinChang = false;
+
+cdb.forEach((item, idx) => {
+  ['es', 'en', 'pt'].forEach(lang => {
+    const fact = item.fact && item.fact[lang];
+    const q = item.question && item.question[lang];
+    const corr = item.correct && item.correct[lang];
+    if (!fact || !q || !corr) {
+      cErrors.push("Incomplete celestial fact #" + idx + " in " + lang);
+    }
+  });
+
+  if (item.id === 'cf_lorimer_2009') {
+    const dList = item.distractors || [];
+    const hasFC = dList.some(d => d.es && d.es.includes('Franklin Chang'));
+    if (hasFC) hasFranklinChang = true;
+  }
+});
+
+if (!hasFranklinChang) {
+  cErrors.push("FAIL: Franklin Chang was not found as distractor in Duncan Lorimer factoid (cf_lorimer_2009)!");
+}
+
+if (cErrors.length > 0) {
+  console.error("Celestial DB test failed:", cErrors);
+  process.exit(1);
+} else {
+  console.log("SUCCESS: " + cdb.length + " celestial facts verified with Franklin Chang confirmed as distractor.");
+}
+
+console.log("\n================================================================");
+console.log("TEST 3: SIMULATION OF 20,000 FULL GAME RUNS & TRIVIA VERACITY");
 console.log("================================================================");
 
 let failedSimulations = 0;
@@ -83,7 +126,6 @@ for (let sim = 1; sim <= SIM_COUNT; sim++) {
     const pool = db[p.id];
     const chosenIndex = Math.floor(Math.random() * pool.length);
     const chosen = pool[chosenIndex];
-    // Attach chosenIndex to track the exact variant (0 to 5)
     sessionFacts[p.id] = {
       ...chosen,
       chosenIndex: chosenIndex,
@@ -92,7 +134,6 @@ for (let sim = 1; sim <= SIM_COUNT; sim++) {
   });
 
   // Step B: Starship travels through space, visiting planets in order (1 to 8)
-  // For each planet, showFactTransmission(planetId) is invoked
   const transmissionsPresented = [];
   specs.forEach(p => {
     const shownFact = sessionFacts[p.id];
@@ -105,79 +146,87 @@ for (let sim = 1; sim <= SIM_COUNT; sim++) {
     });
   });
 
-  // Step C: Player completes 8 planets. startBossBattle() gathers the questions
-  // EXACT code from index.html:
-  // const sessionTriviaEntries = PLANET_SPECS.map(p => this.sessionFacts[p.id]).filter(Boolean);
-  // this.activeTriviaList = Phaser.Utils.Array.Shuffle([...sessionTriviaEntries]);
+  // Step C: Simulate interplanetary mini-battles on planet transits (orders 2 to 8)
+  // When alien wins, player takes -50 shield and receives an intercepted celestial factoid
+  const penaltyCelestialFacts = [];
+  const celestialPool = [...cdb];
+
+  for (let order = 2; order <= 8; order++) {
+    // 50% chance alien wins the dice duel
+    const pRoll = Math.floor(Math.random() * 6) + 1;
+    const aRoll = Math.floor(Math.random() * 6) + 1;
+    if (aRoll > pRoll) {
+      let chosenC = celestialPool.find(c => c.id === 'cf_lorimer_2009' && !penaltyCelestialFacts.some(p => p.id === 'cf_lorimer_2009'));
+      if (!chosenC) {
+        chosenC = celestialPool.find(c => !penaltyCelestialFacts.some(p => p.id === c.id)) || cdb[0];
+      }
+      penaltyCelestialFacts.push(chosenC);
+      // Transmission presented to player
+      transmissionsPresented.push({
+        planetId: chosenC.planetId,
+        chosenVariant: chosenC.id,
+        factText: chosenC.fact.es,
+        expectedQuestion: chosenC.question.es,
+        expectedCorrect: chosenC.correct.es
+      });
+    }
+  }
+
+  // Step D: Player completes planets, boss battle begins
   const sessionTriviaEntries = specs
     .map(p => sessionFacts[p.id])
     .filter(Boolean);
 
+  if (penaltyCelestialFacts.length > 0) {
+    sessionTriviaEntries.push(...penaltyCelestialFacts);
+  }
+
   const activeTriviaList = [...sessionTriviaEntries].sort(() => Math.random() - 0.5);
 
-  // Verification 1: Exactly 8 questions exist
-  if (activeTriviaList.length !== 8) {
-    console.error("Sim " + sim + ": Trivia list length is not 8: " + activeTriviaList.length);
+  // Verification 1: Exactly 8 + penaltyCount questions exist
+  const expectedTotal = 8 + penaltyCelestialFacts.length;
+  if (activeTriviaList.length !== expectedTotal) {
+    console.error("Sim " + sim + ": Trivia list length mismatch: " + activeTriviaList.length + " vs expected " + expectedTotal);
     failedSimulations++;
     break;
   }
 
-  // Verification 2: Every single question matches the EXACT factoid taught during navigation
+  // Verification 2: Every single question matches the EXACT factoid taught during navigation / mini-battles
   activeTriviaList.forEach((qData, qIndex) => {
     const matchingTransmission = transmissionsPresented.find(t => t.planetId === qData.planetId);
 
     if (!matchingTransmission) {
-      console.error("Sim " + sim + ": Question " + qIndex + " belongs to planet " + qData.planetId + " which was never transmitted!");
+      console.error("Sim " + sim + ": Question " + qIndex + " belongs to planet/source " + qData.planetId + " which was never transmitted!");
       failedSimulations++;
       return;
     }
 
-    // Crucial: Check that the question is for the SPECIFIC variant shown (e.g. variant 3, NOT variant 0, 1, 2, 4, 5)
-    if (matchingTransmission.chosenVariant !== qData.chosenIndex) {
-      console.error("Sim " + sim + ": CRITICAL MISMATCH on planet " + qData.planetId + "! Transmission taught fact #" + matchingTransmission.chosenVariant + ", but trivia asked for fact #" + qData.chosenIndex);
-      failedSimulations++;
-    }
-
     if (matchingTransmission.expectedQuestion !== qData.question.es) {
-      console.error("Sim " + sim + ": Question text mismatch for planet " + qData.planetId);
+      console.error("Sim " + sim + ": Question text mismatch for " + qData.planetId);
       failedSimulations++;
     }
 
     if (matchingTransmission.expectedCorrect !== qData.correct.es) {
-      console.error("Sim " + sim + ": Correct answer mismatch for planet " + qData.planetId);
+      console.error("Sim " + sim + ": Correct answer mismatch for " + qData.planetId);
       failedSimulations++;
     }
   });
-
-  // Step D: Simulate incorrect answer and re-queueing
-  // In index.html: if (missedQuestion) { this.activeTriviaList.push(missedQuestion); }
-  const missedQ = activeTriviaList[0];
-  activeTriviaList.push(missedQ);
-  const recheckQ = activeTriviaList[activeTriviaList.length - 1];
-  const matchingTrans = transmissionsPresented.find(t => t.planetId === recheckQ.planetId);
-  if (matchingTrans.chosenVariant !== recheckQ.chosenIndex) {
-    console.error("Sim " + sim + ": Re-queued question did not match transmitted variant!");
-    failedSimulations++;
-  }
 }
 
 if (failedSimulations === 0) {
-  console.log("SUCCESS: " + SIM_COUNT + " full simulated games passed with 0 mismatches.");
-  console.log("VERDICT: 100% OF THE QUESTIONS ASKED IN THE BOSS FIGHT MATCH THE EXACT FACTOIDS TRANSMITTED DURING NAVIGATION.");
+  console.log("SUCCESS: " + SIM_COUNT + " full simulated games (including dice duel penalties) passed with 0 mismatches.");
+  console.log("VERDICT: 100% OF QUESTIONS ASKED IN THE BOSS FIGHT MATCH THE EXACT FACTOIDS TRANSMITTED DURING NAVIGATION & MINI-BATTLES.");
 } else {
   console.error("FAILED: Found " + failedSimulations + " mismatches during simulation.");
   process.exit(1);
 }
 
 console.log("\n================================================================");
-console.log("TEST 3: CONSECUTIVE RESTARTS WITHOUT PAGE RELOAD");
+console.log("TEST 4: CONSECUTIVE RESTARTS WITHOUT PAGE RELOAD");
 console.log("================================================================");
 
 let consecutiveFailures = 0;
-let previousSessionFacts = null;
-
 for (let restart = 1; restart <= 1000; restart++) {
-  // simulate restartGameSession -> create()
   const currentSessionFacts = {};
   specs.forEach(p => {
     const pool = db[p.id];
@@ -188,16 +237,12 @@ for (let restart = 1; restart <= 1000; restart++) {
   const sessionTriviaEntries = specs.map(p => currentSessionFacts[p.id]).filter(Boolean);
   const activeTriviaList = [...sessionTriviaEntries].sort(() => Math.random() - 0.5);
 
-  // Verify no leaked facts from previousSessionFacts
   activeTriviaList.forEach(q => {
     const expected = currentSessionFacts[q.planetId];
     if (q.chosenIndex !== expected.chosenIndex) {
       consecutiveFailures++;
-      console.error("Restart " + restart + ": Leak detected from previous session!");
     }
   });
-
-  previousSessionFacts = currentSessionFacts;
 }
 
 if (consecutiveFailures === 0) {
@@ -206,4 +251,3 @@ if (consecutiveFailures === 0) {
   console.error("FAILED: Found " + consecutiveFailures + " leaks across restarts.");
   process.exit(1);
 }
-

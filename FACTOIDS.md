@@ -492,7 +492,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
 - **Facto (PT):** As rajadas de rádio foram descobertas por Duncan Lorimer em 2009.
 - **Pregunta:** ¿Quién descubrió las ráfagas de radio en 2009?
   - **Correcta:** `Duncan Lorimer`
-  - **Distractores:** `Edwin Hubble` | `Carl Sagan`
+  - **Distractores:** `Franklin Chang (famoso astronauta costarricense)` | `Edwin Hubble` | `Carl Sagan`
 
 ### Factoid 9.8: Medición de Materia Invisible Intergaláctica
 - **Dato (ES):** Las ráfagas de radio permiten a los astrónomos rastrear y medir la materia invisible presente entre las galaxias.
