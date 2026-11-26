@@ -120,17 +120,36 @@ let failedSimulations = 0;
 const SIM_COUNT = 20000;
 
 for (let sim = 1; sim <= SIM_COUNT; sim++) {
-  // Step A: Game starts, SolarSystemGameScene.create() picks 1 fact per planet
+  // Step A: Game starts, SolarSystemGameScene.create() picks 1 fact per planet (40% celestial override, 60% planetary)
   const sessionFacts = {};
+  const usedCelestialIds = new Set();
+  const celestialPool = [...cdb].sort(() => Math.random() - 0.5);
+
   specs.forEach(p => {
-    const pool = db[p.id];
-    const chosenIndex = Math.floor(Math.random() * pool.length);
-    const chosen = pool[chosenIndex];
-    sessionFacts[p.id] = {
-      ...chosen,
-      chosenIndex: chosenIndex,
-      planetId: p.id
-    };
+    let chosen = null;
+    if (Math.random() < 0.40) {
+      const availCelestial = celestialPool.find(c => !usedCelestialIds.has(c.id));
+      if (availCelestial) {
+        usedCelestialIds.add(availCelestial.id);
+        chosen = {
+          ...availCelestial,
+          isCelestialOverride: true,
+          chosenIndex: availCelestial.id,
+          planetId: p.id
+        };
+      }
+    }
+    if (!chosen) {
+      const pool = db[p.id];
+      const chosenIndex = Math.floor(Math.random() * pool.length);
+      chosen = {
+        ...pool[chosenIndex],
+        isCelestialOverride: false,
+        chosenIndex: chosenIndex,
+        planetId: p.id
+      };
+    }
+    sessionFacts[p.id] = chosen;
   });
 
   // Step B: Starship travels through space, visiting planets in order (1 to 8)
@@ -146,29 +165,28 @@ for (let sim = 1; sim <= SIM_COUNT; sim++) {
     });
   });
 
-  // Step C: Simulate interplanetary mini-battles on planet transits (orders 2 to 8)
-  // When alien wins, player takes -50 shield and receives an intercepted celestial factoid
+  // Step C: Simulate interplanetary spy encounters on planet transits (orders 2 to 8, 50% spawn rate)
   const penaltyCelestialFacts = [];
-  const celestialPool = [...cdb];
 
   for (let order = 2; order <= 8; order++) {
-    // 50% chance alien wins the dice duel
-    const pRoll = Math.floor(Math.random() * 6) + 1;
-    const aRoll = Math.floor(Math.random() * 6) + 1;
-    if (aRoll > pRoll) {
-      let chosenC = celestialPool.find(c => c.id === 'cf_lorimer_2009' && !penaltyCelestialFacts.some(p => p.id === 'cf_lorimer_2009'));
-      if (!chosenC) {
-        chosenC = celestialPool.find(c => !penaltyCelestialFacts.some(p => p.id === c.id)) || cdb[0];
+    if (Math.random() < 0.50) {
+      const pRoll = Math.floor(Math.random() * 6) + 1;
+      const aRoll = Math.floor(Math.random() * 6) + 1;
+      if (aRoll > pRoll) {
+        let chosenC = celestialPool.find(c => c.id === 'cf_lorimer_2009' && !usedCelestialIds.has(c.id));
+        if (!chosenC) {
+          chosenC = celestialPool.find(c => !usedCelestialIds.has(c.id)) || cdb[0];
+        }
+        usedCelestialIds.add(chosenC.id);
+        penaltyCelestialFacts.push(chosenC);
+        transmissionsPresented.push({
+          planetId: chosenC.planetId,
+          chosenVariant: chosenC.id,
+          factText: chosenC.fact.es,
+          expectedQuestion: chosenC.question.es,
+          expectedCorrect: chosenC.correct.es
+        });
       }
-      penaltyCelestialFacts.push(chosenC);
-      // Transmission presented to player
-      transmissionsPresented.push({
-        planetId: chosenC.planetId,
-        chosenVariant: chosenC.id,
-        factText: chosenC.fact.es,
-        expectedQuestion: chosenC.question.es,
-        expectedCorrect: chosenC.correct.es
-      });
     }
   }
 
