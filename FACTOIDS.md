@@ -486,15 +486,23 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Magnetares (estrellas ultramagnéticas)`
   - **Distractores:** `Nubes de gas frío` | `Asteroides de hielo`
 
-### Factoid 9.7: Descubrimiento de Duncan Lorimer (2007)
-- **Dato (ES):** Descubiertas en 2007 por Duncan Lorimer, las ráfagas rápidas de radio permiten rastrear y medir la materia invisible entre galaxias.
-- **Fact (EN):** Discovered in 2007 by Duncan Lorimer, FRBs allow astronomers to track and measure invisible matter between galaxies.
-- **Facto (PT):** Descobertas em 2007 por Duncan Lorimer, as rajadas rápidas de rádio permitem medir a matéria invisível entre as galáxias.
-- **Pregunta:** ¿Qué utilidad científica clave tienen las ráfagas rápidas de radio descubiertas en 2007?
-  - **Correcta:** `Medir la materia invisible entre galaxias`
-  - **Distractores:** `Localizar agua potable en la Luna` | `Calcular la masa de la Tierra`
+### Factoid 9.7: Descubrimiento de las Ráfagas de Radio (Duncan Lorimer, 2009)
+- **Dato (ES):** Las ráfagas de radio fueron descubiertas por Duncan Lorimer en 2009.
+- **Fact (EN):** Fast radio bursts were discovered by Duncan Lorimer in 2009.
+- **Facto (PT):** As rajadas de rádio foram descobertas por Duncan Lorimer em 2009.
+- **Pregunta:** ¿Quién descubrió las ráfagas de radio en 2009?
+  - **Correcta:** `Duncan Lorimer`
+  - **Distractores:** `Edwin Hubble` | `Carl Sagan`
 
-### Factoid 9.8: Cosmología: Estudio del Universo
+### Factoid 9.8: Medición de Materia Invisible Intergaláctica
+- **Dato (ES):** Las ráfagas de radio permiten a los astrónomos rastrear y medir la materia invisible presente entre las galaxias.
+- **Fact (EN):** Fast radio bursts allow astronomers to track and measure invisible matter present between galaxies.
+- **Facto (PT):** As rajadas de rádio permitem aos astrônomos rastrear e medir a matéria invisível presente entre as galáxias.
+- **Pregunta:** ¿Qué utilidad científica tienen las ráfagas de radio para los astrónomos?
+  - **Correcta:** `Medir la materia invisible entre galaxias`
+  - **Distractores:** `Detectar agua líquida en la Luna` | `Calcular la masa exacta de la Tierra`
+
+### Factoid 9.9: Cosmología: Estudio del Universo
 - **Dato (ES):** La cosmología es la rama de la física y astronomía que estudia el universo en su totalidad: origen, evolución y destino final.
 - **Fact (EN):** Cosmology is the branch of physics and astronomy studying the universe as a whole: origin, evolution, and ultimate fate.
 - **Facto (PT):** A cosmologia é o ramo da física e astronomia que estuda o universo em sua totalidade: origem, evolução e destino final.
@@ -502,7 +510,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `La Cosmología`
   - **Distractores:** `La Geología` | `La Meteorología`
 
-### Factoid 9.9: Materia y Energía Oscura
+### Factoid 9.10: Materia y Energía Oscura
 - **Dato (ES):** La cosmología analiza cómo se distribuyen las galaxias y cúmulos, junto a la misteriosa materia oscura y energía oscura del cosmos.
 - **Fact (EN):** Cosmology examines how galaxies and clusters distribute alongside the mysterious dark matter and dark energy.
 - **Facto (PT):** A cosmologia analisa a distribuição de galáxias e aglomerados, junto à misteriosa matéria escura e energia escura.
@@ -510,7 +518,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Materia oscura y energía oscura`
   - **Distractores:** `Luz solar y vapor de agua` | `Aire comprimido y minerales`
 
-### Factoid 9.10: La Tensión de Hubble
+### Factoid 9.11: La Tensión de Hubble
 - **Dato (ES):** La tensión de Hubble es la discrepancia científica entre las distintas mediciones de la velocidad a la que se expande el universo.
 - **Fact (EN):** The Hubble tension is the scientific discrepancy between different measurements of the universe's expansion rate.
 - **Facto (PT):** A tensão de Hubble é a discrepância científica entre diferentes medições da taxa de expansão do universo.
@@ -518,7 +526,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Discrepancia en la velocidad de expansión cósmica`
   - **Distractores:** `La temperatura del núcleo solar` | `La velocidad de giro de Mercurio`
 
-### Factoid 9.11: Cunas Estelares: Las Nebulosas
+### Factoid 9.12: Cunas Estelares: Las Nebulosas
 - **Dato (ES):** Las estrellas nacen en nebulosas: colosales nubes cósmicas de gas y polvo que se comprimen por la fuerza de la gravedad.
 - **Fact (EN):** Stars are born inside nebulae: colossal clouds of gas and dust that collapse under the pull of gravity.
 - **Facto (PT):** As estrelas nascem em nebulosas: colossais nuvens de gás e poeira que se comprimem pela gravidade.
@@ -526,7 +534,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `En nebulosas`
   - **Distractores:** `En anillos planetarios` | `En cráteres lunares`
 
-### Factoid 9.12: Fusión Nuclear en las Estrellas
+### Factoid 9.13: Fusión Nuclear en las Estrellas
 - **Dato (ES):** Durante toda su vida, las estrellas transforman hidrógeno en helio mediante fusión nuclear, liberando inmensa energía en luz y calor.
 - **Fact (EN):** Throughout their lives, stars convert hydrogen into helium via nuclear fusion, releasing immense light and heat.
 - **Facto (PT):** Ao longo de sua vida, as estrelas transformam hidrogênio em hélio por fusão nuclear, liberando luz e calor.
@@ -534,7 +542,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Fusión de hidrógeno en helio`
   - **Distractores:** `Combustión de carbón y oxígeno` | `Fisión de uranio radiactivo`
 
-### Factoid 9.13: El Destino del Sol: Gigante Roja
+### Factoid 9.14: El Destino del Sol: Gigante Roja
 - **Dato (ES):** Cuando estrellas medianas como nuestro Sol agoten su combustible de hidrógeno, se expandirán hasta convertirse en gigantes rojas.
 - **Fact (EN):** When medium stars like our Sun deplete their hydrogen fuel, they expand dramatically into red giants.
 - **Facto (PT):** Quando estrelas médias como o nosso Sol esgotarem seu hidrogênio, elas se expandirão virando gigantes vermelhas.
@@ -542,7 +550,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `En una gigante roja`
   - **Distractores:** `En una estrella de hielo` | `En un planeta gaseoso`
 
-### Factoid 9.14: Enanas Blancas
+### Factoid 9.15: Enanas Blancas
 - **Dato (ES):** Al morir, las estrellas pequeñas y medianas expulsan sus capas externas al espacio y su núcleo brillante queda como una enana blanca.
 - **Fact (EN):** Upon dying, small and medium stars eject their outer layers into space, leaving their dense core as a white dwarf.
 - **Facto (PT):** Ao morrer, estrelas pequenas e médias ejetam suas camadas externas, deixando seu núcleo denso como uma anã branca.
@@ -550,7 +558,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Una enana blanca`
   - **Distractores:** `Un cometa interestelar` | `Un agujero negro gigante`
 
-### Factoid 9.15: Supernovas y Agujeros Negros
+### Factoid 9.16: Supernovas y Agujeros Negros
 - **Dato (ES):** Las estrellas más masivas mueren en explosiones cataclísmicas de supernova, pudiendo colapsar en un agujero negro o estrella de neutrones.
 - **Fact (EN):** Massive stars die in violent supernova explosions, potentially collapsing into a black hole or neutron star.
 - **Facto (PT):** Estrelas massivas morrem em explosões violentas de supernova, podendo colapsar em um buraco negro ou estrela de nêutrons.
@@ -558,7 +566,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
   - **Correcta:** `Una supernova`
   - **Distractores:** `Una erupción volcánica` | `Un eclipse solar`
 
-### Factoid 9.16: Siembra Química del Universo
+### Factoid 9.17: Siembra Química del Universo
 - **Dato (ES):** En las explosiones de supernova se forjan y liberan los elementos químicos esenciales que permiten formar nuevas estrellas y planetas.
 - **Fact (EN):** Supernova explosions forge and disperse essential chemical elements that allow new stars and planets to form.
 - **Facto (PT):** Nas explosões de supernova são forjados e liberados os elementos químicos que formam novas estrelas e planetas.
