@@ -1254,9 +1254,9 @@
         },
         distractors: [
           {
-            es: "Franklin Chang (famoso astronauta costarricense)",
-            en: "Franklin Chang (famous Costa Rican astronaut)",
-            pt: "Franklin Chang (famoso astronauta costarriquenho)"
+            es: "Franklin Chang",
+            en: "Franklin Chang",
+            pt: "Franklin Chang"
           },
           {
             es: "Edwin Hubble",
@@ -4861,8 +4861,8 @@
           this.starship.setRotation(angle);
           sound.playThruster(0.9);
 
-          // If navigating from one planet to another (order >= 2), 35% chance to intercept an alien spy mid-flight!
-          if (this.shipNextTargetOrder >= 2 && Math.random() < 0.35) {
+          // If navigating from one planet to another (order >= 2), 50% chance to intercept an alien spy mid-flight!
+          if (this.shipNextTargetOrder >= 2 && Math.random() < 0.5) {
             const midX = (this.starship.x + destX) / 2;
             const midY = (this.starship.y + destY) / 2;
             this.miniBattleMidX = midX;

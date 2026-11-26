@@ -740,7 +740,7 @@ Misión CTSEO — Sistema Solar y Cuerpos Celestes
 • Trivia de Combate:
   Pregunta: ¿Quién descubrió las ráfagas de radio en 2009?
   ✅ Correcta: Duncan Lorimer
-  ❌ Incorrecta 1: Franklin Chang (famoso astronauta costarricense)
+  ❌ Incorrecta 1: Franklin Chang
   ❌ Incorrecta 2: Edwin Hubble (o Carl Sagan)
 
 
