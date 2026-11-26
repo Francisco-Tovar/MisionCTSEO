@@ -476,67 +476,67 @@
        5A2. MINI-BATALLA ESPACIAL (DUELO DE DADOS CONTRA NAVE EXPLORADORA ALIEN)
        ========================================================================= -->
   <div id="mini-battle-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.35)] relative border-2 border-rose-500/70 flex flex-col items-center">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-5 sm:p-7 max-w-lg w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.35)] relative border-2 border-rose-500/70 flex flex-col items-center">
       <!-- Ambient Purple/Rose Glow -->
       <div class="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-fuchsia-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Header Badge -->
-      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-xs font-black text-rose-300 uppercase tracking-widest mb-2 font-sci-fi relative z-10 animate-pulse">
+      <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-sm font-black text-rose-300 uppercase tracking-widest mb-2.5 font-sci-fi relative z-10 animate-pulse">
         <i class="fa-solid fa-satellite-dish text-amber-400"></i>
         <span id="mini-battle-badge">NAVE ESPÍA ALIENÍGENA</span>
       </div>
 
       <!-- Title & Subtitle -->
-      <h3 id="mini-battle-title" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-300 mb-1.5 font-sci-fi relative z-10">
+      <h3 id="mini-battle-title" class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-cyan-300 mb-2 font-sci-fi relative z-10">
         ¡ESPÍA INTERCEPTADO!
       </h3>
-      <p id="mini-battle-desc" class="text-xs sm:text-sm text-slate-300 font-medium mb-4 relative z-10 leading-snug">
+      <p id="mini-battle-desc" class="text-base sm:text-lg text-slate-200 font-semibold mb-4 relative z-10 leading-snug">
         ¡Detectamos una nave espía robando datos del espacio! Detenla en un duelo de dados (1 al 6) antes de que escape.
       </p>
 
       <!-- Dice Arena Box -->
-      <div class="w-full bg-slate-950/90 rounded-2xl p-4 border border-rose-500/40 mb-4 shadow-xl relative z-10">
+      <div class="w-full bg-slate-950/90 rounded-2xl p-4 sm:p-5 border border-rose-500/40 mb-4 shadow-xl relative z-10">
         <div class="flex items-center justify-around">
           <!-- Player Side -->
           <div class="flex flex-col items-center space-y-2">
-            <span id="mini-battle-player-lbl" class="text-[11px] font-black text-cyan-300 uppercase tracking-widest font-sci-fi">TU NAVE</span>
+            <span id="mini-battle-player-lbl" class="text-sm font-black text-cyan-300 uppercase tracking-widest font-sci-fi">TU NAVE</span>
             <div id="player-dice-box" class="dice-cube bg-gradient-to-br from-cyan-900 to-slate-900 border-2 border-cyan-400 text-cyan-200">
               <span id="player-dice-val">🎲</span>
             </div>
-            <span class="text-[10px] font-bold text-slate-400">+100 ESCUDO</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-300">+100 ESCUDO</span>
           </div>
 
           <!-- VS Badge -->
           <div class="flex flex-col items-center justify-center px-2">
-            <span class="w-8 h-8 rounded-full bg-rose-950 border border-rose-400/60 text-amber-300 font-black font-sci-fi text-xs flex items-center justify-center shadow-lg">VS</span>
-            <i class="fa-solid fa-bolt text-amber-400 text-xs mt-1 animate-bounce"></i>
+            <span class="w-10 h-10 rounded-full bg-rose-950 border border-rose-400/60 text-amber-300 font-black font-sci-fi text-sm flex items-center justify-center shadow-lg">VS</span>
+            <i class="fa-solid fa-bolt text-amber-400 text-sm mt-1 animate-bounce"></i>
           </div>
 
           <!-- Alien Scout Side -->
           <div class="flex flex-col items-center space-y-2">
-            <span id="mini-battle-alien-lbl" class="text-[11px] font-black text-rose-300 uppercase tracking-widest font-sci-fi">ESPÍA ALIEN</span>
+            <span id="mini-battle-alien-lbl" class="text-sm font-black text-rose-300 uppercase tracking-widest font-sci-fi">ESPÍA ALIEN</span>
             <div id="alien-dice-box" class="dice-cube bg-gradient-to-br from-rose-950 to-slate-900 border-2 border-rose-500 text-rose-200">
               <span id="alien-dice-val">🎲</span>
             </div>
-            <span class="text-[10px] font-bold text-slate-400">-50 ESCUDO</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-300">-50 ESCUDO</span>
           </div>
         </div>
 
         <!-- Result Feedback Banner (Hidden until roll finished) -->
-        <div id="mini-battle-result" class="hidden mt-4 p-3 rounded-xl border text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all">
-          <i id="mini-battle-result-icon" class="fa-solid fa-shield text-base mt-0.5 shrink-0"></i>
+        <div id="mini-battle-result" class="hidden mt-4 p-3.5 rounded-xl border text-base sm:text-lg font-bold text-left flex items-start space-x-3 transition-all">
+          <i id="mini-battle-result-icon" class="fa-solid fa-shield text-lg mt-1 shrink-0"></i>
           <p id="mini-battle-result-text" class="leading-relaxed"></p>
         </div>
       </div>
 
       <!-- Roll Button -->
-      <button id="btn-mini-battle-roll" onclick="executeDiceDuel()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-black font-sci-fi text-base sm:text-lg uppercase tracking-wider border-2 border-amber-200 shadow-xl shadow-orange-500/30 flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
-        <i class="fa-solid fa-dice text-xl"></i>
+      <button id="btn-mini-battle-roll" onclick="executeDiceDuel()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-black font-sci-fi text-lg sm:text-xl uppercase tracking-wider border-2 border-amber-200 shadow-xl shadow-orange-500/30 flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
+        <i class="fa-solid fa-dice text-2xl"></i>
         <span id="btn-mini-battle-roll-text">¡LANZAR DADOS! 🎲</span>
       </button>
 
       <!-- Continue Navigation Button (Appears after battle resolution) -->
-      <button id="btn-mini-battle-continue" onclick="closeMiniBattleAndProceed()" class="hidden comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black font-sci-fi text-base uppercase tracking-wider border border-cyan-300 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer mt-2">
+      <button id="btn-mini-battle-continue" onclick="closeMiniBattleAndProceed()" class="hidden comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-black font-sci-fi text-lg sm:text-xl uppercase tracking-wider border border-cyan-300 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer mt-2">
         <span id="btn-mini-battle-continue-text">CONTINUAR MISIÓN 🚀</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
@@ -547,37 +547,37 @@
        5A3. PENALTY CELESTIAL BODIES FACTOID MODAL (Interception after Alien Win)
        ========================================================================= -->
   <div id="celestial-penalty-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
-    <div class="glass-card-holo modal-scroll-card rounded-3xl p-4 sm:p-6 max-w-md w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.4)] relative border-2 border-rose-500/80 flex flex-col items-center">
+    <div class="glass-card-holo modal-scroll-card rounded-3xl p-5 sm:p-7 max-w-lg w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.4)] relative border-2 border-rose-500/80 flex flex-col items-center">
       <!-- Ambient Glow -->
       <div class="absolute top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-rose-600/25 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Warning Badge -->
-      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-xs font-black text-rose-300 uppercase tracking-widest mb-2 font-sci-fi relative z-10 animate-pulse">
+      <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/60 text-sm font-black text-rose-300 uppercase tracking-widest mb-2.5 font-sci-fi relative z-10 animate-pulse">
         <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
         <span id="celestial-penalty-badge">ALERTA DE INTELIGENCIA</span>
       </div>
 
       <!-- Title -->
-      <h3 id="celestial-penalty-title" class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-amber-300 to-sky-300 mb-2 font-sci-fi relative z-10">
+      <h3 id="celestial-penalty-title" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-amber-300 to-sky-300 mb-3 font-sci-fi relative z-10">
         ¡INFORMACIÓN ROBADA!
       </h3>
 
       <!-- Factoid Body Card -->
-      <div class="w-full bg-slate-900/90 p-4 rounded-2xl border border-sky-700/50 text-slate-100 text-base leading-relaxed mb-3 text-left flex items-start space-x-3 shadow-lg relative z-10">
-        <i class="fa-solid fa-satellite-dish text-cyan-400 text-xl mt-0.5 shrink-0"></i>
-        <p id="celestial-penalty-fact-text" class="font-medium">Dato de cuerpos celestes...</p>
+      <div class="w-full bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-sky-700/50 text-slate-100 text-lg sm:text-xl leading-relaxed mb-3.5 text-left flex items-start space-x-3 shadow-lg relative z-10">
+        <i class="fa-solid fa-satellite-dish text-cyan-400 text-2xl mt-1 shrink-0"></i>
+        <p id="celestial-penalty-fact-text" class="font-semibold">Dato de cuerpos celestes...</p>
       </div>
 
       <!-- Warning Callout Box -->
-      <div class="w-full bg-rose-950/80 p-3 rounded-xl border border-rose-500/60 text-rose-200 text-xs font-bold text-left mb-4 flex items-start space-x-2 relative z-10">
-        <i class="fa-solid fa-skull-crossbones text-rose-400 text-sm mt-0.5 shrink-0"></i>
+      <div class="w-full bg-rose-950/80 p-3.5 sm:p-4 rounded-xl border border-rose-500/60 text-rose-100 text-sm sm:text-base font-bold text-left mb-5 flex items-start space-x-2.5 relative z-10">
+        <i class="fa-solid fa-skull-crossbones text-rose-400 text-lg mt-0.5 shrink-0"></i>
         <p id="celestial-penalty-warning" class="leading-snug">
           Logramos escanear qué se llevó, pero el espía escapó rumbo a la nave nodriza. ¡El ejército invasor se vuelve más fuerte y tu batalla final será más difícil!
         </p>
       </div>
 
       <!-- Continue Button -->
-      <button id="btn-celestial-penalty-continue" onclick="dismissCelestialPenaltyAndFly()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 hover:to-cyan-300 text-slate-950 font-black font-sci-fi text-base uppercase tracking-wider border border-emerald-200 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
+      <button id="btn-celestial-penalty-continue" onclick="dismissCelestialPenaltyAndFly()" class="comic-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 hover:from-emerald-400 hover:to-cyan-300 text-slate-950 font-black font-sci-fi text-lg sm:text-xl uppercase tracking-wider border border-emerald-200 shadow-xl flex items-center justify-center space-x-2 relative z-10 cursor-pointer">
         <span id="btn-celestial-penalty-btn-text">¡ENTENDIDO, SEGUIR NAVEGANDO!</span>
         <i class="fa-solid fa-rocket"></i>
       </button>
@@ -4861,8 +4861,8 @@
           this.starship.setRotation(angle);
           sound.playThruster(0.9);
 
-          // If navigating from one planet to another (order >= 2), trigger interplanetary scout mini-battle midway!
-          if (this.shipNextTargetOrder >= 2) {
+          // If navigating from one planet to another (order >= 2), 35% chance to intercept an alien spy mid-flight!
+          if (this.shipNextTargetOrder >= 2 && Math.random() < 0.35) {
             const midX = (this.starship.x + destX) / 2;
             const midY = (this.starship.y + destY) / 2;
             this.miniBattleMidX = midX;
@@ -4926,9 +4926,11 @@
           this.alienScout = null;
         }
 
+        // tex_alien_scout nose is drawn pointing LEFT (angle Math.PI), so facing player requires Angle(starship -> scout)
+        const initialFaceRot = Phaser.Math.Angle.Between(this.starship.x, this.starship.y, spawnX, spawnY);
         this.alienScout = this.add.image(spawnX, spawnY, 'tex_alien_scout')
           .setScale(0.85)
-          .setRotation(shipAngle + Math.PI)
+          .setRotation(initialFaceRot)
           .setDepth(15);
 
         sound.playOminousStinger();
@@ -4939,7 +4941,15 @@
           y: scoutTargetY,
           duration: 480,
           ease: 'Back.easeOut',
+          onUpdate: () => {
+            if (this.alienScout && this.starship) {
+              this.alienScout.setRotation(Phaser.Math.Angle.Between(this.starship.x, this.starship.y, this.alienScout.x, this.alienScout.y));
+            }
+          },
           onComplete: () => {
+            if (this.alienScout && this.starship) {
+              this.alienScout.setRotation(Phaser.Math.Angle.Between(this.starship.x, this.starship.y, this.alienScout.x, this.alienScout.y));
+            }
             // Hover tween for alien scout
             this.tweens.add({
               targets: this.alienScout,
@@ -4976,9 +4986,9 @@
           sound.playCorrect(2);
 
           if (resultCard) {
-            resultCard.className = 'mt-4 p-3 rounded-xl border border-emerald-400/60 bg-emerald-950/80 text-emerald-200 text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all';
+            resultCard.className = 'mt-4 p-3.5 rounded-xl border border-emerald-400/60 bg-emerald-950/80 text-emerald-200 text-base sm:text-lg font-bold text-left flex items-start space-x-3 transition-all';
           }
-          if (resultIcon) resultIcon.className = 'fa-solid fa-shield-halved text-emerald-400 text-base mt-0.5 shrink-0';
+          if (resultIcon) resultIcon.className = 'fa-solid fa-shield-halved text-emerald-400 text-lg mt-1 shrink-0';
           if (resultText) resultText.innerText = loc.miniBattleWinDesc;
           if (btnContinueText) btnContinueText.innerText = loc.miniBattleContinueBtn;
           if (btnContinue) btnContinue.classList.remove('hidden');
@@ -5029,9 +5039,9 @@
           this.activePenaltyFact = nextFact;
 
           if (resultCard) {
-            resultCard.className = 'mt-4 p-3 rounded-xl border border-rose-500/70 bg-rose-950/85 text-rose-200 text-xs sm:text-sm font-bold text-left flex items-start space-x-2.5 transition-all';
+            resultCard.className = 'mt-4 p-3.5 rounded-xl border border-rose-500/70 bg-rose-950/85 text-rose-200 text-base sm:text-lg font-bold text-left flex items-start space-x-3 transition-all';
           }
-          if (resultIcon) resultIcon.className = 'fa-solid fa-triangle-exclamation text-rose-400 text-base mt-0.5 shrink-0';
+          if (resultIcon) resultIcon.className = 'fa-solid fa-triangle-exclamation text-rose-400 text-lg mt-1 shrink-0';
           if (resultText) resultText.innerText = loc.miniBattleLoseDesc;
           if (btnContinueText) btnContinueText.innerText = (currentLanguage === 'en' ? 'VIEW STOLEN INTEL' : (currentLanguage === 'pt' ? 'VER DADOS ROUBADOS' : 'VER INFORMACIÓN ROBADA'));
           if (btnContinue) btnContinue.classList.remove('hidden');
