@@ -1,6 +1,6 @@
 # GUÍA OFICIAL DE FACTOIDS Y TRIVIA
-Misión CTSEO — Sistema Solar
-48 Factoids Oficiales (6 por Planeta) | Español, English, Português
+Misión CTSEO — Sistema Solar y Cuerpos Celestes
+64 Factoids Oficiales (48 Planetarios + 16 de Cuerpos Celestes) | Español, English, Português
 
 
 ## 1. MERCURIO
@@ -648,3 +648,215 @@ Misión CTSEO — Sistema Solar
   ✅ Correcta: Azul cobalto intenso
   ❌ Incorrecta 1: Verde esmeralda
   ❌ Incorrecta 2: Blanco plateado
+
+
+## 9. CUERPOS CELESTES Y ASTROFÍSICA
+(Presentación de Astronomía por Vanessa, Marco, Abigail, Valeria, Victoria y Gabriel)
+
+### Factoid 9.1 — Definición de Cuerpos Celestes
+• Transmisiones de Navegación:
+  🇪🇸 Español: Los cuerpos celestes son todos aquellos objetos naturales ubicados en el espacio exterior, más allá de la atmósfera de la Tierra.
+  🇬🇧 English: Celestial bodies are all natural objects located in outer space, beyond Earth's atmosphere.
+  🇧🇷 Português: Os corpos celestes são todos os objetos naturais localizados no espaço exterior, além da atmosfera da Terra.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué define fundamentalmente a un cuerpo celeste en el universo?
+  ✅ Correcta: Un objeto natural en el espacio exterior
+  ❌ Incorrecta 1: Cualquier nave o satélite artificial
+  ❌ Incorrecta 2: Un fenómeno óptico del cielo
+
+
+### Factoid 9.2 — Variedad de Cuerpos Celestes
+• Transmisiones de Navegación:
+  🇪🇸 Español: Los cuerpos celestes incluyen planetas, estrellas, satélites naturales, asteroides, cometas y meteoritos, formando la estructura del universo.
+  🇬🇧 English: Celestial bodies include planets, stars, natural satellites, asteroids, comets, and meteoroids, building the universe's structure.
+  🇧🇷 Português: Os corpos celestes incluem planetas, estrelas, satélites naturais, asteroides, cometas e meteoritos, formando a estrutura do universo.
+
+• Trivia de Combate:
+  Pregunta: ¿Cuáles son componentes naturales considerados cuerpos celestes fundamentales?
+  ✅ Correcta: Planetas, estrellas, cometas y asteroides
+  ❌ Incorrecta 1: Satélites de telecomunicaciones
+  ❌ Incorrecta 2: Estaciones espaciales artificiales
+
+
+### Factoid 9.3 — Estrellas de Neutrones
+• Transmisiones de Navegación:
+  🇪🇸 Español: Las estrellas de neutrones son esferas ultra-densas y masivas que quedan como remanente cuando una estrella gigante colapsa y muere.
+  🇬🇧 English: Neutron stars are ultra-dense, heavy compact spheres left behind when a giant star collapses and dies.
+  🇧🇷 Português: As estrelas de nêutrons são esferas ultradensas e pesadas que restam quando uma estrela gigante colapsa e morre.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué queda tras el colapso del núcleo de una estrella gigante al morir?
+  ✅ Correcta: Una estrella de neutrones
+  ❌ Incorrecta 1: Un cometa congelado
+  ❌ Incorrecta 2: Un planeta rocoso
+
+
+### Factoid 9.4 — Púlsares: Faros Cósmicos
+• Transmisiones de Navegación:
+  🇪🇸 Español: Los púlsares son estrellas de neutrones que rotan a gran velocidad, emitiendo pulsos periódicos de radiación como un faro en el espacio.
+  🇬🇧 English: Pulsars are rapidly spinning neutron stars that emit periodic beams of radiation like a cosmic lighthouse.
+  🇧🇷 Português: Os púlsares são estrelas de nêutrons que giram em alta velocidade, emitindo pulsos de radiação como um farol cósmico.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué característica distingue a los púlsares en el espacio exterior?
+  ✅ Correcta: Giran rápido y parpadean como un faro
+  ❌ Incorrecta 1: Son cometas que expulsan agua caliente
+  ❌ Incorrecta 2: Permanecen inmóviles sin brillo
+
+
+### Factoid 9.5 — Ráfagas Rápidas de Radio (FRB)
+• Transmisiones de Navegación:
+  🇪🇸 Español: Las Ráfagas Rápidas de Radio (FRB) son destellos de milisegundos que liberan en un instante tanta energía como el Sol en todo un día.
+  🇬🇧 English: Fast Radio Bursts (FRBs) are millisecond flashes that release in an instant as much energy as the Sun does in an entire day.
+  🇧🇷 Português: As Rajadas Rápidas de Rádio (FRB) são clarões de milissegundos que liberam tanta energia quanto o Sol em um dia inteiro.
+
+• Trivia de Combate:
+  Pregunta: ¿Cuánta energía puede liberar una Ráfaga Rápida de Radio (FRB) en solo milisegundos?
+  ✅ Correcta: Tanta energía como el Sol en un día
+  ❌ Incorrecta 1: La energía de un rayo terrestre
+  ❌ Incorrecta 2: Menos energía que una bombilla
+
+
+### Factoid 9.6 — Magnetares y el Enigma de los FRB
+• Transmisiones de Navegación:
+  🇪🇸 Español: Los astrónomos apuntan a que los FRB provienen de magnetares: estrellas muertas con campos magnéticos los más potentes del universo.
+  🇬🇧 English: Astronomers trace FRBs to magnetars: dead neutron stars possessing the most powerful magnetic fields in the universe.
+  🇧🇷 Português: Os astrônomos apontam que os FRBs vêm de magnetares: estrelas mortas com os campos magnéticos mais poderosos do universo.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué tipo de cuerpo celeste ultramagnético es el principal sospechoso de originar los FRB?
+  ✅ Correcta: Magnetares (estrellas ultramagnéticas)
+  ❌ Incorrecta 1: Nubes de gas frío
+  ❌ Incorrecta 2: Asteroides de hielo
+
+
+### Factoid 9.7 — Descubrimiento de Duncan Lorimer (2007)
+• Transmisiones de Navegación:
+  🇪🇸 Español: Descubiertas en 2007 por Duncan Lorimer, las ráfagas rápidas de radio permiten rastrear y medir la materia invisible entre galaxias.
+  🇬🇧 English: Discovered in 2007 by Duncan Lorimer, FRBs allow astronomers to track and measure invisible matter between galaxies.
+  🇧🇷 Português: Descobertas em 2007 por Duncan Lorimer, as rajadas rápidas de rádio permitem medir a matéria invisível entre as galáxias.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué utilidad científica clave tienen las ráfagas rápidas de radio descubiertas en 2007?
+  ✅ Correcta: Medir la materia invisible entre galaxias
+  ❌ Incorrecta 1: Localizar agua potable en la Luna
+  ❌ Incorrecta 2: Calcular la masa de la Tierra
+
+
+### Factoid 9.8 — Cosmología: Estudio del Universo
+• Transmisiones de Navegación:
+  🇪🇸 Español: La cosmología es la rama de la física y astronomía que estudia el universo en su totalidad: origen, evolución y destino final.
+  🇬🇧 English: Cosmology is the branch of physics and astronomy studying the universe as a whole: origin, evolution, and ultimate fate.
+  🇧🇷 Português: A cosmologia é o ramo da física e astronomia que estuda o universo em sua totalidade: origem, evolução e destino final.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué disciplina científica investiga el universo completo desde el Big Bang hasta su destino final?
+  ✅ Correcta: La Cosmología
+  ❌ Incorrecta 1: La Geología
+  ❌ Incorrecta 2: La Meteorología
+
+
+### Factoid 9.9 — Materia y Energía Oscura
+• Transmisiones de Navegación:
+  🇪🇸 Español: La cosmología analiza cómo se distribuyen las galaxias y cúmulos, junto a la misteriosa materia oscura y energía oscura del cosmos.
+  🇬🇧 English: Cosmology examines how galaxies and clusters distribute alongside the mysterious dark matter and dark energy.
+  🇧🇷 Português: A cosmologia analisa a distribuição de galáxias e aglomerados, junto à misteriosa matéria escura e energia escura.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué componentes misteriosos del universo analiza la cosmología junto a las galaxias?
+  ✅ Correcta: Materia oscura y energía oscura
+  ❌ Incorrecta 1: Luz solar y vapor de agua
+  ❌ Incorrecta 2: Aire comprimido y minerales
+
+
+### Factoid 9.10 — La Tensión de Hubble
+• Transmisiones de Navegación:
+  🇪🇸 Español: La tensión de Hubble es la discrepancia científica entre las distintas mediciones de la velocidad a la que se expande el universo.
+  🇬🇧 English: The Hubble tension is the scientific discrepancy between different measurements of the universe's expansion rate.
+  🇧🇷 Português: A tensão de Hubble é a discrepância científica entre diferentes medições da taxa de expansão do universo.
+
+• Trivia de Combate:
+  Pregunta: ¿A qué se refiere el enigma científico conocido como la Tensión de Hubble?
+  ✅ Correcta: Discrepancia en la velocidad de expansión cósmica
+  ❌ Incorrecta 1: La temperatura del núcleo solar
+  ❌ Incorrecta 2: La velocidad de giro de Mercurio
+
+
+### Factoid 9.11 — Cunas Estelares: Las Nebulosas
+• Transmisiones de Navegación:
+  🇪🇸 Español: Las estrellas nacen en nebulosas: colosales nubes cósmicas de gas y polvo que se comprimen por la fuerza de la gravedad.
+  🇬🇧 English: Stars are born inside nebulae: colossal clouds of gas and dust that collapse under the pull of gravity.
+  🇧🇷 Português: As estrelas nascem em nebulosas: colossais nuvens de gás e poeira que se comprimem pela gravidade.
+
+• Trivia de Combate:
+  Pregunta: ¿En qué estructuras cósmicas de gas y polvo nacen las estrellas?
+  ✅ Correcta: En nebulosas
+  ❌ Incorrecta 1: En anillos planetarios
+  ❌ Incorrecta 2: En cráteres lunares
+
+
+### Factoid 9.12 — Fusión Nuclear en las Estrellas
+• Transmisiones de Navegación:
+  🇪🇸 Español: Durante toda su vida, las estrellas transforman hidrógeno en helio mediante fusión nuclear, liberando inmensa energía en luz y calor.
+  🇬🇧 English: Throughout their lives, stars convert hydrogen into helium via nuclear fusion, releasing immense light and heat.
+  🇧🇷 Português: Ao longo de sua vida, as estrelas transformam hidrogênio em hélio por fusão nuclear, liberando luz e calor.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué proceso nuclear alimenta el brillo y calor de las estrellas activas?
+  ✅ Correcta: Fusión de hidrógeno en helio
+  ❌ Incorrecta 1: Combustión de carbón y oxígeno
+  ❌ Incorrecta 2: Fisión de uranio radiactivo
+
+
+### Factoid 9.13 — El Destino del Sol: Gigante Roja
+• Transmisiones de Navegación:
+  🇪🇸 Español: Cuando estrellas medianas como nuestro Sol agoten su combustible de hidrógeno, se expandirán hasta convertirse en gigantes rojas.
+  🇬🇧 English: When medium stars like our Sun deplete their hydrogen fuel, they expand dramatically into red giants.
+  🇧🇷 Português: Quando estrelas médias como o nosso Sol esgotarem seu hidrogênio, elas se expandirão virando gigantes vermelhas.
+
+• Trivia de Combate:
+  Pregunta: ¿En qué tipo de estrella gigante se convertirá el Sol al agotar su combustible principal?
+  ✅ Correcta: En una gigante roja
+  ❌ Incorrecta 1: En una estrella de hielo
+  ❌ Incorrecta 2: En un planeta gaseoso
+
+
+### Factoid 9.14 — Enanas Blancas
+• Transmisiones de Navegación:
+  🇪🇸 Español: Al morir, las estrellas pequeñas y medianas expulsan sus capas externas al espacio y su núcleo brillante queda como una enana blanca.
+  🇬🇧 English: Upon dying, small and medium stars eject their outer layers into space, leaving their dense core as a white dwarf.
+  🇧🇷 Português: Ao morrer, estrelas pequenas e médias ejetam suas camadas externas, deixando seu núcleo denso como uma anã branca.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué remanente estelar denso queda en el centro tras la muerte de estrellas como el Sol?
+  ✅ Correcta: Una enana blanca
+  ❌ Incorrecta 1: Un cometa interestelar
+  ❌ Incorrecta 2: Un agujero negro gigante
+
+
+### Factoid 9.15 — Supernovas y Agujeros Negros
+• Transmisiones de Navegación:
+  🇪🇸 Español: Las estrellas más masivas mueren en explosiones cataclísmicas de supernova, pudiendo colapsar en un agujero negro o estrella de neutrones.
+  🇬🇧 English: Massive stars die in violent supernova explosions, potentially collapsing into a black hole or neutron star.
+  🇧🇷 Português: Estrelas massivas morrem em explosões violentas de supernova, podendo colapsar em um buraco negro ou estrela de nêutrons.
+
+• Trivia de Combate:
+  Pregunta: ¿Qué explosión colosal marca la muerte violenta de las estrellas de gran masa?
+  ✅ Correcta: Una supernova
+  ❌ Incorrecta 1: Una erupción volcánica
+  ❌ Incorrecta 2: Un eclipse solar
+
+
+### Factoid 9.16 — Siembra Química del Universo
+• Transmisiones de Navegación:
+  🇪🇸 Español: En las explosiones de supernova se forjan y liberan los elementos químicos esenciales que permiten formar nuevas estrellas y planetas.
+  🇬🇧 English: Supernova explosions forge and disperse essential chemical elements that allow new stars and planets to form.
+  🇧🇷 Português: Nas explosões de supernova são forjados e liberados os elementos químicos que formam novas estrelas e planetas.
+
+• Trivia de Combate:
+  Pregunta: ¿De dónde provienen los elementos químicos que forman nuevos planetas y sistemas solares?
+  ✅ Correcta: Liberados en explosiones de supernovas
+  ❌ Incorrecta 1: Fabricados por cometas congelados
+  ❌ Incorrecta 2: Surgidos del vacío sin estrellas
+

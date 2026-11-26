@@ -15,6 +15,7 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
 6. [Saturno](#6-saturno)
 7. [Urano](#7-urano)
 8. [Neptuno](#8-neptuno)
+9. [Cuerpos Celestes y Astrofísica](#9-cuerpos-celestes-y-astrofísica)
 
 ---
 
@@ -431,4 +432,138 @@ Cada factoid cuenta con sus versiones oficiales en **Español (ES)**, **Inglés 
 - **Pregunta:** ¿Qué tonalidad azul intensa distingue a Neptuno en el Sistema Solar?
   - **Correcta:** `Azul cobalto intenso`
   - **Distractores:** `Verde esmeralda` | `Blanco plateado`
+
+---
+
+## 9. Cuerpos Celestes y Astrofísica
+*(Basado en la Presentación de Astronomía del Equipo: Vanessa, Marco, Abigail, Valeria, Victoria y Gabriel)*
+
+### Factoid 9.1: Definición de Cuerpos Celestes
+- **Dato (ES):** Los cuerpos celestes son todos aquellos objetos naturales ubicados en el espacio exterior, más allá de la atmósfera de la Tierra.
+- **Fact (EN):** Celestial bodies are all natural objects located in outer space, beyond Earth's atmosphere.
+- **Facto (PT):** Os corpos celestes são todos os objetos naturais localizados no espaço exterior, além da atmosfera da Terra.
+- **Pregunta:** ¿Qué define fundamentalmente a un cuerpo celeste en el universo?
+  - **Correcta:** `Un objeto natural en el espacio exterior`
+  - **Distractores:** `Cualquier nave o satélite artificial` | `Un fenómeno óptico del cielo`
+
+### Factoid 9.2: Variedad de Cuerpos Celestes
+- **Dato (ES):** Los cuerpos celestes incluyen planetas, estrellas, satélites naturales, asteroides, cometas y meteoritos, formando la estructura del universo.
+- **Fact (EN):** Celestial bodies include planets, stars, natural satellites, asteroids, comets, and meteoroids, building the universe's structure.
+- **Facto (PT):** Os corpos celestes incluem planetas, estrelas, satélites naturais, asteroides, cometas e meteoritos, formando a estrutura do universo.
+- **Pregunta:** ¿Cuáles son componentes naturales considerados cuerpos celestes fundamentales?
+  - **Correcta:** `Planetas, estrellas, cometas y asteroides`
+  - **Distractores:** `Satélites de telecomunicaciones` | `Estaciones espaciales artificiales`
+
+### Factoid 9.3: Estrellas de Neutrones
+- **Dato (ES):** Las estrellas de neutrones son esferas ultra-densas y masivas que quedan como remanente cuando una estrella gigante colapsa y muere.
+- **Fact (EN):** Neutron stars are ultra-dense, heavy compact spheres left behind when a giant star collapses and dies.
+- **Facto (PT):** As estrelas de nêutrons são esferas ultradensas e pesadas que restam quando uma estrela gigante colapsa e morre.
+- **Pregunta:** ¿Qué queda tras el colapso del núcleo de una estrella gigante al morir?
+  - **Correcta:** `Una estrella de neutrones`
+  - **Distractores:** `Un cometa congelado` | `Un planeta rocoso`
+
+### Factoid 9.4: Púlsares: Faros Cósmicos
+- **Dato (ES):** Los púlsares son estrellas de neutrones que rotan a gran velocidad, emitiendo pulsos periódicos de radiación como un faro en el espacio.
+- **Fact (EN):** Pulsars are rapidly spinning neutron stars that emit periodic beams of radiation like a cosmic lighthouse.
+- **Facto (PT):** Os púlsares são estrelas de nêutrons que giram em alta velocidade, emitindo pulsos de radiação como um farol cósmico.
+- **Pregunta:** ¿Qué característica distingue a los púlsares en el espacio exterior?
+  - **Correcta:** `Giran rápido y parpadean como un faro`
+  - **Distractores:** `Son cometas que expulsan agua caliente` | `Permanecen inmóviles sin brillo`
+
+### Factoid 9.5: Ráfagas Rápidas de Radio (FRB)
+- **Dato (ES):** Las Ráfagas Rápidas de Radio (FRB) son destellos de milisegundos que liberan en un instante tanta energía como el Sol en todo un día.
+- **Fact (EN):** Fast Radio Bursts (FRBs) are millisecond flashes that release in an instant as much energy as the Sun does in an entire day.
+- **Facto (PT):** As Rajadas Rápidas de Rádio (FRB) são clarões de milissegundos que liberam tanta energia quanto o Sol em um dia inteiro.
+- **Pregunta:** ¿Cuánta energía puede liberar una Ráfaga Rápida de Radio (FRB) en solo milisegundos?
+  - **Correcta:** `Tanta energía como el Sol en un día`
+  - **Distractores:** `La energía de un rayo terrestre` | `Menos energía que una bombilla`
+
+### Factoid 9.6: Magnetares y el Enigma de los FRB
+- **Dato (ES):** Los astrónomos apuntan a que los FRB provienen de magnetares: estrellas muertas con campos magnéticos los más potentes del universo.
+- **Fact (EN):** Astronomers trace FRBs to magnetars: dead neutron stars possessing the most powerful magnetic fields in the universe.
+- **Facto (PT):** Os astrônomos apontam que os FRBs vêm de magnetares: estrelas mortas com os campos magnéticos mais poderosos do universo.
+- **Pregunta:** ¿Qué tipo de cuerpo celeste ultramagnético es el principal sospechoso de originar los FRB?
+  - **Correcta:** `Magnetares (estrellas ultramagnéticas)`
+  - **Distractores:** `Nubes de gas frío` | `Asteroides de hielo`
+
+### Factoid 9.7: Descubrimiento de Duncan Lorimer (2007)
+- **Dato (ES):** Descubiertas en 2007 por Duncan Lorimer, las ráfagas rápidas de radio permiten rastrear y medir la materia invisible entre galaxias.
+- **Fact (EN):** Discovered in 2007 by Duncan Lorimer, FRBs allow astronomers to track and measure invisible matter between galaxies.
+- **Facto (PT):** Descobertas em 2007 por Duncan Lorimer, as rajadas rápidas de rádio permitem medir a matéria invisível entre as galáxias.
+- **Pregunta:** ¿Qué utilidad científica clave tienen las ráfagas rápidas de radio descubiertas en 2007?
+  - **Correcta:** `Medir la materia invisible entre galaxias`
+  - **Distractores:** `Localizar agua potable en la Luna` | `Calcular la masa de la Tierra`
+
+### Factoid 9.8: Cosmología: Estudio del Universo
+- **Dato (ES):** La cosmología es la rama de la física y astronomía que estudia el universo en su totalidad: origen, evolución y destino final.
+- **Fact (EN):** Cosmology is the branch of physics and astronomy studying the universe as a whole: origin, evolution, and ultimate fate.
+- **Facto (PT):** A cosmologia é o ramo da física e astronomia que estuda o universo em sua totalidade: origem, evolução e destino final.
+- **Pregunta:** ¿Qué disciplina científica investiga el universo completo desde el Big Bang hasta su destino final?
+  - **Correcta:** `La Cosmología`
+  - **Distractores:** `La Geología` | `La Meteorología`
+
+### Factoid 9.9: Materia y Energía Oscura
+- **Dato (ES):** La cosmología analiza cómo se distribuyen las galaxias y cúmulos, junto a la misteriosa materia oscura y energía oscura del cosmos.
+- **Fact (EN):** Cosmology examines how galaxies and clusters distribute alongside the mysterious dark matter and dark energy.
+- **Facto (PT):** A cosmologia analisa a distribuição de galáxias e aglomerados, junto à misteriosa matéria escura e energia escura.
+- **Pregunta:** ¿Qué componentes misteriosos del universo analiza la cosmología junto a las galaxias?
+  - **Correcta:** `Materia oscura y energía oscura`
+  - **Distractores:** `Luz solar y vapor de agua` | `Aire comprimido y minerales`
+
+### Factoid 9.10: La Tensión de Hubble
+- **Dato (ES):** La tensión de Hubble es la discrepancia científica entre las distintas mediciones de la velocidad a la que se expande el universo.
+- **Fact (EN):** The Hubble tension is the scientific discrepancy between different measurements of the universe's expansion rate.
+- **Facto (PT):** A tensão de Hubble é a discrepância científica entre diferentes medições da taxa de expansão do universo.
+- **Pregunta:** ¿A qué se refiere el enigma científico conocido como la Tensión de Hubble?
+  - **Correcta:** `Discrepancia en la velocidad de expansión cósmica`
+  - **Distractores:** `La temperatura del núcleo solar` | `La velocidad de giro de Mercurio`
+
+### Factoid 9.11: Cunas Estelares: Las Nebulosas
+- **Dato (ES):** Las estrellas nacen en nebulosas: colosales nubes cósmicas de gas y polvo que se comprimen por la fuerza de la gravedad.
+- **Fact (EN):** Stars are born inside nebulae: colossal clouds of gas and dust that collapse under the pull of gravity.
+- **Facto (PT):** As estrelas nascem em nebulosas: colossais nuvens de gás e poeira que se comprimem pela gravidade.
+- **Pregunta:** ¿En qué estructuras cósmicas de gas y polvo nacen las estrellas?
+  - **Correcta:** `En nebulosas`
+  - **Distractores:** `En anillos planetarios` | `En cráteres lunares`
+
+### Factoid 9.12: Fusión Nuclear en las Estrellas
+- **Dato (ES):** Durante toda su vida, las estrellas transforman hidrógeno en helio mediante fusión nuclear, liberando inmensa energía en luz y calor.
+- **Fact (EN):** Throughout their lives, stars convert hydrogen into helium via nuclear fusion, releasing immense light and heat.
+- **Facto (PT):** Ao longo de sua vida, as estrelas transformam hidrogênio em hélio por fusão nuclear, liberando luz e calor.
+- **Pregunta:** ¿Qué proceso nuclear alimenta el brillo y calor de las estrellas activas?
+  - **Correcta:** `Fusión de hidrógeno en helio`
+  - **Distractores:** `Combustión de carbón y oxígeno` | `Fisión de uranio radiactivo`
+
+### Factoid 9.13: El Destino del Sol: Gigante Roja
+- **Dato (ES):** Cuando estrellas medianas como nuestro Sol agoten su combustible de hidrógeno, se expandirán hasta convertirse en gigantes rojas.
+- **Fact (EN):** When medium stars like our Sun deplete their hydrogen fuel, they expand dramatically into red giants.
+- **Facto (PT):** Quando estrelas médias como o nosso Sol esgotarem seu hidrogênio, elas se expandirão virando gigantes vermelhas.
+- **Pregunta:** ¿En qué tipo de estrella gigante se convertirá el Sol al agotar su combustible principal?
+  - **Correcta:** `En una gigante roja`
+  - **Distractores:** `En una estrella de hielo` | `En un planeta gaseoso`
+
+### Factoid 9.14: Enanas Blancas
+- **Dato (ES):** Al morir, las estrellas pequeñas y medianas expulsan sus capas externas al espacio y su núcleo brillante queda como una enana blanca.
+- **Fact (EN):** Upon dying, small and medium stars eject their outer layers into space, leaving their dense core as a white dwarf.
+- **Facto (PT):** Ao morrer, estrelas pequenas e médias ejetam suas camadas externas, deixando seu núcleo denso como uma anã branca.
+- **Pregunta:** ¿Qué remanente estelar denso queda en el centro tras la muerte de estrellas como el Sol?
+  - **Correcta:** `Una enana blanca`
+  - **Distractores:** `Un cometa interestelar` | `Un agujero negro gigante`
+
+### Factoid 9.15: Supernovas y Agujeros Negros
+- **Dato (ES):** Las estrellas más masivas mueren en explosiones cataclísmicas de supernova, pudiendo colapsar en un agujero negro o estrella de neutrones.
+- **Fact (EN):** Massive stars die in violent supernova explosions, potentially collapsing into a black hole or neutron star.
+- **Facto (PT):** Estrelas massivas morrem em explosões violentas de supernova, podendo colapsar em um buraco negro ou estrela de nêutrons.
+- **Pregunta:** ¿Qué explosión colosal marca la muerte violenta de las estrellas de gran masa?
+  - **Correcta:** `Una supernova`
+  - **Distractores:** `Una erupción volcánica` | `Un eclipse solar`
+
+### Factoid 9.16: Siembra Química del Universo
+- **Dato (ES):** En las explosiones de supernova se forjan y liberan los elementos químicos esenciales que permiten formar nuevas estrellas y planetas.
+- **Fact (EN):** Supernova explosions forge and disperse essential chemical elements that allow new stars and planets to form.
+- **Facto (PT):** Nas explosões de supernova são forjados e liberados os elementos químicos que formam novas estrelas e planetas.
+- **Pregunta:** ¿De dónde provienen los elementos químicos que forman nuevos planetas y sistemas solares?
+  - **Correcta:** `Liberados en explosiones de supernovas`
+  - **Distractores:** `Fabricados por cometas congelados` | `Surgidos del vacío sin estrellas`
+
 
